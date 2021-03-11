@@ -199,7 +199,7 @@ namespace AmbitiousSnake
 				if (_InputDevice == InputDevice.KeyboardAndMouse)
 					return Keyboard.current.spaceKey.isPressed;
 				else
-					return LeftTouchController.thumbstickClicked.isPressed || RightTouchController.thumbstickClicked.isPressed;
+					return LeftThumbstickClickedInput || RightThumbstickClickedInput;
 			}
 		}
 		public bool _SetOrientationInput
@@ -207,6 +207,25 @@ namespace AmbitiousSnake
 			get
 			{
 				return SetOrientationInput;
+			}
+		}
+		public static float ChangeLengthInput
+		{
+			get
+			{
+				float output = 0;
+				if (LeftTouchController != null)
+					output = LeftTouchController.thumbstick.ReadValue().y;
+				if (RightTouchController != null)
+					output += RightTouchController.thumbstick.ReadValue().y;
+				return output;
+			}
+		}
+		public float _ChangeLengthInput
+		{
+			get
+			{
+				return ChangeLengthInput;
 			}
 		}
 		public static bool LeftGripInput
@@ -263,6 +282,34 @@ namespace AmbitiousSnake
 			get
 			{
 				return RightTriggerInput;
+			}
+		}
+		public static bool LeftThumbstickClickedInput
+		{
+			get
+			{
+				return LeftTouchController != null && LeftTouchController.thumbstickClicked.isPressed;
+			}
+		}
+		public bool _LeftThumbstickClickedInput
+		{
+			get
+			{
+				return LeftThumbstickClickedInput;
+			}
+		}
+		public static bool RightThumbstickClickedInput
+		{
+			get
+			{
+				return RightTouchController != null && RightTouchController.thumbstickClicked.isPressed;
+			}
+		}
+		public bool _RightThumbstickClickedInput
+		{
+			get
+			{
+				return RightThumbstickClickedInput;
 			}
 		}
 		public static Vector3 HeadPosition
