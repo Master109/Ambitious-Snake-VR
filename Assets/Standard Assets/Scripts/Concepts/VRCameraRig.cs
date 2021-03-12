@@ -57,11 +57,7 @@ namespace AmbitiousSnake
 		{
 			setOrientationInput = InputManager.SetOrientationInput;
 			if (InputManager.Instance.inputDevice == InputManager.InputDevice.OculusRift || InputManager.Instance.inputDevice == InputManager.InputDevice.OculusQuest)
-			{
 				UpdateAnchors ();
-				if (setOrientationInput && !previousSetOrientationInput)
-					SetOrientation ();
-			}
 			else
 			{
 				Vector2 rotaInput = Mouse.current.delta.ReadValue().FlipY() * lookRate * Time.deltaTime;
@@ -72,6 +68,8 @@ namespace AmbitiousSnake
 				}
 				trs.position = Snake.instance.HeadPosition + (rota * positionOffset);
 			}
+			if (setOrientationInput && !previousSetOrientationInput)
+				SetOrientation ();
 			previousSetOrientationInput = setOrientationInput;
 		}
 

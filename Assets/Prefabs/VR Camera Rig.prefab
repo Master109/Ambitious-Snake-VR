@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 413833954}
+  - component: {fileID: 8327021286894586924}
   m_Layer: 0
   m_Name: Tracking Space
   m_TagString: Untagged
@@ -23,7 +24,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 413833953}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -33,6 +34,25 @@ Transform:
   m_Father: {fileID: 5101054896660311123}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1818360609 &8327021286894586924
+RotationConstraint:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 413833953}
+  m_Enabled: 1
+  m_Weight: 1
+  m_RotationAtRest: {x: 90, y: 0, z: 0}
+  m_RotationOffset: {x: 0, y: 0, z: 0}
+  m_AffectRotationX: 1
+  m_AffectRotationY: 0
+  m_AffectRotationZ: 0
+  m_IsContraintActive: 1
+  m_IsLocked: 1
+  m_Sources:
+  - sourceTransform: {fileID: 413833954}
+    weight: 1
 --- !u!1 &289841377150199378
 GameObject:
   m_ObjectHideFlags: 0
@@ -85,7 +105,7 @@ MonoBehaviour:
   leftHandTrs: {fileID: 1114109396482559081}
   rightHandTrs: {fileID: 8632472086426486499}
   trs: {fileID: 5101054896660311123}
-  lookRate: 1
+  lookRate: 20
   whatICollideWith:
     serializedVersion: 2
     m_Bits: 128

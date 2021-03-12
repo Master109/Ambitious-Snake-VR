@@ -124,7 +124,10 @@ namespace AmbitiousSnake
 			Vector3 position;
 			Vector3 headPosition = HeadPosition;
 			if (Physics.Raycast(headPosition, move, out hit, totalMoveAmount + pieceRadius, whatICrashInto, QueryTriggerInteraction.Ignore))
+			{
 				position = hit.point + (headPosition - hit.point).normalized * pieceRadius;
+				totalMoveAmount = hit.distance - pieceRadius;
+			}
 			else
 				position = headPosition + (move * totalMoveAmount);
 			while (totalMoveAmount > 0)
