@@ -10774,6 +10774,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Top Wall
       objectReference: {fileID: 0}
+    - target: {fileID: 7440210945223678247, guid: cf2ca6134ca012e639b4d28f0952512c, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cf2ca6134ca012e639b4d28f0952512c, type: 3}
 --- !u!4 &455205527 stripped
@@ -56252,10 +56256,6 @@ PrefabInstance:
     - target: {fileID: 1812593976192016077, guid: 070b8e84f0a49cc9aa07b3c8a9f86686, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1812593977018533703, guid: 070b8e84f0a49cc9aa07b3c8a9f86686, type: 3}
-      propertyPath: inputDevice
-      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 070b8e84f0a49cc9aa07b3c8a9f86686, type: 3}

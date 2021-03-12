@@ -81,8 +81,9 @@ namespace AmbitiousSnake
 			}
 		}
 
-		void Awake ()
+		public override void Awake ()
 		{
+			base.Awake ();
 			// for (float distance = 0; distance <= length.value; distance += maxDistanceBetweenPieces)
 			// 	AddPiece (trs.position + trs.forward * distance, maxDistanceBetweenPieces);
 			AddPiece (trs.position, 0);
@@ -118,7 +119,9 @@ namespace AmbitiousSnake
 		
 		void Move ()
 		{
-			move = InputManager.MoveInput;
+			move = VRCameraRig.instance.eyesTrs.rotation * InputManager.MoveInput;
+			if (move.sqrMagnitude == 0)
+				return;
 			RaycastHit hit;
 			float totalMoveAmount = moveSpeed * Time.deltaTime;
 			Vector3 position;
@@ -126,7 +129,7 @@ namespace AmbitiousSnake
 			if (Physics.Raycast(headPosition, move, out hit, totalMoveAmount + pieceRadius, whatICrashInto, QueryTriggerInteraction.Ignore))
 			{
 				position = hit.point + (headPosition - hit.point).normalized * pieceRadius;
-				totalMoveAmount = hit.distance - pieceRadius;
+				totalMoveAmount = Mathf.Max(hit.distance - pieceRadius, 0);
 			}
 			else
 				position = headPosition + (move * totalMoveAmount);

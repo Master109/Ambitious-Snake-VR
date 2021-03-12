@@ -38,7 +38,8 @@ namespace AmbitiousSnake
 		public LayerMask whatICollideWith;
 		[HideInInspector]
 		public float cameraDistance;
-		Vector3 positionOffset;
+		[HideInInspector]
+		public Vector3 positionOffset;
 		Quaternion rota;
 		bool setOrientationInput;
 		bool previousSetOrientationInput;
@@ -91,10 +92,10 @@ namespace AmbitiousSnake
 			}
 			eyesTrs.localPosition = InputManager.HeadPosition;
 			eyesTrs.localRotation = InputManager.HeadRotation;
-			leftHandTrs.localRotation = InputManager.LeftHandRotation;
-			rightHandTrs.localRotation = InputManager.RightHandRotation;
 			leftHandTrs.localPosition = InputManager.LeftHandPosition;
+			leftHandTrs.localRotation = InputManager.LeftHandRotation;
 			rightHandTrs.localPosition = InputManager.RightHandPosition;
+			rightHandTrs.localRotation = InputManager.RightHandRotation;
 		}
 		
 		void SetOrientation ()
