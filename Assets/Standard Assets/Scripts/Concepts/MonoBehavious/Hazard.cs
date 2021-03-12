@@ -15,7 +15,7 @@ namespace AmbitiousSnake
 		{
 			if (dead)
 				return;
-			IDestructable destructable = coll.gameObject.GetComponent<IDestructable>();
+			IDestructable destructable = coll.rigidbody.GetComponent<IDestructable>();
 			if (destructable != null)
 				ApplyDamage (destructable, damage);
 			if (destroyOnContact)
@@ -24,8 +24,7 @@ namespace AmbitiousSnake
 				if (prefabIndex == -1)
 					Destroy(gameObject);
 				else
-					// ObjectPool.Instance.Despawn (prefabIndex, gameObject, trs);
-					Destroy(gameObject);
+					ObjectPool.Instance.Despawn (prefabIndex, gameObject, trs);
 			}
 		}
 		

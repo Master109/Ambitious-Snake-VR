@@ -43,7 +43,7 @@ namespace AmbitiousSnake
 			if (Time.timeSinceLevelLoad > video.frameCount * (1f / video.frameRate) / video.playbackSpeed || skipTimer > skipAfterTime)
 			{
 				enabled = false;
-				_SceneManager.Instance.mostRecentLevelName = LoadSceneOnDone;
+				_SceneManager.Instance.mostRecentSceneName = LoadSceneOnDone;
 				_SceneManager.Instance.LoadSceneWithTransition (LoadSceneOnDone);
 			}
 		}

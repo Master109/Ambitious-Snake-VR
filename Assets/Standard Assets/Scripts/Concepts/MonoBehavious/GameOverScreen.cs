@@ -8,6 +8,6 @@ public class GameOverScreen : SingletonMonoBehaviour<GameOverScreen>
 {
 	public virtual void GameOver ()
 	{
-		_SceneManager.Instance.LoadSceneWithTransition (_SceneManager.Instance.mostRecentLevelName);
+		_SceneManager.Instance.LoadSceneWithTransition (_SceneManager.Instance.mostRecentSceneName);
 	}
 }

@@ -75,7 +75,7 @@ namespace AmbitiousSnake
 		void HandleRestart ()
 		{
 			if (InputManager.RestartInput)
-				_SceneManager.instance.RestartLevelWithoutTransition ();
+				_SceneManager.instance.RestartSceneWithoutTransition ();
 		}
 		
 		public void Quit ()

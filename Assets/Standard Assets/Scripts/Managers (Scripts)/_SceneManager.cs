@@ -10,7 +10,7 @@ namespace AmbitiousSnake
 		public static bool isLoading;
 		public float transitionRate;
 		[SaveAndLoadValue]
-		public string mostRecentLevelName;
+		public string mostRecentSceneName;
 		public static Scene CurrentScene
 		{
 			get
@@ -28,7 +28,7 @@ namespace AmbitiousSnake
 			}
 			isLoading = true;
 			Time.timeScale = 1;
-			StartCoroutine (LevelTransition (levelName));
+			StartCoroutine (SceneTransition (levelName));
 		}
 		
 		public void LoadSceneWithoutTransition (string levelName)
@@ -47,7 +47,7 @@ namespace AmbitiousSnake
 			}
 			isLoading = true;
 			Time.timeScale = 1;
-			StartCoroutine (LevelTransition (levelId));
+			StartCoroutine (SceneTransition (levelId));
 		}
 		
 		public void LoadSceneWithoutTransition (int levelId)
@@ -66,7 +66,7 @@ namespace AmbitiousSnake
 			}
 			isLoading = true;
 			Time.timeScale = 1;
-			StartCoroutine (LevelTransition (levelName, LoadSceneMode.Additive));
+			StartCoroutine (SceneTransition (levelName, LoadSceneMode.Additive));
 		}
 		
 		public void LoadSceneAdditiveWithoutTransition (string levelName)
@@ -76,39 +76,39 @@ namespace AmbitiousSnake
 			SceneManager.LoadScene(levelName, LoadSceneMode.Additive);
 		}
 		
-		public void RestartLevelWithTransition ()
+		public void RestartSceneWithTransition ()
 		{
 			isLoading = true;
 			LoadSceneWithTransition (SceneManager.GetActiveScene().name);
 		}
 		
-		public void RestartLevelWithoutTransition ()
+		public void RestartSceneWithoutTransition ()
 		{
 			isLoading = true;
 			LoadSceneWithoutTransition (SceneManager.GetActiveScene().name);
 		}
 		
-		public void NextLevelWithTransition ()
+		public void NextSceneWithTransition ()
 		{
 			isLoading = true;
 			LoadSceneWithTransition (SceneManager.GetActiveScene().buildIndex + 1);
 		}
 		
-		public void NextLevelWithoutTransition ()
+		public void NextSceneWithoutTransition ()
 		{
 			isLoading = true;
 			LoadSceneWithoutTransition (SceneManager.GetActiveScene().buildIndex + 1);
 		}
 		
-		public virtual void OnLevelLoaded (Scene scene = new Scene(), LoadSceneMode loadMode = LoadSceneMode.Single)
+		public virtual void OnSceneLoaded (Scene scene = new Scene(), LoadSceneMode loadMode = LoadSceneMode.Single)
 		{
 			Camera.main.rect = new Rect(.5f, .5f, 0, 0);
-			StartCoroutine(LevelTransition (null));
-			SceneManager.sceneLoaded -= OnLevelLoaded;
+			StartCoroutine(SceneTransition (null));
+			SceneManager.sceneLoaded -= OnSceneLoaded;
 			isLoading = false;
 		}
 		
-		public virtual IEnumerator LevelTransition (string levelName = null, LoadSceneMode loadMode = LoadSceneMode.Single)
+		public virtual IEnumerator SceneTransition (string levelName = null, LoadSceneMode loadMode = LoadSceneMode.Single)
 		{
 			bool transitioningIn = string.IsNullOrEmpty(levelName);
 			float transitionRateMultiplier = 1;
@@ -127,15 +127,15 @@ namespace AmbitiousSnake
 			else
 			{
 				Camera.main.rect = new Rect(.5f, .5f, 0, 0);
-				SceneManager.sceneLoaded += OnLevelLoaded;
+				SceneManager.sceneLoaded += OnSceneLoaded;
 				if (!string.IsNullOrEmpty(levelName))
 					SceneManager.LoadScene(levelName, loadMode);
 			}
 		}
 
-		public virtual IEnumerator LevelTransition (int levelId = -1, LoadSceneMode loadMode = LoadSceneMode.Single)
+		public virtual IEnumerator SceneTransition (int levelId = -1, LoadSceneMode loadMode = LoadSceneMode.Single)
 		{
-			yield return StartCoroutine(LevelTransition (SceneManager.GetSceneByBuildIndex(levelId).name, loadMode));
+			yield return StartCoroutine(SceneTransition (SceneManager.GetSceneByBuildIndex(levelId).name, loadMode));
 		}
 	}
 }

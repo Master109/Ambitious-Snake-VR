@@ -96,7 +96,7 @@ namespace AmbitiousSnake
 		
 		public void Death ()
 		{
-			LoseableScenerio.Instance.Lose ();
+			_SceneManager.instance.RestartSceneWithoutTransition ();
 		}
 		
 		public void DoUpdate ()
@@ -108,8 +108,11 @@ namespace AmbitiousSnake
 
 		public void TakeDamage (float amount, Hazard source)
 		{
+			if (dead)
+				return;
 			hp = Mathf.Clamp(hp - amount, 0, MaxHp);
-			hpText.text = "Health: " + hp;
+			if (hpText != null)
+				hpText.text = "Health: " + hp;
 			if (hp == 0)
 			{
 				dead = true;
@@ -205,7 +208,7 @@ namespace AmbitiousSnake
 			}
 		}
 
-		void OnDestroy ()
+		void OnDisable ()
 		{
 			GameManager.updatables = GameManager.updatables.Remove(this);
 		}
