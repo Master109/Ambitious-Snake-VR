@@ -7,5 +7,6 @@ namespace AmbitiousSnake
 	public class SnakePiece : Spawnable
 	{
         public float distanceToPreviousPiece;
+		public MeshRenderer meshRenderer;
 	}
 }

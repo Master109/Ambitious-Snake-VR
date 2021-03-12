@@ -178,11 +178,16 @@ namespace AmbitiousSnake
 			get
 			{
 				Vector3 output = Vector3.zero;
+#if UNITY_EDITOR
+				// output = Snake.Instance.followTrs.position - Snake.instance.HeadPosition;
+				output = Snake.Instance.followTrs.forward;
+#else
 				if (LeftMoveInput)
 					output = LeftHandRotation * Vector3.forward;
 				if (RightMoveInput)
 					output += RightHandRotation * Vector3.forward;
-				return Vector2.ClampMagnitude(output, 1);
+#endif
+				return Vector3.ClampMagnitude(output, 1);
 			}
 		}
 		public Vector3 _MoveInput
@@ -190,23 +195,6 @@ namespace AmbitiousSnake
 			get
 			{
 				return MoveInput;
-			}
-		}
-		public static bool SetOrientationInput
-		{
-			get
-			{
-				if (_InputDevice == InputDevice.KeyboardAndMouse)
-					return Keyboard.current.spaceKey.isPressed;
-				else
-					return LeftThumbstickClickedInput || RightThumbstickClickedInput;
-			}
-		}
-		public bool _SetOrientationInput
-		{
-			get
-			{
-				return SetOrientationInput;
 			}
 		}
 		public static float ChangeLengthInput
@@ -226,6 +214,41 @@ namespace AmbitiousSnake
 			get
 			{
 				return ChangeLengthInput;
+			}
+		}
+		public static bool SetOrientationInput
+		{
+			get
+			{
+				if (_InputDevice == InputDevice.KeyboardAndMouse)
+					return Keyboard.current.spaceKey.isPressed;
+				else
+					return LeftThumbstickClickedInput || RightThumbstickClickedInput;
+			}
+		}
+		public bool _SetOrientationInput
+		{
+			get
+			{
+				return SetOrientationInput;
+			}
+		}
+		public static bool RestartInput
+		{
+			get
+			{
+				if (_InputDevice == InputDevice.KeyboardAndMouse)
+					return Keyboard.current.rKey.isPressed;
+				else
+					return ((LeftTouchController != null && (LeftTouchController.primaryButton.isPressed || LeftTouchController.secondaryButton.isPressed))
+					|| (RightTouchController != null && (RightTouchController.primaryButton.isPressed || RightTouchController.secondaryButton.isPressed)));
+			}
+		}
+		public bool _RestartInput
+		{
+			get
+			{
+				return RestartInput;
 			}
 		}
 		public static bool LeftGripInput

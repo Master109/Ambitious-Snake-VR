@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using Extensions;
 using UnityEngine.InputSystem;
-using Unity.XR.Oculus.Input;
 
 namespace AmbitiousSnake
 {

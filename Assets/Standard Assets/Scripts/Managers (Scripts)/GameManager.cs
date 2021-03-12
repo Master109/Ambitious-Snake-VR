@@ -68,7 +68,14 @@ namespace AmbitiousSnake
 			if (ObjectPool.Instance != null && ObjectPool.instance.enabled)
 				ObjectPool.instance.DoUpdate ();
 			InputSystem.Update ();
+			HandleRestart ();
 			framesSinceLevelLoaded ++;
+		}
+
+		void HandleRestart ()
+		{
+			if (InputManager.RestartInput)
+				_SceneManager.instance.RestartLevelWithoutTransition ();
 		}
 		
 		public void Quit ()

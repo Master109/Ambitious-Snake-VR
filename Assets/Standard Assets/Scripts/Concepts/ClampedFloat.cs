@@ -16,6 +16,6 @@ public class ClampedFloat
 	public void SetValue (float value)
 	{
 		this.value = value;
-		value = GetValue();
+		this.value = GetValue();
 	}
 }

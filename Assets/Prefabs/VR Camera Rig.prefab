@@ -88,7 +88,7 @@ MonoBehaviour:
   lookRate: 1
   whatICollideWith:
     serializedVersion: 2
-    m_Bits: 192
+    m_Bits: 128
   cameraDistance: 0
 --- !u!1 &1435133479702998454
 GameObject:
