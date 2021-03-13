@@ -13,7 +13,7 @@ namespace AmbitiousSnake
 		public float dissolveDuration;
 		bool isDissolving;
 
-		void OnCollisionEnter2D (Collision2D coll)
+		void OnCollisionEnter (Collision coll)
 		{
 			if (isDissolving)
 				return;
