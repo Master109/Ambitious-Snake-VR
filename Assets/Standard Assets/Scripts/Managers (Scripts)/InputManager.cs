@@ -203,9 +203,15 @@ namespace AmbitiousSnake
 			{
 				float output = 0;
 				if (LeftTouchController != null)
+					// output = LeftTouchController.gripPressed.isPressed.GetHashCode();
 					output = LeftTouchController.thumbstick.ReadValue().y;
 				if (RightTouchController != null)
+					// output -= RightTouchController.gripPressed.isPressed.GetHashCode();
 					output += RightTouchController.thumbstick.ReadValue().y;
+#if UNITY_EDITOR
+				output = Mouse.current.leftButton.isPressed.GetHashCode() - Mouse.current.rightButton.isPressed.GetHashCode();
+#endif
+				output = Mathf.Clamp(output, -1, 1);
 				return output;
 			}
 		}

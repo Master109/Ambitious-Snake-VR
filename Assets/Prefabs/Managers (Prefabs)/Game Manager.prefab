@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64ee96cfd35d97944bfe33b4d39732ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  handleMultipleInstances: 2
+  handleMultipleInstances: 1
   persistant: 1
   registeredGos: []
   uniqueId: 0
@@ -64,7 +64,7 @@ MonoBehaviour:
   handleMultipleInstances: 0
   persistant: 0
   transitionRate: 0
-  mostRecentLevelName: 
+  mostRecentSceneName: 
 --- !u!1001 &4695539735119086582
 PrefabInstance:
   m_ObjectHideFlags: 0

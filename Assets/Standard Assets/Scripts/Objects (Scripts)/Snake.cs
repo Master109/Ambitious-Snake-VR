@@ -84,8 +84,6 @@ namespace AmbitiousSnake
 		public override void Awake ()
 		{
 			base.Awake ();
-			// for (float distance = 0; distance <= length.value; distance += maxDistanceBetweenPieces)
-			// 	AddPiece (trs.position + trs.forward * distance, maxDistanceBetweenPieces);
 			AddPiece (trs.position, 0);
 		}
 		
@@ -104,6 +102,7 @@ namespace AmbitiousSnake
 			if (dead)
 				return;
 			Move ();
+			SetLength (length.value + InputManager.ChangeLengthInput * changeLengthRate * Time.deltaTime);
 		}
 
 		public void TakeDamage (float amount, Hazard source)
@@ -142,7 +141,6 @@ namespace AmbitiousSnake
 				totalMoveAmount -= moveAmount;
 				AddPiece (position, moveAmount);
 			}
-			SetLength (length.value + InputManager.ChangeLengthInput * changeLengthRate * Time.deltaTime);
 		}
 
 		void AddPiece (Vector3 position)

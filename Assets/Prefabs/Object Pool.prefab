@@ -52,4 +52,4 @@ MonoBehaviour:
     trs: {fileID: 8012893104815861624, guid: c90fed61d079a9d6086b1212f3642e33, type: 3}
     prefabIndex: 0
     createdCount: 0
-    preload: 400
+    preload: 200

@@ -59,12 +59,12 @@ MonoBehaviour:
   maxDistanceBetweenPieces: 0.25
   whatICrashInto:
     serializedVersion: 2
-    m_Bits: 192
+    m_Bits: 1216
   length:
-    value: 100
+    value: 50
     valueRange:
       min: 2
-      max: 100
+      max: 50
   currentLength: 0
   pieceRadius: 0.5
   piecePrefab: {fileID: 2551292470738008868, guid: c90fed61d079a9d6086b1212f3642e33, type: 3}
