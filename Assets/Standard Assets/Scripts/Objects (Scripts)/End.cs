@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace AmbitiousSnake
 {
-	public class End : SingletonMonoBehaviour<End>
+	public class End : Tile
 	{
 		void OnCollisionEnter (Collision coll)
 		{

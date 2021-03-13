@@ -7,7 +7,7 @@ using System.Collections.Generic;
 namespace AmbitiousSnake
 {
 	//[ExecuteInEditMode]
-	public class DissolveTile : MonoBehaviour
+	public class DissolveTile : Tile
 	{
 		public MeshRenderer meshRenderer;
 		public float dissolveDuration;

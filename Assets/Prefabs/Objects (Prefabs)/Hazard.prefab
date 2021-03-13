@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 3813223544051276545}
   - component: {fileID: 5628221973568042662}
   - component: {fileID: 1995873673321029553}
+  - component: {fileID: 7017179896687917580}
   m_Layer: 8
   m_Name: Hazard
   m_TagString: Untagged
@@ -113,3 +114,16 @@ MonoBehaviour:
   damage: 0
   destroyOnContact: 0
   dead: 0
+--- !u!114 &7017179896687917580
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7440210945223678247}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8088580ded82b1f27a618f1b1e3fa4e1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  connectedTo: []
