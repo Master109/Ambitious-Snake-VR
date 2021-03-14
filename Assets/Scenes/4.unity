@@ -596,6 +596,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Dissolve Tile (273)
       objectReference: {fileID: 0}
+    - target: {fileID: 8674132230223879713, guid: 7c93e444d5fc401c594e0fe7cde080b1, type: 3}
+      propertyPath: isSupportingTile
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7c93e444d5fc401c594e0fe7cde080b1, type: 3}
 --- !u!4 &22765885 stripped
@@ -8215,6 +8219,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Dissolve Tile (255)
       objectReference: {fileID: 0}
+    - target: {fileID: 8674132230223879713, guid: 7c93e444d5fc401c594e0fe7cde080b1, type: 3}
+      propertyPath: isSupportingTile
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7c93e444d5fc401c594e0fe7cde080b1, type: 3}
 --- !u!4 &574277680 stripped
@@ -13433,6 +13441,10 @@ PrefabInstance:
     - target: {fileID: 7440210945223678247, guid: 7c93e444d5fc401c594e0fe7cde080b1, type: 3}
       propertyPath: m_Name
       value: Dissolve Tile (237)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8674132230223879713, guid: 7c93e444d5fc401c594e0fe7cde080b1, type: 3}
+      propertyPath: isSupportingTile
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7c93e444d5fc401c594e0fe7cde080b1, type: 3}

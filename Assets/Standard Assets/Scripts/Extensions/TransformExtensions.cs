@@ -78,9 +78,14 @@ namespace Extensions
 			return transforms[closestOpponentIndex];
 		}
 
-		public static Rect GetUnrotatedRect (this Transform trs)
+		public static Rect GetRect (this Transform trs)
 		{
 			return Rect.MinMaxRect(trs.position.x - trs.lossyScale.x, trs.position.y - trs.lossyScale.y, trs.position.x + trs.lossyScale.x, trs.position.y + trs.lossyScale.y);
+		}
+
+		public static Bounds GetBounds (this Transform trs)
+		{
+			return new Bounds(trs.position, trs.lossyScale);
 		}
 
 		public static bool IsSameOrientationAndScale (this Transform trs, Transform other)

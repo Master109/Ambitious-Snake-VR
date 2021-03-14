@@ -108,5 +108,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5070c3be69477ac6493c0f18cff2fc7c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  handleMultipleInstances: 0
-  persistant: 0
+  trs: {fileID: 1097746140504088053}
+  connectedTo: []
+  supportingTiles: []
+  isSupportingTile: 0
+  rigid: {fileID: 0}

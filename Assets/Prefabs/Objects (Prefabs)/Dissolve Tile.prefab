@@ -108,5 +108,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d54de613733034b99d90b4fd44eb4c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  trs: {fileID: 1097746140504088053}
+  connectedTo: []
+  supportingTiles: []
+  isSupportingTile: 0
+  rigid: {fileID: 0}
   meshRenderer: {fileID: 3813223544051276545}
   dissolveDuration: 1

@@ -126,4 +126,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8088580ded82b1f27a618f1b1e3fa4e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  trs: {fileID: 1097746140504088053}
   connectedTo: []
+  supportingTiles: []
+  isSupportingTile: 0
+  rigid: {fileID: 0}

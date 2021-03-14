@@ -51,5 +51,27 @@ namespace Extensions
 			b2.Expand(expandB2);
 			return b1.Intersects(b2);
 		}
+		
+		public static float GetVolume (this Bounds b)
+		{
+			return b.size.x * b.size.y * b.size.z;
+		}
+		
+		public static int GetVolume (this BoundsInt b)
+		{
+			return b.size.x * b.size.y * b.size.z;
+		}
+		
+		public static Vector3 FromNormalizedPoint (this Bounds b, Vector3 normalizedPoint)
+		{
+			return b.min + b.size.Multiply(normalizedPoint);
+		}
+		
+		public static BoundsInt ToBoundsInt (this Bounds b)
+		{
+			BoundsInt output = new BoundsInt();
+			output.SetMinMax(b.min.ToVec3Int(MathfExtensions.RoundingMethod.RoundUpIfNotInteger), b.max.ToVec3Int(MathfExtensions.RoundingMethod.RoundUpIfNotInteger));
+			return output;
+		}
 	}
 }

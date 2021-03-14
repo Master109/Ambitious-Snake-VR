@@ -35,8 +35,8 @@ namespace Extensions
 		{
 			HalfOrMoreRoundsUp,
 			HalfOrLessRoundsDown,
-			RoundUpIfNotWhole,
-			RoundDownIfNotWhole
+			RoundUpIfNotInteger,
+			RoundDownIfNotInteger
 		}
 
 		public static float GetClosestNumber (float f, params float[] numbers)
