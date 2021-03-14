@@ -70,7 +70,7 @@ namespace Extensions
 		public static BoundsInt ToBoundsInt (this Bounds b)
 		{
 			BoundsInt output = new BoundsInt();
-			output.SetMinMax(b.min.ToVec3Int(MathfExtensions.RoundingMethod.RoundUpIfNotInteger), b.max.ToVec3Int(MathfExtensions.RoundingMethod.RoundUpIfNotInteger));
+			output.SetMinMax(b.min.ToVec3Int(MathfExtensions.RoundingMethod.RoundUpIfNotInteger), b.max.ToVec3Int(MathfExtensions.RoundingMethod.RoundDownIfNotInteger));
 			return output;
 		}
 	}

@@ -164,12 +164,13 @@ namespace AmbitiousSnake
 		void RemovePiece ()
 		{
 			SnakePiece tailPiece = TailPiece;
-			ObjectPool.instance.Despawn (tailPiece.prefabIndex, tailPiece.gameObject, tailPiece.trs);
+			Transform tailPieceTrs = tailPiece.trs;
+			ObjectPool.instance.Despawn (tailPiece.prefabIndex, tailPiece.gameObject, tailPieceTrs);
 			pieces.RemoveAt(0);
 			currentLength -= tailPiece.distanceToPreviousPiece;
 			Vector3 worldCenterOfMass = rigid.worldCenterOfMass;
 			worldCenterOfMass *= pieces.Count + 1;
-			worldCenterOfMass -= tailPiece.trs.position;
+			worldCenterOfMass -= tailPieceTrs.position;
 			worldCenterOfMass /= pieces.Count;
 			rigid.centerOfMass = trs.InverseTransformPoint(worldCenterOfMass);
 		}

@@ -5,7 +5,6 @@ using System;
 using Unity.XR.Oculus.Input;
 using UnityEngine.InputSystem;
 using Extensions;
-using AmbitiousSnake;
 
 namespace AmbitiousSnake
 {
@@ -348,7 +347,7 @@ namespace AmbitiousSnake
 				if (Hmd != null)
 					return Hmd.devicePosition.ReadValue();
 				else
-					return VectorExtensions.NULL3;
+					return Vector3.zero;
 			}
 		}
 		public Vector3 _HeadPosition

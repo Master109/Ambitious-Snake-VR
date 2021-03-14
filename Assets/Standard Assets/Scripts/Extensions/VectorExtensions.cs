@@ -121,6 +121,8 @@ namespace Extensions
 					return new Vector3Int(Mathf.RoundToInt(v.x), Mathf.RoundToInt(v.y), Mathf.RoundToInt(v.z));
 				case MathfExtensions.RoundingMethod.RoundUpIfNotInteger:
 					return new Vector3Int((int) Mathf.Ceil(v.x), (int) Mathf.Ceil(v.y), (int) Mathf.Ceil(v.z));
+				case MathfExtensions.RoundingMethod.RoundDownIfNotInteger:
+					return new Vector3Int((int) v.x, (int) v.y, (int) v.z);
 				default:
 					throw new UnityException("The logic for handling the " + roundMethod.ToString() + " round method has not yet been implemented.");
 			}
@@ -134,6 +136,8 @@ namespace Extensions
 					return new Vector3Int(Mathf.RoundToInt(v.x), Mathf.RoundToInt(v.y), 0);
 				case MathfExtensions.RoundingMethod.RoundUpIfNotInteger:
 					return new Vector3Int((int) Mathf.Ceil(v.x), (int) Mathf.Ceil(v.y), 0);
+				case MathfExtensions.RoundingMethod.RoundDownIfNotInteger:
+					return new Vector3Int((int) v.x, (int) v.y, 0);
 				default:
 					throw new UnityException("The logic for handling the " + roundMethod.ToString() + " round method has not yet been implemented.");
 			}

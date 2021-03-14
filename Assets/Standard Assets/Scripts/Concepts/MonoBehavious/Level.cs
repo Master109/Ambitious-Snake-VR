@@ -5,6 +5,7 @@ using Extensions;
 using TMPro;
 #if UNITY_EDITOR
 using UnityEditor;
+using Unity.EditorCoroutines.Editor;
 #endif
 
 namespace AmbitiousSnake
@@ -41,70 +42,131 @@ namespace AmbitiousSnake
 		[MenuItem("Tools/Update Tiles")]
 		static void UpdateTiles ()
 		{
+			// EditorCoroutineUtility.StartCoroutineOwnerless(UpdateTilesRoutine ());
 			Tile[] tiles = FindObjectsOfType<Tile>();
 			for (int i = 0; i < tiles.Length; i ++)
 			{
 				Tile tile = tiles[i];
-				tile.connectedTo = new Tile[0];
-				tile.supportingTiles = new Tile[0];
-			}
-			for (int i = 0; i < tiles.Length; i ++)
-			{
-				Tile tile = tiles[i];
-				for (int i2 = 0; i2 < tiles.Length; i2 ++)
+				if (!tile.enabled)
 				{
-					Tile tile2 = tiles[i2];
-					if (tile != tile2)
+					tiles = tiles.RemoveAt(i);
+					i --;
+				}
+				else
+				{
+					tile.neighbors = new Tile[0];
+					tile.supportingTiles = new Tile[0];
+				}
+			}
+			List<Tile> tilesRemaining = new List<Tile>(tiles);
+			List<List<Tile>> connectedTileGroups = new List<List<Tile>>();
+			List<List<Tile>> supportingTileGroups = new List<List<Tile>>();
+			while (tilesRemaining.Count > 0)
+			{
+				Tile tile = tilesRemaining[0];
+				for (int i = 0; i < tiles.Length; i ++)
+				{
+					Tile tile2 = tiles[i];
+					if (tile != tile2 && Tile.AreNeighbors(tile, tile2))
 					{
-						bool tileIsConnectedToTile2 = tile.connectedTo.Contains(tile2);
-						bool tile2IsConnectedToTile = tile2.connectedTo.Contains(tile);
-						bool areNeighbors = Tile.AreNeighbors(tile, tile2);
-						if (tileIsConnectedToTile2 != tile2IsConnectedToTile)
+						if (!tile.neighbors.Contains(tile2))
+							tile.neighbors = tile.neighbors.Add(tile2);
+						if (!tile2.neighbors.Contains(tile))
+							tile2.neighbors = tile2.neighbors.Add(tile);
+						List<Tile> connectedTileGroup = new List<Tile>() { tile, tile2 };
+						for (int i2 = 0; i2 < connectedTileGroup.Count; i2 ++)
 						{
-							if (tileIsConnectedToTile2)
-								ConnectTile (tile, tile2, areNeighbors);
-							else
-								ConnectTile (tile2, tile, areNeighbors);
+							Tile tile3 = tiles[i2];
+							for (int i3 = 0; i3 < tiles.Length; i3 ++)
+							{
+								Tile tile4 = tiles[i3];
+								if (Tile.AreNeighbors(tile3, tile4))
+								{
+									if (!connectedTileGroup.Contains(tile4))
+										connectedTileGroup.Add(tile4);
+								}
+							}
 						}
-						else if (!tileIsConnectedToTile2 && areNeighbors)
-						{
-							ConnectTile (tile, tile2, true);
-							ConnectTile (tile2, tile, true);
-						}
+						connectedTileGroups.Add(connectedTileGroup);
 					}
+				}
+				tilesRemaining.RemoveAt(0);
+			}
+			for (int i = 0; i < connectedTileGroups.Count; i ++)
+			{
+				List<Tile> connectedTileGroup = connectedTileGroups[i];
+				for (int i2 = 0; i2 < connectedTileGroup.Count; i2 ++)
+				{
+					Tile tile = connectedTileGroup[i2];
+					tile.connectedTo = connectedTileGroup.ToArray().Remove(tile);
 				}
 			}
 		}
 
-		static void ConnectTile (Tile connectFrom, Tile connectTo, bool areNeighbors)
+		static IEnumerator UpdateTilesRoutine ()
 		{
-			if (areNeighbors)
-				connectFrom.neighbors = connectFrom.neighbors.Add(connectTo);
-			connectFrom.connectedTo = connectFrom.connectedTo.Add(connectTo);
-			if (connectTo.isSupportingTile)
-				connectFrom.supportingTiles = connectFrom.supportingTiles.Add(connectTo);
-			for (int i = 0; i < connectTo.connectedTo.Length; i ++)
+			print("Began");
+			Tile[] tiles = FindObjectsOfType<Tile>();
+			for (int i = 0; i < tiles.Length; i ++)
 			{
-				Tile tile = connectTo.connectedTo[i];
-				if (tile != connectFrom && !connectFrom.connectedTo.Contains(tile))
+				Tile tile = tiles[i];
+				if (!tile.enabled)
 				{
-					// connectFrom.connectedTo = connectFrom.connectedTo.Add(tile);
-					// if (tile.isSupportingTile)
-					// 	connectFrom.supportingTiles = connectFrom.supportingTiles.Add(tile);
-					ConnectTile (connectFrom, tile, Tile.AreNeighbors(connectFrom, tile));
+					tiles = tiles.RemoveAt(i);
+					i --;
+				}
+				else
+				{
+					tile.neighbors = new Tile[0];
+					tile.supportingTiles = new Tile[0];
 				}
 			}
-			for (int i = 0; i < connectFrom.connectedTo.Length; i ++)
+			List<Tile> tilesRemaining = new List<Tile>(tiles);
+			List<List<Tile>> connectedTileGroups = new List<List<Tile>>();
+			List<List<Tile>> supportingTileGroups = new List<List<Tile>>();
+			while (tilesRemaining.Count > 0)
 			{
-				Tile tile = connectFrom.connectedTo[i];
-				if (tile != connectTo && !connectTo.connectedTo.Contains(tile))
+				Tile tile = tilesRemaining[0];
+				for (int i = 0; i < tiles.Length; i ++)
 				{
-					// connectTo.connectedTo = connectTo.connectedTo.Add(tile);
-					// if (tile.isSupportingTile)
-					// 	connectTo.supportingTiles = connectTo.supportingTiles.Add(tile);
-					ConnectTile (connectTo, tile, Tile.AreNeighbors(connectTo, tile));
+					Tile tile2 = tiles[i];
+					if (tile != tile2 && Tile.AreNeighbors(tile, tile2))
+					{
+						if (!tile.neighbors.Contains(tile2))
+							tile.neighbors = tile.neighbors.Add(tile2);
+						if (!tile2.neighbors.Contains(tile))
+							tile2.neighbors = tile2.neighbors.Add(tile);
+						List<Tile> connectedTileGroup = new List<Tile>() { tile, tile2 };
+						for (int i2 = 0; i2 < connectedTileGroup.Count; i2 ++)
+						{
+							Tile tile3 = tiles[i2];
+							for (int i3 = 0; i3 < tiles.Length; i3 ++)
+							{
+								Tile tile4 = tiles[i3];
+								if (Tile.AreNeighbors(tile3, tile4))
+								{
+									if (!connectedTileGroup.Contains(tile4))
+										connectedTileGroup.Add(tile4);
+								}
+							}
+						}
+						connectedTileGroups.Add(connectedTileGroup);
+					}
+				}
+				tilesRemaining.RemoveAt(0);
+				yield return null;
+			}
+			for (int i = 0; i < connectedTileGroups.Count; i ++)
+			{
+				List<Tile> connectedTileGroup = connectedTileGroups[i];
+				for (int i2 = 0; i2 < connectedTileGroup.Count; i2 ++)
+				{
+					Tile tile = connectedTileGroup[i2];
+					tile.connectedTo = connectedTileGroup.ToArray().Remove(tile);
 				}
 			}
+			print("Done");
+			yield break;
 		}
 #endif
 	}

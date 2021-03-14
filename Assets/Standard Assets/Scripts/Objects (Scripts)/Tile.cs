@@ -14,6 +14,10 @@ namespace AmbitiousSnake
 		public bool isSupportingTile;
 		public Rigidbody rigid;
 
+		public virtual void OnEnable ()
+		{
+		}
+
 		public virtual void OnDestroy ()
 		{
 			if (_SceneManager.isLoading)
@@ -92,18 +96,41 @@ namespace AmbitiousSnake
 		public static bool AreNeighbors (Tile tile, Tile tile2)
 		{
 			// return tile.trs.GetBounds().Intersects(tile2.trs.GetBounds());
-			int sharedCorners = 0;
-			BoundsInt tileBounds = tile.trs.GetBounds().ToBoundsInt();
-			BoundsInt tile2Bounds = tile2.trs.GetBounds().ToBoundsInt();
-			foreach (Vector3Int point in tileBounds.allPositionsWithin)
+			Bounds tileBounds = tile.trs.GetBounds();
+			Bounds tile2Bounds = tile2.trs.GetBounds();
+			for (float x = tileBounds.min.x; x < tileBounds.max.x; x ++)
 			{
-				foreach (Vector3Int point2 in tile2Bounds.allPositionsWithin)
+				for (float y = tileBounds.min.y; y < tileBounds.max.y; y ++)
 				{
-					if ((point - point2).sqrMagnitude == 1)
-						return true;
+					for (float z = tileBounds.min.z; z < tileBounds.max.z; z ++)
+					{
+						for (float x2 = tile2Bounds.min.x; x2 < tile2Bounds.max.x; x2 ++)
+						{
+							for (float y2 = tile2Bounds.min.y; y2 < tile2Bounds.max.y; y2 ++)
+							{
+								for (float z2 = tile2Bounds.min.z; z2 < tile2Bounds.max.z; z2 ++)
+								{
+									if ((new Vector3(x, y, z) - new Vector3(x2, y2, z2)).sqrMagnitude == 1)
+										return true;
+								}
+							}
+						}
+					}
 				}
 			}
 			return false;
+			// BoundsInt tileBounds = tile.trs.GetBounds().ToBoundsInt();
+			// BoundsInt tile2Bounds = tile2.trs.GetBounds().ToBoundsInt();
+			// foreach (Vector3Int point in tileBounds.allPositionsWithin)
+			// {
+			// 	foreach (Vector3Int point2 in tile2Bounds.allPositionsWithin)
+			// 	{
+			// 		if ((point - point2).sqrMagnitude == 1)
+			// 			return true;
+			// 	}
+			// }
+			// return false;
+			return (tile.trs.position - tile2.trs.position).sqrMagnitude == 1;
 		}
 	}
 }
