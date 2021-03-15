@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using Extensions;
+using System;
 
 namespace AmbitiousSnake
 {
@@ -11,6 +12,7 @@ namespace AmbitiousSnake
 		public Tile[] neighbors = new Tile[0];
 		public Tile[] connectedTo = new Tile[0];
 		public Tile[] supportingTiles = new Tile[0];
+		public PathToSupport[] pathsToSupports = new PathToSupport[0];
 		public bool isSupportingTile;
 		public Rigidbody rigid;
 
@@ -81,11 +83,15 @@ namespace AmbitiousSnake
 					Tile unsupportedTile = unsupportedTileGroup[i2];
 					unsupportedTile.trs.SetParent(rigidTrs);
 					unsupportedTile.rigid = rigid;
-					BoundsInt unsupportedTileBounds = unsupportedTile.trs.GetBounds().ToBoundsInt();
+					Bounds unsupportedTileBounds = unsupportedTile.trs.GetBounds();
 					rigid.mass += unsupportedTileBounds.GetVolume();
-					foreach (Vector3 point in unsupportedTileBounds.allPositionsWithin)
+					for (float x = unsupportedTileBounds.min.x; x < unsupportedTileBounds.max.x; x ++)
 					{
-						worldCenterOfMass += point;
+						for (float y = unsupportedTileBounds.min.y; y < unsupportedTileBounds.max.y; y ++)
+						{
+							for (float z = unsupportedTileBounds.min.z; z < unsupportedTileBounds.max.z; z ++)
+								worldCenterOfMass += new Vector3(x, y, z) + Vector3.one / 2;
+						}
 					}
 				}
 				worldCenterOfMass /= rigid.mass;
@@ -130,7 +136,12 @@ namespace AmbitiousSnake
 			// 	}
 			// }
 			// return false;
-			return (tile.trs.position - tile2.trs.position).sqrMagnitude == 1;
+		}
+
+		[Serializable]
+		public struct PathToSupport
+		{
+			public Tile[] tiles;
 		}
 	}
 }

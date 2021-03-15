@@ -43,7 +43,7 @@ namespace AmbitiousSnake
 		static void UpdateTiles ()
 		{
 			// EditorCoroutineUtility.StartCoroutineOwnerless(UpdateTilesRoutine ());
-			Tile[] tiles = FindObjectsOfType<Tile>();
+			Tile[] tiles = SelectionExtensions.GetSelected<Tile>();
 			for (int i = 0; i < tiles.Length; i ++)
 			{
 				Tile tile = tiles[i];
@@ -53,10 +53,7 @@ namespace AmbitiousSnake
 					i --;
 				}
 				else
-				{
 					tile.neighbors = new Tile[0];
-					tile.supportingTiles = new Tile[0];
-				}
 			}
 			List<Tile> tilesRemaining = new List<Tile>(tiles);
 			List<List<Tile>> connectedTileGroups = new List<List<Tile>>();
@@ -74,6 +71,11 @@ namespace AmbitiousSnake
 						if (!tile2.neighbors.Contains(tile))
 							tile2.neighbors = tile2.neighbors.Add(tile);
 						List<Tile> connectedTileGroup = new List<Tile>() { tile, tile2 };
+						List<Tile> supportingTileGroup = new List<Tile>();
+						if (tile.isSupportingTile)
+							supportingTileGroup.Add(tile);
+						if (tile2.isSupportingTile)
+							supportingTileGroup.Add(tile2);
 						for (int i2 = 0; i2 < connectedTileGroup.Count; i2 ++)
 						{
 							Tile tile3 = tiles[i2];
@@ -83,11 +85,19 @@ namespace AmbitiousSnake
 								if (Tile.AreNeighbors(tile3, tile4))
 								{
 									if (!connectedTileGroup.Contains(tile4))
+									{
 										connectedTileGroup.Add(tile4);
+										if (tile4.isSupportingTile)
+										{
+											if (!connectedTileGroup.Contains(tile4))
+												supportingTileGroup.Add(tile4);
+										}
+									}
 								}
 							}
 						}
 						connectedTileGroups.Add(connectedTileGroup);
+						supportingTileGroups.Add(supportingTileGroup);
 					}
 				}
 				tilesRemaining.RemoveAt(0);
@@ -95,10 +105,12 @@ namespace AmbitiousSnake
 			for (int i = 0; i < connectedTileGroups.Count; i ++)
 			{
 				List<Tile> connectedTileGroup = connectedTileGroups[i];
+				List<Tile> supportingTileGroup = supportingTileGroups[i];
 				for (int i2 = 0; i2 < connectedTileGroup.Count; i2 ++)
 				{
 					Tile tile = connectedTileGroup[i2];
 					tile.connectedTo = connectedTileGroup.ToArray().Remove(tile);
+					tile.supportingTiles = supportingTileGroup.ToArray().Remove(tile);
 				}
 			}
 		}
@@ -106,7 +118,7 @@ namespace AmbitiousSnake
 		static IEnumerator UpdateTilesRoutine ()
 		{
 			print("Began");
-			Tile[] tiles = FindObjectsOfType<Tile>();
+			Tile[] tiles = SelectionExtensions.GetSelected<Tile>();
 			for (int i = 0; i < tiles.Length; i ++)
 			{
 				Tile tile = tiles[i];
@@ -148,6 +160,7 @@ namespace AmbitiousSnake
 									if (!connectedTileGroup.Contains(tile4))
 										connectedTileGroup.Add(tile4);
 								}
+								yield return null;
 							}
 						}
 						connectedTileGroups.Add(connectedTileGroup);

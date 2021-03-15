@@ -4,7 +4,7 @@ using UnityEngine;
 using Extensions;
 using AmbitiousSnake;
 
-public class LookAtVRCameraRig : UpdateWhileEnabled, IUpdatable
+public class LookAtVRCameraRig : UpdateWhileEnabled
 {
 	public Transform trs;
 	
