@@ -10,9 +10,9 @@ namespace AmbitiousSnake
 	{
 		public Transform trs;
 		public Tile[] neighbors = new Tile[0];
-		public Tile[] connectedTo = new Tile[0];
 		public Tile[] supportingTiles = new Tile[0];
-		public PathToSupport[] pathsToSupports = new PathToSupport[0];
+		public int tileGraphIndex;
+		public int tileNodeIndex;
 		public bool isSupportingTile;
 		public Rigidbody rigid;
 
@@ -27,76 +27,59 @@ namespace AmbitiousSnake
 			for (int i = 0; i < neighbors.Length; i ++)
 			{
 				Tile tile = neighbors[i];
-				if (tile == null)
-					tile.neighbors = tile.neighbors.Remove(this);
+				tile.neighbors = tile.neighbors.Remove(this);
 			}
-			List<List<Tile>> unsupportedTileGroups = new List<List<Tile>>();
-			for (int i = 0; i < connectedTo.Length; i ++)
+			Graph<Tile> tileGraph = Level.instance.tileGraphs[tileGraphIndex];
+			tileGraph.RemoveNode (tileGraph.nodes[tileNodeIndex], true);
+			for (int i = tileNodeIndex; i < tileGraph.nodes.Count; i ++)
+				tileGraph.nodes[i].value.tileNodeIndex ++;
+			Level.instance.tileGraphs[tileGraphIndex] = tileGraph;
+			for (int i = 0; i < neighbors.Length; i ++)
 			{
-				Tile tile = connectedTo[i];
-				if (tile != null)
+				Tile neighbor = neighbors[i];
+				List<Graph<Tile>.Node> connectedTileNodes = tileGraph.GetConnectedGroup(tileGraph.nodes[neighbor.tileNodeIndex]);
+				Tile[] connectedTiles = new Tile[connectedTileNodes.Count];
+				for (int i2 = 0; i2 < connectedTileNodes.Count; i2 ++)
+					connectedTiles[i] = connectedTileNodes[i2].value;
+				bool shouldSplit = true;
+				for (int i2 = 0; i2 < neighbor.supportingTiles.Length; i2 ++)
 				{
-					tile.connectedTo = tile.connectedTo.Remove(this);
-					if (isSupportingTile)
+					Tile supportingTile = neighbor.supportingTiles[i2];
+					if (connectedTiles.Contains(supportingTile))
 					{
-						tile.supportingTiles = tile.supportingTiles.Remove(this);
-						if (tile.supportingTiles.Length == 0 && tile.rigid == null)
-						{
-							bool isInUnsupportedTileGroup = false;
-							for (int i2 = 0; i2 < unsupportedTileGroups.Count; i2 ++)
-							{
-								List<Tile> unsupportedTileGroup = unsupportedTileGroups[i2];
-								for (int i3 = 0; i3 < unsupportedTileGroup.Count; i3 ++)
-								{
-									Tile unsupportedTile = unsupportedTileGroup[i3];
-									for (int i4 = 0; i4 < unsupportedTile.connectedTo.Length; i4 ++)
-									{
-										Tile tile2 = unsupportedTile.connectedTo[i4];
-										if (tile == tile2)
-										{
-											unsupportedTileGroups[i2].Add(tile);
-											isInUnsupportedTileGroup = true;
-											break;
-										}
-									}
-									if (isInUnsupportedTileGroup)
-										break;
-								}
-								if (isInUnsupportedTileGroup)
-									break;
-							}
-							if (!isInUnsupportedTileGroup)
-								unsupportedTileGroups.Add(new List<Tile>() { tile });
-						}
+						shouldSplit = false;
+						break;
+					}
+				}
+				if (shouldSplit)
+					SplitTiles (connectedTiles);
+			}
+		}
+
+		public static void SplitTiles (Tile[] tiles)
+		{
+			Rigidbody rigid = new GameObject().AddComponent<Rigidbody>();
+			rigid.mass = 0;
+			Transform rigidTrs = rigid.GetComponent<Transform>();
+			Vector3 worldCenterOfMass = new Vector3();
+			for (int i = 0; i < tiles.Length; i ++)
+			{
+				Tile tile = tiles[i];
+				tile.trs.SetParent(rigidTrs);
+				tile.rigid = rigid;
+				Bounds tileBounds = tile.trs.GetBounds();
+				rigid.mass += tileBounds.GetVolume();
+				for (float x = tileBounds.min.x; x < tileBounds.max.x; x ++)
+				{
+					for (float y = tileBounds.min.y; y < tileBounds.max.y; y ++)
+					{
+						for (float z = tileBounds.min.z; z < tileBounds.max.z; z ++)
+							worldCenterOfMass += new Vector3(x, y, z) + Vector3.one / 2;
 					}
 				}
 			}
-			for (int i = 0; i < unsupportedTileGroups.Count; i ++)
-			{
-				List<Tile> unsupportedTileGroup = unsupportedTileGroups[i];
-				rigid = new GameObject().AddComponent<Rigidbody>();
-				rigid.mass = 0;
-				Transform rigidTrs = rigid.GetComponent<Transform>();
-				Vector3 worldCenterOfMass = new Vector3();
-				for (int i2 = 0; i2 < unsupportedTileGroup.Count; i2 ++)
-				{
-					Tile unsupportedTile = unsupportedTileGroup[i2];
-					unsupportedTile.trs.SetParent(rigidTrs);
-					unsupportedTile.rigid = rigid;
-					Bounds unsupportedTileBounds = unsupportedTile.trs.GetBounds();
-					rigid.mass += unsupportedTileBounds.GetVolume();
-					for (float x = unsupportedTileBounds.min.x; x < unsupportedTileBounds.max.x; x ++)
-					{
-						for (float y = unsupportedTileBounds.min.y; y < unsupportedTileBounds.max.y; y ++)
-						{
-							for (float z = unsupportedTileBounds.min.z; z < unsupportedTileBounds.max.z; z ++)
-								worldCenterOfMass += new Vector3(x, y, z) + Vector3.one / 2;
-						}
-					}
-				}
-				worldCenterOfMass /= rigid.mass;
-				rigid.centerOfMass = rigidTrs.InverseTransformPoint(worldCenterOfMass);
-			}
+			worldCenterOfMass /= rigid.mass;
+			rigid.centerOfMass = rigidTrs.InverseTransformPoint(worldCenterOfMass);
 		}
 
 		public static bool AreNeighbors (Tile tile, Tile tile2)
@@ -138,10 +121,27 @@ namespace AmbitiousSnake
 			// return false;
 		}
 
-		[Serializable]
-		public struct PathToSupport
+		public static Tile[] GetConnectedGroup (Tile tile)
 		{
-			public Tile[] tiles;
+			List<Tile> output = new List<Tile>();
+			List<Tile> checkedTiles = new List<Tile>() { tile };
+			List<Tile> remainingTiles = new List<Tile>() { tile };
+			while (remainingTiles.Count > 0)
+			{
+				Tile tile2 = remainingTiles[0];
+				output.Add(tile2);
+				for (int i = 0; i < tile2.neighbors.Length; i ++)
+				{
+					Tile connectedTile = tile2.neighbors[i];
+					if (!checkedTiles.Contains(connectedTile))
+					{
+						checkedTiles.Add(connectedTile);
+						remainingTiles.Add(connectedTile);
+					}
+				}
+				remainingTiles.RemoveAt(0);
+			}
+			return output.ToArray();
 		}
 	}
 }

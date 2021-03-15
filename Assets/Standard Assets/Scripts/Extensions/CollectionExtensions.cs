@@ -221,5 +221,42 @@ namespace Extensions
 		{
 			return list.Contains(element);
 		}
+
+		public static void RotateRight (IList list, int count)
+		{
+			object temp = list[count - 1];
+			list.RemoveAt(count - 1);
+			list.Insert(0, temp);
+		}
+
+		public static IEnumerable<IList> GetPermutations (this IList list, int count)
+		{
+			if (count == 1)
+				yield return list;
+			else
+			{
+				for (int i = 0; i < count; i ++)
+				{
+					foreach (IList permutation in GetPermutations(list, count - 1))
+						yield return permutation;
+					RotateRight (list, count);
+				}
+			}
+		}
+
+		public static IEnumerable<IList> GetPermutations (this IList list)
+		{
+			return list.GetPermutations(list.Count);
+		}
+
+		public static IEnumerable<IList> GetPermutations<T> (this T[] array, int count)
+		{
+			return array.ToList().GetPermutations(count);
+		}
+
+		public static IEnumerable<IList> GetPermutations<T> (this T[] array)
+		{
+			return array.GetPermutations(array.Length);
+		}
 	}
 }
