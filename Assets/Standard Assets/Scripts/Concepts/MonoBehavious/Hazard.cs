@@ -4,23 +4,26 @@ using UnityEngine;
 
 namespace AmbitiousSnake
 {
-	public class Hazard : Spawnable
+	public class Hazard : Spawnable, ICollisionEnterHandler
 	{
+		public Collider collider;
+		public Collider Collider
+		{
+			get
+			{
+				return collider;
+			}
+		}
 		public float damage;
 		public bool destroyOnContact;
-		[HideInInspector]
-		public bool dead;
 		
 		public virtual void OnCollisionEnter (Collision coll)
 		{
-			if (dead)
-				return;
 			IDestructable destructable = coll.rigidbody.GetComponent<IDestructable>();
 			if (destructable != null)
 				ApplyDamage (destructable, damage);
 			if (destroyOnContact)
 			{
-				dead = true;
 				if (prefabIndex == -1)
 					Destroy(gameObject);
 				else

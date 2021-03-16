@@ -15,6 +15,7 @@ namespace AmbitiousSnake
 		public static bool paused;
 		public static IUpdatable[] updatables = new IUpdatable[0];
 		public static int framesSinceLevelLoaded;
+		public static bool isQuittingGame;
 		[SaveAndLoadValue]
 		static string enabledGosString = "";
 		[SaveAndLoadValue]
@@ -42,6 +43,7 @@ namespace AmbitiousSnake
 				uniqueId = value;
 			}
 		}
+		public TileParent tileParentPrefab;
 
 		public override void Awake ()
 		{
@@ -88,9 +90,10 @@ namespace AmbitiousSnake
 			print(obj);
 		}
 
-		// void OnApplicationQuit ()
-		// {
-		// 	PlayerPrefs.DeleteAll();
-		// }
+		void OnApplicationQuit ()
+		{
+			// PlayerPrefs.DeleteAll();
+			isQuittingGame = true;
+		}
 	}
 }

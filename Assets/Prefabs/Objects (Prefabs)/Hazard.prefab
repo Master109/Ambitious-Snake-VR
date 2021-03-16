@@ -111,9 +111,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   trs: {fileID: 1097746140504088053}
   prefabIndex: 0
+  collider: {fileID: 5628221973568042662}
   damage: 0
   destroyOnContact: 0
-  dead: 0
 --- !u!114 &7017179896687917580
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -127,7 +127,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   trs: {fileID: 1097746140504088053}
-  connectedTo: []
+  neighbors: []
   supportingTiles: []
   isSupportingTile: 0
-  rigid: {fileID: 0}
+  tileParent: {fileID: 0}

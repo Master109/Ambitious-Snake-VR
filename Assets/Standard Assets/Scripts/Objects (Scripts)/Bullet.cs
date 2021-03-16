@@ -12,6 +12,8 @@ namespace AmbitiousSnake
 		public Transform shooter;
 		public ObjectPool.RangedDespawn rangedDespawn;
 		public new Collider collider;
+		[HideInInspector]
+		public bool dead;
 		
 		public virtual void OnEnable ()
 		{
@@ -40,11 +42,19 @@ namespace AmbitiousSnake
 		public virtual void OnDisable ()
 		{
 			StopAllCoroutines();
+			dead = true;
 		}
 
 		public virtual void OnDestroy ()
 		{
 			ObjectPool.Instance.CancelRangedDespawn (rangedDespawn);
+			dead = true;
+		}
+
+		public override void OnCollisionEnter (Collision coll)
+		{
+			if (!dead)
+				base.OnCollisionEnter (coll);
 		}
 	}
 }

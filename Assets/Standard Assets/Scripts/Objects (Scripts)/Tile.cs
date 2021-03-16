@@ -2,7 +2,6 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using Extensions;
-using System;
 
 namespace AmbitiousSnake
 {
@@ -11,10 +10,8 @@ namespace AmbitiousSnake
 		public Transform trs;
 		public Tile[] neighbors = new Tile[0];
 		public Tile[] supportingTiles = new Tile[0];
-		public int tileGraphIndex;
-		public int tileNodeIndex;
 		public bool isSupportingTile;
-		public Rigidbody rigid;
+		public TileParent tileParent;
 
 		public virtual void OnEnable ()
 		{
@@ -22,25 +19,34 @@ namespace AmbitiousSnake
 
 		public virtual void OnDestroy ()
 		{
-			if (_SceneManager.isLoading)
+			if (_SceneManager.isLoading || GameManager.isQuittingGame)
 				return;
 			for (int i = 0; i < neighbors.Length; i ++)
 			{
 				Tile tile = neighbors[i];
 				tile.neighbors = tile.neighbors.Remove(this);
 			}
-			Graph<Tile> tileGraph = Level.instance.tileGraphs[tileGraphIndex];
-			tileGraph.RemoveNode (tileGraph.nodes[tileNodeIndex], true);
-			for (int i = tileNodeIndex; i < tileGraph.nodes.Count; i ++)
-				tileGraph.nodes[i].value.tileNodeIndex ++;
-			Level.instance.tileGraphs[tileGraphIndex] = tileGraph;
+			if (tileParent != null)
+			{
+				Vector3 worldCenterOfMass = tileParent.rigid.worldCenterOfMass;
+				worldCenterOfMass *= tileParent.rigid.mass;
+				Bounds bounds = trs.GetBounds();
+				for (float x = bounds.min.x; x < bounds.max.x; x ++)
+				{
+					for (float y = bounds.min.y; y < bounds.max.y; y ++)
+					{
+						for (float z = bounds.min.z; z < bounds.max.z; z ++)
+							worldCenterOfMass -= new Vector3(x, y, z) + Vector3.one / 2;
+					}
+				}
+				tileParent.rigid.mass -= bounds.GetVolume();
+				worldCenterOfMass /= tileParent.rigid.mass;
+				tileParent.rigid.centerOfMass = tileParent.trs.InverseTransformPoint(worldCenterOfMass);
+			}
 			for (int i = 0; i < neighbors.Length; i ++)
 			{
 				Tile neighbor = neighbors[i];
-				List<Graph<Tile>.Node> connectedTileNodes = tileGraph.GetConnectedGroup(tileGraph.nodes[neighbor.tileNodeIndex]);
-				Tile[] connectedTiles = new Tile[connectedTileNodes.Count];
-				for (int i2 = 0; i2 < connectedTileNodes.Count; i2 ++)
-					connectedTiles[i] = connectedTileNodes[i2].value;
+				Tile[] connectedTiles = Tile.GetConnectedGroup(neighbor);
 				bool shouldSplit = true;
 				for (int i2 = 0; i2 < neighbor.supportingTiles.Length; i2 ++)
 				{
@@ -58,17 +64,18 @@ namespace AmbitiousSnake
 
 		public static void SplitTiles (Tile[] tiles)
 		{
-			Rigidbody rigid = new GameObject().AddComponent<Rigidbody>();
-			rigid.mass = 0;
-			Transform rigidTrs = rigid.GetComponent<Transform>();
+			TileParent tileParent = Instantiate(GameManager.instance.tileParentPrefab);
+			tileParent.rigid.mass = 0;
 			Vector3 worldCenterOfMass = new Vector3();
 			for (int i = 0; i < tiles.Length; i ++)
 			{
 				Tile tile = tiles[i];
-				tile.trs.SetParent(rigidTrs);
-				tile.rigid = rigid;
+				tile.trs.SetParent(tileParent.trs);
+				if (tile.tileParent != null && tile.tileParent.trs.childCount == 0)
+					Destroy(tile.tileParent.gameObject);
+				tile.tileParent = tileParent;
 				Bounds tileBounds = tile.trs.GetBounds();
-				rigid.mass += tileBounds.GetVolume();
+				tileParent.rigid.mass += tileBounds.GetVolume();
 				for (float x = tileBounds.min.x; x < tileBounds.max.x; x ++)
 				{
 					for (float y = tileBounds.min.y; y < tileBounds.max.y; y ++)
@@ -78,8 +85,9 @@ namespace AmbitiousSnake
 					}
 				}
 			}
-			worldCenterOfMass /= rigid.mass;
-			rigid.centerOfMass = rigidTrs.InverseTransformPoint(worldCenterOfMass);
+			worldCenterOfMass /= tileParent.rigid.mass;
+			tileParent.rigid.centerOfMass = tileParent.trs.InverseTransformPoint(worldCenterOfMass);
+			tileParent.collisionEnterHandlers = tileParent.GetComponentsInChildren<ICollisionEnterHandler>();
 		}
 
 		public static bool AreNeighbors (Tile tile, Tile tile2)

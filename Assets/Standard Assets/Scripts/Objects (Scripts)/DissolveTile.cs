@@ -1,19 +1,25 @@
 using UnityEngine;
-using System;
 using Extensions;
 using System.Collections;
 using System.Collections.Generic;
 
 namespace AmbitiousSnake
 {
-	//[ExecuteInEditMode]
-	public class DissolveTile : Tile
+	public class DissolveTile : Tile, ICollisionEnterHandler
 	{
+		public Collider collider;
+		public Collider Collider
+		{
+			get
+			{
+				return collider;
+			}
+		}
 		public MeshRenderer meshRenderer;
 		public float dissolveDuration;
 		bool isDissolving;
 
-		void OnCollisionEnter (Collision coll)
+		public void OnCollisionEnter (Collision coll)
 		{
 			if (isDissolving)
 				return;

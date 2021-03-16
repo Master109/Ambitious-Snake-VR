@@ -49,6 +49,7 @@ MonoBehaviour:
   persistant: 1
   registeredGos: []
   uniqueId: 0
+  tileParentPrefab: {fileID: 7443350915100600320, guid: dee869748e5143aebbace3fb8a4b6289, type: 3}
 --- !u!114 &2810666221001315617
 MonoBehaviour:
   m_ObjectHideFlags: 0

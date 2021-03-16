@@ -109,7 +109,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   trs: {fileID: 1097746140504088053}
-  connectedTo: []
+  neighbors: []
   supportingTiles: []
   isSupportingTile: 0
-  rigid: {fileID: 0}
+  tileParent: {fileID: 0}
+  collider: {fileID: 5628221973568042662}
