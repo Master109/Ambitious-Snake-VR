@@ -11,6 +11,8 @@ namespace AmbitiousSnake
 
 		public override void Do ()
 		{
+			if (this == null)
+				return;
 			if (trs == null)
 				trs = GetComponent<Transform>();
 			if (replaceWithTilePrefab != null)
@@ -20,7 +22,7 @@ namespace AmbitiousSnake
 				tile.trs.rotation = trs.rotation;
 				tile.trs.SetParent(trs.parent);
 				tile.trs.localScale = trs.localScale;
-				Destroy(gameObject);
+				DestroyImmediate(gameObject);
 			}
 		}
 	}

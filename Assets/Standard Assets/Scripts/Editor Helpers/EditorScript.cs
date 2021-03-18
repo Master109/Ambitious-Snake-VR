@@ -18,30 +18,30 @@ namespace AmbitiousSnake
 		public virtual void OnEnable ()
 		{
 			if (Application.isPlaying)
-				EditorApplication.update -= DoEditorUpdate;
+				EditorApplication.update -= Do;
 		}
 
 		public virtual void OnDisable ()
 		{
-			EditorApplication.update -= DoEditorUpdate;
+			EditorApplication.update -= Do;
+		}
+
+		public virtual void OnDestroy ()
+		{
+			EditorApplication.update -= Do;
 		}
 
 		public virtual void OnValidate ()
 		{
 			if (doRepeatedly)
-				EditorApplication.update += DoEditorUpdate;
+				EditorApplication.update += Do;
 			else
-				EditorApplication.update -= DoEditorUpdate;
+				EditorApplication.update -= Do;
 			if (!doOnce)
 				return;
 			doOnce = false;
 			Do ();
 		}
-
-		public virtual void DoEditorUpdate ()
-		{
-		}
-
 		public virtual void Do ()
 		{
 		}
@@ -175,7 +175,7 @@ namespace AmbitiousSnake
 #else
 using UnityEngine;
 
-namespace BMH
+namespace AmbitiousSnake
 {
 	public class EditorScript : MonoBehaviour
 	{

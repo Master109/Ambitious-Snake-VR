@@ -14,6 +14,7 @@ namespace AmbitiousSnake
 		public new Collider collider;
 		[HideInInspector]
 		public bool dead;
+		public bool destroyOnContact;
 		
 		public virtual void OnEnable ()
 		{
@@ -54,7 +55,16 @@ namespace AmbitiousSnake
 		public override void OnCollisionEnter (Collision coll)
 		{
 			if (!dead)
+			{
 				base.OnCollisionEnter (coll);
+				if (destroyOnContact)
+				{
+					if (prefabIndex == -1)
+						Destroy(gameObject);
+					else
+						ObjectPool.Instance.Despawn (prefabIndex, gameObject, trs);
+				}
+			}
 		}
 	}
 }

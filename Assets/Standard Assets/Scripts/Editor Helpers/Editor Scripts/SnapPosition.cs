@@ -2,28 +2,25 @@
 using UnityEngine;
 using System.Collections;
 using Extensions;
+using AmbitiousSnake;
 
 [ExecuteInEditMode]
-public class SnapPosition : MonoBehaviour
+public class SnapPosition : EditorScript
 {
 	public bool useLocalPosition;
 	public Transform trs;
 	Vector3 newPos;
 	public Vector3 snapTo;
 	public Vector3 offset;
-	
-	public virtual void OnEnable ()
+
+	public override void OnEnable ()
 	{
-		if (Application.isPlaying)
-		{
-			Destroy(this);
-			return;
-		}
-		if (trs == null) 
+		if (trs == null)
 			trs = GetComponent<Transform>();
+		base.OnEnable ();
 	}
 	
-	public virtual void Update ()
+	public override void Do ()
 	{
 		if (!useLocalPosition)
 		{

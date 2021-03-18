@@ -52,6 +52,11 @@ namespace AmbitiousSnake
 		public float pieceRadius;
 		public SnakePiece piecePrefab;
 		public float changeLengthRate;
+		public delegate Vector3 OnMove(Vector3 move);
+		public event OnMove onMove;
+		public delegate float OnChangeLength(float amount);
+		public event OnChangeLength onChangeLength;
+		public float lengthTraveled;
 		public SnakePiece HeadPiece
 		{
 			get
@@ -124,6 +129,8 @@ namespace AmbitiousSnake
 			move = VRCameraRig.instance.eyesTrs.rotation * InputManager.MoveInput;
 			if (move.sqrMagnitude == 0)
 				return;
+			if (onMove != null)
+				move = onMove(move);
 			RaycastHit hit;
 			float totalMoveAmount = moveSpeed * Time.deltaTime;
 			Vector3 position;
@@ -152,6 +159,8 @@ namespace AmbitiousSnake
 		{
 			SnakePiece headPiece = ObjectPool.Instance.SpawnComponent<SnakePiece>(piecePrefab.prefabIndex, position, piecePrefab.trs.rotation, trs);
 			headPiece.distanceToPreviousPiece = distanceToPreviousPiece;
+			lengthTraveled += distanceToPreviousPiece;
+			headPiece.lengthTraveledAtSpawn = lengthTraveled;
 			pieces.Add(headPiece);
 			currentLength += distanceToPreviousPiece;
 			Vector3 worldCenterOfMass = rigid.worldCenterOfMass;
@@ -179,6 +188,8 @@ namespace AmbitiousSnake
 		{
 			float lengthChange = length.value - newLength;
 			lengthChange -= newLength - currentLength;
+			if (lengthChange != 0 && onChangeLength != null)
+				lengthChange = onChangeLength(lengthChange);
 			length.SetValue (newLength);
 			while (lengthChange > 0)
 			{

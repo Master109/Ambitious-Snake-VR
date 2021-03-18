@@ -2,21 +2,21 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using AmbitiousSnake;
 
 [ExecuteInEditMode]
-public class SetMeshPivot : MonoBehaviour
+public class SetMeshPivot : EditorScript
 {
-	public bool update;
 	public Transform trs;
 	public MeshFilter[] meshFilters;
 	
-	public virtual void Update ()
+	public override void Do ()
 	{
-		if (!update)
-			return;
-		update = false;
-		foreach (MeshFilter meshFilter in meshFilters)
+		for (int i = 0; i < meshFilters.Length; i ++)
+		{
+			MeshFilter meshFilter = meshFilters[i];
 			meshFilter.GetComponent<Transform>().position += meshFilter.GetComponent<Transform>().rotation * (trs.position - meshFilter.sharedMesh.bounds.center);
+		}
 	}
 }
 #endif

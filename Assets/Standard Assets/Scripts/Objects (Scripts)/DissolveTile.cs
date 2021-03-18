@@ -29,6 +29,7 @@ namespace AmbitiousSnake
 
 		IEnumerator DissolveRoutine ()
 		{
+			meshRenderer.material.ChangeMaterialTransparency (true);
 			do
 			{
 				yield return new WaitForEndOfFrame();
