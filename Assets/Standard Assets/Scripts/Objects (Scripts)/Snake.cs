@@ -216,6 +216,11 @@ namespace AmbitiousSnake
 					break;
 				}
 			}
+			for (int i = 0; i < pieces.Count; i ++)
+			{
+				SnakePiece piece = pieces[i];
+				piece.meshRenderer.material.SetFloat("value", (float) (i + 1) / pieces.Count);
+			}
 		}
 
 		void OnDisable ()
