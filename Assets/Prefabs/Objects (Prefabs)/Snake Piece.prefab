@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 8012893104815861631}
   - component: {fileID: 2551292470738008868}
   m_Layer: 6
-  m_Name: Snake Part
+  m_Name: Snake Piece
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -111,4 +111,5 @@ MonoBehaviour:
   trs: {fileID: 8012893104815861624}
   prefabIndex: 0
   distanceToPreviousPiece: 0
+  lengthTraveledAtSpawn: 0
   meshRenderer: {fileID: 8012893104815861630}
