@@ -9,5 +9,6 @@ namespace AmbitiousSnake
         public float distanceToPreviousPiece;
 		public float lengthTraveledAtSpawn;
 		public MeshRenderer meshRenderer;
+		public const float RADIUS = 1;
 	}
 }

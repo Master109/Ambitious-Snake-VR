@@ -1,43 +1,41 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Extensions;
 
 namespace AmbitiousSnake
 {
 	public class WindTile : MonoBehaviour
 	{
-		public Plane pushStartPlane;
 		public Transform pushDirectionTrs;
-		public float forceAmount;
+		public LayerMask whatIPush;
+		public float forceAmountPerHit;
+		[Range(2, 20)]
+		public int raycastsPerUnit;
 
 		void OnTriggerStay (Collider other)
 		{
 			Rigidbody rigid = other.GetComponentInParent<Rigidbody>();
 			if (rigid != null)
-				rigid.AddForce(pushDirectionTrs.forward * forceAmount * GetAffectedArea(other), ForceMode.Impulse);
+				rigid.AddForce(pushDirectionTrs.forward * GetForce(rigid), ForceMode.Impulse);
 		}
 
-		float GetAffectedArea (Collider collider)
+		float GetForce (Rigidbody rigid)
 		{
-			SphereCollider sphereCollider = collider as SphereCollider;
-			if (sphereCollider != null)
+			float output = 0;
+			Bounds bounds = pushDirectionTrs.GetBounds();
+			bounds.center = Vector3.zero;
+			for (float x = bounds.min.x; x <= bounds.max.x; x += 1f / raycastsPerUnit)
 			{
-				Vector3 sphereCastStart = pushStartPlane.ClosestPointOnPlane(sphereCollider.bounds.center);
-				float sphereCastDistance = 0;
-				if (pushStartPlane.GetSide(sphereCollider.bounds.center))
-					sphereCastDistance = Vector3.Distance(sphereCastStart, sphereCollider.bounds.center);
-				RaycastHit[] hits = Physics.SphereCastAll(sphereCastStart, sphereCollider.bounds.extents.x, pushDirectionTrs.forward, sphereCastDistance);
-				for (int i = 0; i < hits.Length; i ++)
+				for (float y = bounds.min.y; y <= bounds.max.y; y += 1f / raycastsPerUnit)
 				{
-					RaycastHit hit = hits[i];
-					
+					RaycastHit hit;
+					Vector3 raycastStart = pushDirectionTrs.TransformPoint(new Vector3(x, y));
+					if (Physics.Raycast(raycastStart, pushDirectionTrs.forward, out hit, pushDirectionTrs.lossyScale.z, whatIPush) && hit.rigidbody == rigid)
+						output += forceAmountPerHit;
 				}
-				return 0;
 			}
-			else
-			{
-				return 0;
-			}
+			return output;
 		}
 	}
 }

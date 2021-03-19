@@ -181,10 +181,14 @@ namespace AmbitiousSnake
 				// output = Snake.Instance.followTrs.position - Snake.instance.HeadPosition;
 				output = Snake.Instance.followTrs.forward;
 #else
+#if UNITY_STANDALONE
+				output = Snake.Instance.trs.forward;
+#else
 				if (LeftMoveInput)
 					output = LeftHandRotation * Vector3.forward;
 				if (RightMoveInput)
 					output += RightHandRotation * Vector3.forward;
+#endif
 #endif
 				return Vector3.ClampMagnitude(output, 1);
 			}
@@ -207,7 +211,7 @@ namespace AmbitiousSnake
 				if (RightTouchController != null)
 					// output -= RightTouchController.gripPressed.isPressed.GetHashCode();
 					output += RightTouchController.thumbstick.ReadValue().y;
-#if UNITY_EDITOR
+#if UNITY_EDITOR || UNITY_STANDALONE
 				output = Mouse.current.leftButton.isPressed.GetHashCode() - Mouse.current.rightButton.isPressed.GetHashCode();
 #endif
 				output = Mathf.Clamp(output, -1, 1);

@@ -49,7 +49,6 @@ namespace AmbitiousSnake
 		public LayerMask whatICrashInto;
 		public ClampedFloat length;
 		public float currentLength;
-		public float pieceRadius;
 		public SnakePiece piecePrefab;
 		public float changeLengthRate;
 		public delegate Vector3 OnMove(Vector3 move);
@@ -135,10 +134,10 @@ namespace AmbitiousSnake
 			float totalMoveAmount = moveSpeed * Time.deltaTime;
 			Vector3 position;
 			Vector3 headPosition = HeadPosition;
-			if (Physics.Raycast(headPosition, move, out hit, totalMoveAmount + pieceRadius, whatICrashInto, QueryTriggerInteraction.Ignore))
+			if (Physics.Raycast(headPosition, move, out hit, totalMoveAmount + SnakePiece.RADIUS, whatICrashInto, QueryTriggerInteraction.Ignore))
 			{
-				position = hit.point + (headPosition - hit.point).normalized * pieceRadius;
-				totalMoveAmount = Mathf.Max(hit.distance - pieceRadius, 0);
+				position = hit.point + (headPosition - hit.point).normalized * SnakePiece.RADIUS;
+				totalMoveAmount = Mathf.Max(hit.distance - SnakePiece.RADIUS, 0);
 			}
 			else
 				position = headPosition + (move * totalMoveAmount);

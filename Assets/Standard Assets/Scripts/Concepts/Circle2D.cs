@@ -1,23 +1,26 @@
 using System;
 using UnityEngine;
 using Extensions;
+using System.Collections.Generic;
+// using System.Drawing;
+// using System.Drawing.Drawing2D;
 
 [Serializable]
 public class Circle2D
 {
-    public Vector2 center;
-    public float radius;
-    public float Diameter
-    {
-        get
-        {
-            return radius * 2;
-        }
-        set
-        {
-            radius = value / 2;
-        }
-    }
+	public Vector2 center;
+	public float radius;
+	public float Diameter
+	{
+		get
+		{
+			return radius * 2;
+		}
+		set
+		{
+			radius = value / 2;
+		}
+	}
 	public float Circumference
 	{
 		get
@@ -55,7 +58,7 @@ public class Circle2D
 		this.center = center;
 	}
 
-	public virtual Vector2[] GetPointsAlongOutside (float addToAngle, float startAngle = 0)
+	public Vector2[] GetPointsAlongOutside (float addToAngle, float startAngle = 0)
 	{
 		Vector2[] output = new Vector2[0];
 		float currentAngle = startAngle;
@@ -67,7 +70,7 @@ public class Circle2D
 		return output;
 	}
 
-	public virtual Vector2 GetPointAtAngle (float angle)
+	public Vector2 GetPointAtAngle (float angle)
 	{
 		return center + VectorExtensions.FromFacingAngle(angle) * radius;
 	}
@@ -90,4 +93,41 @@ public class Circle2D
 		}
 		return false;
 	}
+	
+	// public static Region GetIntersections (params Circle2D[] circles)
+	// {
+	// 	if (circles.Length == 0)
+	// 		return null;
+	// 	Region output = new Region();
+	// 	for (int i = 0; i < circles.Length; i ++)
+	// 	{
+	// 		Circle2D circle = circles[i];
+	// 		GraphicsPath circlePath = new GraphicsPath();
+	// 		circlePath.AddEllipse(circle.center.x - circle.radius, circle.center.y - circle.radius, circle.radius * 2, circle.radius * 2);
+	// 		output.Intersect(circlePath);
+	// 	}
+	// 	return output;
+	// }
+
+	// public static float GetIntersectionsArea (params Circle2D[] circles)
+	// {
+	// 	float output = 0;
+	// 	RectangleF[] rectangles = GetIntersections(circles).GetRegionScans(new Matrix());
+	// 	for (int i = 0; i < rectangles.Length; i ++)
+	// 	{
+	// 		RectangleF rectangle = rectangles[i];
+	// 		output += rectangle.Width * rectangle.Height;
+	// 	}
+	// 	return output;
+	// }
+
+	// public Region ToRegion ()
+	// {
+	// 	GraphicsPath graphicsPath = new GraphicsPath();
+	// 	graphicsPath.AddEllipse(center.x - radius, center.y - radius, radius * 2, radius * 2);
+	// 	graphicsPath.Dispose();
+	// 	Region region = new Region(graphicsPath);
+	// 	region.Dispose();
+	// 	return region;
+	// }
 }

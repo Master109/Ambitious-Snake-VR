@@ -131,7 +131,6 @@ PlayerSettings:
   preloadedAssets:
   - {fileID: 11400000, guid: 8566bffd07d8279fb8082fda6303b766, type: 2}
   - {fileID: 11400000, guid: 0c76d8203d205c0a48002771e8550863, type: 2}
-  - {fileID: -3577337339595048784, guid: 27230e9527e8e64cfa1d6e5728a41562, type: 2}
   metroInputSource: 0
   wsaTransparentSwapchain: 0
   m_HolographicPauseOnTrackingLoss: 1
@@ -677,7 +676,9 @@ PlayerSettings:
   webGLLinkerTarget: 1
   webGLThreadsSupport: 0
   webGLDecompressionFallback: 0
-  scriptingDefineSymbols: {}
+  scriptingDefineSymbols:
+    1: G3_USING_UNITY
+    7: EPPZ_UTILS;EPPZ_LINES;EPPZ_GEOMETRY
   additionalCompilerArguments: {}
   platformArchitecture: {}
   scriptingBackend:
@@ -686,7 +687,7 @@ PlayerSettings:
   managedStrippingLevel: {}
   incrementalIl2cppBuild: {}
   suppressCommonWarnings: 1
-  allowUnsafeCode: 0
+  allowUnsafeCode: 1
   useDeterministicCompilation: 1
   useReferenceAssemblies: 1
   enableRoslynAnalyzers: 1

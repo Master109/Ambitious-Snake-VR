@@ -77,7 +77,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: Sticky Tile
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 1829149984968769263, guid: 4fb6fbb20e22c03b9997215fca7e749d, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 4fb6fbb20e22c03b9997215fca7e749d, type: 3}
 --- !u!1 &8160584320555390613 stripped
 GameObject:
