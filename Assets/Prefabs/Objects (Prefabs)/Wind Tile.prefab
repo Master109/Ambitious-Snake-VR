@@ -350,7 +350,7 @@ MonoBehaviour:
   pushDirectionTrs: {fileID: 7045453529322753465}
   whatIPush:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 4032
   forceAmountPerHit: 1
   raycastsPerUnit: 10
 --- !u!1001 &1585487369490157490

@@ -7,8 +7,9 @@ namespace AmbitiousSnake
 	public class SnakePiece : Spawnable
 	{
         public float distanceToPreviousPiece;
-		public float lengthTraveledAtSpawn;
+		// public float lengthTraveledAtSpawn;
 		public MeshRenderer meshRenderer;
-		public const float RADIUS = 1;
+		public Collider collider;
+		public const float RADIUS = 0.5f;
 	}
 }

@@ -113,3 +113,4 @@ MonoBehaviour:
   distanceToPreviousPiece: 0
   lengthTraveledAtSpawn: 0
   meshRenderer: {fileID: 8012893104815861630}
+  collider: {fileID: 8012893104815861631}

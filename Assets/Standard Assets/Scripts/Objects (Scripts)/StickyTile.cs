@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace AmbitiousSnake
 {
-	public class StickyTile : Tile, ICollisionEnterHandler
+	public class StickyTile : Tile, ICollisionEnterHandler, ICollisionExitHandler
 	{
 		public Collider collider;
 		public Collider Collider
@@ -18,14 +18,18 @@ namespace AmbitiousSnake
 
 		public void OnCollisionEnter (Collision coll)
 		{
-			for (int i = 0; i < coll.contactCount; i ++)
+			Rigidbody rigid = coll.gameObject.GetComponentInParent<Rigidbody>();
+			if (stuckPoints.ContainsKey(rigid))
+				return;
+			StuckPoint stuckPoint = new StuckPoint();
+			stuckPoint.fixedJoint = gameObject.AddComponent<FixedJoint>();
+			stuckPoint.fixedJoint.connectedBody = rigid;
+			if (rigid == Snake.instance.rigid)
 			{
-				StuckPoint stuckPoint = new StuckPoint();
-				stuckPoint.fixedJoint = gameObject.AddComponent<FixedJoint>();
-				stuckPoint.fixedJoint.connectedBody = coll.gameObject.GetComponentInParent<Rigidbody>();
-				if (stuckPoint.fixedJoint.connectedBody)
-				stuckPoints.Add(stuckPoint.fixedJoint.connectedBody, stuckPoint);
+				if (coll.collider == Snake.instance.HeadPiece.collider)
+					Snake.instance.enabled = false;
 			}
+			stuckPoints.Add(stuckPoint.fixedJoint.connectedBody, stuckPoint);
 		}
 
 		void OnSnakeChangeLength ()
@@ -33,7 +37,7 @@ namespace AmbitiousSnake
 			
 		}
 
-		void OnCollisionExit (Collision coll)
+		public void OnCollisionExit (Collision coll)
 		{
 			Rigidbody rigid = coll.gameObject.GetComponentInParent<Rigidbody>();
 			StuckPoint stuckPoint;
@@ -49,14 +53,14 @@ namespace AmbitiousSnake
 			public FixedJoint fixedJoint;
 		}
 
-		public class SnakeStuckPoint : StuckPoint
-		{
-			public float stuckAtLengthTraveled;
+		// public class SnakeStuckPoint : StuckPoint
+		// {
+		// 	public float stuckAtLengthTraveled;
 
-			public SnakeStuckPoint (float stuckAtLengthTraveled)
-			{
-				this.stuckAtLengthTraveled = stuckAtLengthTraveled;
-			}
-		}
+		// 	public SnakeStuckPoint (float stuckAtLengthTraveled)
+		// 	{
+		// 		this.stuckAtLengthTraveled = stuckAtLengthTraveled;
+		// 	}
+		// }
 	}
 }

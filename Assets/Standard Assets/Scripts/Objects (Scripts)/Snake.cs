@@ -55,7 +55,7 @@ namespace AmbitiousSnake
 		public event OnMove onMove;
 		public delegate float OnChangeLength(float amount);
 		public event OnChangeLength onChangeLength;
-		public float lengthTraveled;
+		// public float lengthTraveled;
 		public SnakePiece HeadPiece
 		{
 			get
@@ -158,8 +158,8 @@ namespace AmbitiousSnake
 		{
 			SnakePiece headPiece = ObjectPool.Instance.SpawnComponent<SnakePiece>(piecePrefab.prefabIndex, position, piecePrefab.trs.rotation, trs);
 			headPiece.distanceToPreviousPiece = distanceToPreviousPiece;
-			lengthTraveled += distanceToPreviousPiece;
-			headPiece.lengthTraveledAtSpawn = lengthTraveled;
+			// lengthTraveled += distanceToPreviousPiece;
+			// headPiece.lengthTraveledAtSpawn = lengthTraveled;
 			pieces.Add(headPiece);
 			currentLength += distanceToPreviousPiece;
 			Vector3 worldCenterOfMass = rigid.worldCenterOfMass;

@@ -23,8 +23,7 @@ namespace AmbitiousSnake
 		float GetForce (Rigidbody rigid)
 		{
 			float output = 0;
-			Bounds bounds = pushDirectionTrs.GetBounds();
-			bounds.center = Vector3.zero;
+			Bounds bounds = new Bounds(Vector3.zero, pushDirectionTrs.lossyScale);
 			for (float x = bounds.min.x; x <= bounds.max.x; x += 1f / raycastsPerUnit)
 			{
 				for (float y = bounds.min.y; y <= bounds.max.y; y += 1f / raycastsPerUnit)
