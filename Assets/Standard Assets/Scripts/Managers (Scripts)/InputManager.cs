@@ -246,11 +246,15 @@ namespace AmbitiousSnake
 		{
 			get
 			{
+#if UNITY_EDITOR
+				return Keyboard.current.rKey.isPressed;
+#endif
 				if (_InputDevice == InputDevice.KeyboardAndMouse)
 					return Keyboard.current.rKey.isPressed;
 				else
-					return ((LeftTouchController != null && (LeftTouchController.primaryButton.isPressed || LeftTouchController.secondaryButton.isPressed))
-					|| (RightTouchController != null && (RightTouchController.primaryButton.isPressed || RightTouchController.secondaryButton.isPressed)));
+					// return ((LeftTouchController != null && (LeftTouchController.primaryButton.isPressed || LeftTouchController.secondaryButton.isPressed))
+					// || (RightTouchController != null && (RightTouchController.primaryButton.isPressed || RightTouchController.secondaryButton.isPressed)));
+					return false;
 			}
 		}
 		public bool _RestartInput
@@ -258,6 +262,66 @@ namespace AmbitiousSnake
 			get
 			{
 				return RestartInput;
+			}
+		}
+		public static bool LeftGameplayMenuInput
+		{
+			get
+			{
+#if UNITY_EDITOR
+				return Keyboard.current.leftArrowKey.isPressed;
+#endif
+				if (_InputDevice == InputDevice.KeyboardAndMouse)
+					return Keyboard.current.leftArrowKey.isPressed;
+				else
+					return LeftTouchController != null && (LeftTouchController.primaryButton.isPressed || LeftTouchController.secondaryButton.isPressed);
+			}
+		}
+		public bool _LeftGameplayMenuInput
+		{
+			get
+			{
+				return LeftGameplayMenuInput;
+			}
+		}
+		public static bool RightGameplayMenuInput
+		{
+			get
+			{
+#if UNITY_EDITOR
+				return Keyboard.current.leftArrowKey.isPressed;
+#endif
+				if (_InputDevice == InputDevice.KeyboardAndMouse)
+					return Keyboard.current.leftArrowKey.isPressed;
+				else
+					return RightTouchController != null && (RightTouchController.primaryButton.isPressed || RightTouchController.secondaryButton.isPressed);
+			}
+		}
+		public bool _RightGameplayMenuInput
+		{
+			get
+			{
+				return RightGameplayMenuInput;
+			}
+		}
+		public static bool GameplayMenuInput
+		{
+			get
+			{
+#if UNITY_EDITOR
+				return Keyboard.current.escapeKey.isPressed;
+#endif
+				if (_InputDevice == InputDevice.KeyboardAndMouse)
+					return Keyboard.current.escapeKey.isPressed;
+				else
+					return LeftGameplayMenuInput || RightGameplayMenuInput;
+			}
+		}
+		public bool _GameplayMenuInput
+		{
+			get
+			{
+				return GameplayMenuInput;
 			}
 		}
 		public static bool LeftGripInput

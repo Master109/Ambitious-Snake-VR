@@ -55,7 +55,7 @@ namespace AmbitiousSnake
 		public event OnMove onMove;
 		public delegate float OnChangeLength(float amount);
 		public event OnChangeLength onChangeLength;
-		// public float lengthTraveled;
+		public float lengthTraveled;
 		public SnakePiece HeadPiece
 		{
 			get
@@ -105,8 +105,8 @@ namespace AmbitiousSnake
 		{
 			if (dead)
 				return;
-			Move ();
-			SetLength (length.value + InputManager.ChangeLengthInput * changeLengthRate * Time.deltaTime);
+			HandleMovement ();
+			SetLength (Mathf.Clamp(length.value + InputManager.ChangeLengthInput * changeLengthRate * Time.deltaTime, length.valueRange.min, length.valueRange.max));
 		}
 
 		public void TakeDamage (float amount, Hazard source)
@@ -122,16 +122,21 @@ namespace AmbitiousSnake
 				Death ();
 			}
 		}
-		
-		void Move ()
+
+		void HandleMovement ()
 		{
 			move = VRCameraRig.instance.eyesTrs.rotation * InputManager.MoveInput;
 			if (move.sqrMagnitude == 0)
 				return;
+			Move (move);
+		}
+		
+		void Move (Vector3 move)
+		{
 			if (onMove != null)
 				move = onMove(move);
 			RaycastHit hit;
-			float totalMoveAmount = moveSpeed * Time.deltaTime;
+			float totalMoveAmount = move.magnitude * moveSpeed * Time.deltaTime;
 			Vector3 position;
 			Vector3 headPosition = HeadPosition;
 			if (Physics.Raycast(headPosition, move, out hit, totalMoveAmount + SnakePiece.RADIUS, whatICrashInto, QueryTriggerInteraction.Ignore))
@@ -140,7 +145,7 @@ namespace AmbitiousSnake
 				totalMoveAmount = Mathf.Max(hit.distance - SnakePiece.RADIUS, 0);
 			}
 			else
-				position = headPosition + (move * totalMoveAmount);
+				position = headPosition + (move.normalized * totalMoveAmount);
 			while (totalMoveAmount > 0)
 			{
 				float moveAmount = Mathf.Min(maxDistanceBetweenPieces, totalMoveAmount);
@@ -158,8 +163,8 @@ namespace AmbitiousSnake
 		{
 			SnakePiece headPiece = ObjectPool.Instance.SpawnComponent<SnakePiece>(piecePrefab.prefabIndex, position, piecePrefab.trs.rotation, trs);
 			headPiece.distanceToPreviousPiece = distanceToPreviousPiece;
-			// lengthTraveled += distanceToPreviousPiece;
-			// headPiece.lengthTraveledAtSpawn = lengthTraveled;
+			lengthTraveled += distanceToPreviousPiece;
+			headPiece.lengthTraveledAtSpawn = lengthTraveled;
 			pieces.Add(headPiece);
 			currentLength += distanceToPreviousPiece;
 			Vector3 worldCenterOfMass = rigid.worldCenterOfMass;
@@ -186,9 +191,22 @@ namespace AmbitiousSnake
 		void SetLength (float newLength)
 		{
 			float lengthChange = length.value - newLength;
-			lengthChange -= newLength - currentLength;
 			if (lengthChange != 0 && onChangeLength != null)
+			{
+				float previousLengthChange = lengthChange;
 				lengthChange = onChangeLength(lengthChange);
+				newLength += lengthChange - previousLengthChange;
+			}
+			lengthChange -= newLength - currentLength;
+			if (newLength > length.value)
+			{
+				if (pieces.Count > 1 && move.sqrMagnitude == 0)
+				{
+					move = (HeadPosition - pieces[pieces.Count - 2].trs.position).normalized;
+					move *= (newLength - length.value) / (moveSpeed * Time.deltaTime);
+					Move (move);
+				}
+			}
 			length.SetValue (newLength);
 			while (lengthChange > 0)
 			{

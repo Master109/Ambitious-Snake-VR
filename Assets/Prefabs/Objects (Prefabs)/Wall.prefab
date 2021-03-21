@@ -55,13 +55,17 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+    - target: {fileID: 2804029671725097319, guid: 4fb6fbb20e22c03b9997215fca7e749d, type: 3}
+      propertyPath: doRepeatedly
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3813223544051276545, guid: 4fb6fbb20e22c03b9997215fca7e749d, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: bac0b4246d3a0a6678331f2e1c1d60c4, type: 2}
     - target: {fileID: 7440210945223678247, guid: 4fb6fbb20e22c03b9997215fca7e749d, type: 3}
       propertyPath: m_Name
-      value: Wall 1
+      value: Wall
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4fb6fbb20e22c03b9997215fca7e749d, type: 3}

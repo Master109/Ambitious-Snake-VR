@@ -10,6 +10,7 @@ namespace AmbitiousSnake
 		public Rigidbody rigid;
 		public ICollisionEnterHandler[] collisionEnterHandlers = new ICollisionEnterHandler[0];
 		public ICollisionExitHandler[] collisionExitHandlers = new ICollisionExitHandler[0];
+		public static int lastUniqueId = 0;
 
 		void OnCollisionEnter (Collision coll)
 		{

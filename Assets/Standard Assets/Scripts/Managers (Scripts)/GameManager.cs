@@ -44,6 +44,12 @@ namespace AmbitiousSnake
 			}
 		}
 		public TileParent tileParentPrefab;
+		bool leftGameplayMenuInput;
+		bool previousLeftGameplayMenuInput;
+		bool rightGameplayMenuInput;
+		bool previousRightGameplayMenuInput;
+		bool gameplayMenuInput;
+		bool previousGameplayMenuInput;
 
 		public override void Awake ()
 		{
@@ -70,8 +76,32 @@ namespace AmbitiousSnake
 			if (ObjectPool.Instance != null && ObjectPool.instance.enabled)
 				ObjectPool.instance.DoUpdate ();
 			InputSystem.Update ();
+			leftGameplayMenuInput = InputManager.LeftGameplayMenuInput;
+			rightGameplayMenuInput = InputManager.RightGameplayMenuInput;
+			gameplayMenuInput = InputManager.GameplayMenuInput;
+			HandleGameplayMenu ();
 			HandleRestart ();
 			framesSinceLevelLoaded ++;
+			previousLeftGameplayMenuInput = leftGameplayMenuInput;
+			previousRightGameplayMenuInput = rightGameplayMenuInput;
+			previousGameplayMenuInput = gameplayMenuInput;
+		}
+
+		void HandleGameplayMenu ()
+		{
+			if (GameplayMenu.instance.gameObject.activeSelf || !GameplayMenu.instance.interactive)
+				return;
+			if (leftGameplayMenuInput && !previousLeftGameplayMenuInput)
+				GameplayMenu.instance.selectorTrs = VRCameraRig.instance.leftHandTrs;
+			else if (rightGameplayMenuInput && !previousRightGameplayMenuInput)
+				GameplayMenu.instance.selectorTrs = VRCameraRig.instance.rightHandTrs;
+			else if (gameplayMenuInput && !previousGameplayMenuInput)
+				GameplayMenu.instance.selectorTrs = VRCameraRig.instance.eyesTrs;
+			else
+				return;
+			GameplayMenu.instance.trs.position = VRCameraRig.instance.eyesTrs.position + (VRCameraRig.instance.eyesTrs.forward * GameplayMenu.instance.distanceFromCamera);
+			GameplayMenu.instance.trs.rotation = VRCameraRig.instance.eyesTrs.rotation;
+			GameplayMenu.instance.gameObject.SetActive(true);
 		}
 
 		void HandleRestart ()

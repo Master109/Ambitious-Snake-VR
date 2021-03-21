@@ -65,6 +65,8 @@ namespace AmbitiousSnake
 		public static void SplitTiles (Tile[] tiles)
 		{
 			TileParent tileParent = Instantiate(GameManager.instance.tileParentPrefab);
+			tileParent.name += TileParent.lastUniqueId;
+			TileParent.lastUniqueId ++;
 			tileParent.rigid.mass = 0;
 			Vector3 worldCenterOfMass = new Vector3();
 			for (int i = 0; i < tiles.Length; i ++)

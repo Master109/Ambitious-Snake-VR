@@ -1,6 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace Extensions
 {
@@ -22,6 +25,7 @@ namespace Extensions
 			}
 			return null;
 		}
+
 		public static Transform[] FindChildren (this Transform trs, string childName)
 		{
 			List<Transform> output = new List<Transform>();
@@ -40,10 +44,10 @@ namespace Extensions
 			return output.ToArray();
 		}
 
-		public static Transform GetClosestTransform_2D (this Transform closestTo, Transform[] transforms)
+		public static Transform FindClosestTransform (Transform[] transforms, Transform closestTo)
 		{
-			// while (transforms.Contains(null))
-			// 	transforms = transforms.Remove(null);
+			while (transforms.Contains(null))
+				transforms = transforms.Remove(null);
 			if (transforms.Length == 0)
 				return null;
 			else if (transforms.Length == 1)
@@ -59,23 +63,72 @@ namespace Extensions
 			return transforms[closestOpponentIndex];
 		}
 
-		public static Transform GetClosestTransform_2D (Transform[] transforms, Vector2 position)
+		public static Transform GetClosestTransform_2D (this Transform trs, Transform[] transforms)
 		{
-			// while (transforms.Contains(null))
-			// 	transforms = transforms.Remove(null);
-			if (transforms.Length == 0)
-				return null;
-			else if (transforms.Length == 1)
-				return transforms[0];
-			int closestOpponentIndex = 0;
+			Transform closestTrs = transforms[0];
+			float closestDistance = ((Vector2) (trs.position - closestTrs.position)).sqrMagnitude;
 			for (int i = 1; i < transforms.Length; i ++)
 			{
-				Transform checkOpponent = transforms[i];
-				Transform currentClosestOpponent = transforms[closestOpponentIndex];
-				if (Vector2.Distance(position, checkOpponent.position) < Vector2.Distance(position, currentClosestOpponent.position))
-					closestOpponentIndex = i;
+				Transform transform = transforms[i];
+				float distance = ((Vector2) (trs.position - closestTrs.position)).sqrMagnitude;
+				if (distance < closestDistance)
+				{
+					closestTrs = trs;
+					closestDistance = distance;
+				}
 			}
-			return transforms[closestOpponentIndex];
+			return closestTrs;
+		}
+
+		public static Transform GetClosestTransform_2D (Transform[] transforms, Vector2 position)
+		{
+			Transform closestTrs = transforms[0];
+			float closestDistance = (position - (Vector2) closestTrs.position).sqrMagnitude;
+			for (int i = 1; i < transforms.Length; i ++)
+			{
+				Transform trs = transforms[i];
+				float distance = (position - (Vector2) trs.position).sqrMagnitude;
+				if (distance < closestDistance)
+				{
+					closestTrs = trs;
+					closestDistance = distance;
+				}
+			}
+			return closestTrs;
+		}
+
+		public static Transform GetClosestTransform_3D (this Transform trs, Transform[] transforms)
+		{
+			Transform closestTrs = transforms[0];
+			float closestDistance = (trs.position - closestTrs.position).sqrMagnitude;
+			for (int i = 1; i < transforms.Length; i ++)
+			{
+				Transform transform = transforms[i];
+				float distance = (trs.position - closestTrs.position).sqrMagnitude;
+				if (distance < closestDistance)
+				{
+					closestTrs = trs;
+					closestDistance = distance;
+				}
+			}
+			return closestTrs;
+		}
+
+		public static Transform GetClosestTransform_3D (Transform[] transforms, Vector3 position)
+		{
+			Transform closestTrs = transforms[0];
+			float closestDistance = (position - closestTrs.position).sqrMagnitude;
+			for (int i = 1; i < transforms.Length; i ++)
+			{
+				Transform trs = transforms[i];
+				float distance = (position - trs.position).sqrMagnitude;
+				if (distance < closestDistance)
+				{
+					closestTrs = trs;
+					closestDistance = distance;
+				}
+			}
+			return closestTrs;
 		}
 
 		public static Rect GetRect (this Transform trs)
@@ -122,28 +175,32 @@ namespace Extensions
 
 		public static void SetWorldScale (this Transform trs, Vector3 scale)
 		{
-			// trs.localScale = trs.rotation * trs.InverseTransformDirection(scale);
 			trs.localScale = Vector3.one;
 			trs.localScale = scale.Divide(trs.lossyScale);
 		}
 
-		public static Transform FindClosestTransform (Transform[] transforms, Transform closestTo)
+		public static Matrix4x4 GetMatrix (this Transform trs)
 		{
-			while (transforms.Contains(null))
-				transforms = transforms.Remove(null);
-			if (transforms.Length == 0)
-				return null;
-			else if (transforms.Length == 1)
-				return transforms[0];
-			int closestOpponentIndex = 0;
-			for (int i = 1; i < transforms.Length; i ++)
-			{
-				Transform checkOpponent = transforms[i];
-				Transform currentClosestOpponent = transforms[closestOpponentIndex];
-				if (Vector2.Distance(closestTo.position, checkOpponent.position) < Vector2.Distance(closestTo.position, currentClosestOpponent.position))
-					closestOpponentIndex = i;
-			}
-			return transforms[closestOpponentIndex];
+			return Matrix4x4.TRS(trs.position, trs.rotation, trs.lossyScale);
 		}
+
+		public static Transform InsertParent (this Transform trs)
+		{
+			Transform parent = new GameObject().GetComponent<Transform>();
+			parent.SetParent(trs.parent);
+			trs.SetParent(parent);
+			return parent;
+		}
+
+#if UNITY_EDITOR
+		public static Transform InsertParentAndRegisterUndo (this Transform trs)
+		{
+			Transform parent = new GameObject().GetComponent<Transform>();
+			Undo.RegisterCreatedObjectUndo(parent.gameObject, "Insert parent");
+			parent.SetParent(trs.parent);
+			Undo.SetTransformParent(trs, parent, "Insert parent");
+			return parent;
+		}
+#endif
 	}
 }
