@@ -42,8 +42,7 @@ namespace AmbitiousSnake
 		public TMP_Text hpText;
 		[HideInInspector]
 		public bool dead;
-		[HideInInspector]
-		public Vector3 move;
+		Vector3 move;
 		public float maxDistanceBetweenPieces;
 		List<SnakePiece> pieces = new List<SnakePiece>();
 		public LayerMask whatICrashInto;
@@ -88,7 +87,9 @@ namespace AmbitiousSnake
 		public override void Awake ()
 		{
 			base.Awake ();
-			AddPiece (trs.position, 0);
+			AddHeadPiece (trs.position, 0);
+			for (float distance = maxDistanceBetweenPieces; distance <= length.value; distance += maxDistanceBetweenPieces)
+				AddHeadPiece (trs.position + trs.forward * distance, maxDistanceBetweenPieces);
 		}
 		
 		void OnEnable ()
@@ -137,29 +138,33 @@ namespace AmbitiousSnake
 				move = onMove(move);
 			RaycastHit hit;
 			float totalMoveAmount = move.magnitude * moveSpeed * Time.deltaTime;
-			Vector3 position;
 			Vector3 headPosition = HeadPosition;
-			if (Physics.Raycast(headPosition, move, out hit, totalMoveAmount + SnakePiece.RADIUS, whatICrashInto, QueryTriggerInteraction.Ignore))
-			{
-				position = hit.point + (headPosition - hit.point).normalized * SnakePiece.RADIUS;
-				totalMoveAmount = Mathf.Max(hit.distance - SnakePiece.RADIUS, 0);
-			}
-			else
-				position = headPosition + (move.normalized * totalMoveAmount);
+			if (Physics.Raycast(headPosition, move, out hit, totalMoveAmount + SnakePiece.RADIUS + Physics.defaultContactOffset, whatICrashInto, QueryTriggerInteraction.Ignore))
+				totalMoveAmount = hit.distance - SnakePiece.RADIUS - Physics.defaultContactOffset;
 			while (totalMoveAmount > 0)
 			{
 				float moveAmount = Mathf.Min(maxDistanceBetweenPieces, totalMoveAmount);
+				Vector3 position;
+				if (Physics.Raycast(headPosition, move, out hit, moveAmount + SnakePiece.RADIUS + Physics.defaultContactOffset, whatICrashInto, QueryTriggerInteraction.Ignore))
+				{
+					if (hit.distance <= SnakePiece.RADIUS + Physics.defaultContactOffset)
+						return;
+					position = hit.point + (headPosition - hit.point).normalized * (SnakePiece.RADIUS + Physics.defaultContactOffset);
+				}
+				else
+					position = headPosition + (move.normalized * moveAmount);
+				AddHeadPiece (position, moveAmount);
+				headPosition = position;
 				totalMoveAmount -= moveAmount;
-				AddPiece (position, moveAmount);
 			}
 		}
 
-		void AddPiece (Vector3 position)
+		void AddHeadPiece (Vector3 position)
 		{
-			AddPiece (position, (HeadPosition - position).magnitude);
+			AddHeadPiece (position, (HeadPosition - position).magnitude);
 		}
 
-		void AddPiece (Vector3 position, float distanceToPreviousPiece)
+		void AddHeadPiece (Vector3 position, float distanceToPreviousPiece)
 		{
 			SnakePiece headPiece = ObjectPool.Instance.SpawnComponent<SnakePiece>(piecePrefab.prefabIndex, position, piecePrefab.trs.rotation, trs);
 			headPiece.distanceToPreviousPiece = distanceToPreviousPiece;
@@ -174,7 +179,27 @@ namespace AmbitiousSnake
 			rigid.centerOfMass = trs.InverseTransformPoint(worldCenterOfMass);
 		}
 
-		void RemovePiece ()
+		void AddTailPiece (Vector3 position)
+		{
+			AddHeadPiece (position, (TailPosition - position).magnitude);
+		}
+
+		void AddTailPiece (Vector3 position, float distanceToPreviousPiece)
+		{
+			SnakePiece tailPiece = ObjectPool.Instance.SpawnComponent<SnakePiece>(piecePrefab.prefabIndex, position, piecePrefab.trs.rotation, trs);
+			tailPiece.distanceToPreviousPiece = distanceToPreviousPiece;
+			lengthTraveled += distanceToPreviousPiece;
+			tailPiece.lengthTraveledAtSpawn = lengthTraveled;
+			pieces.Insert(0, tailPiece);
+			currentLength += distanceToPreviousPiece;
+			Vector3 worldCenterOfMass = rigid.worldCenterOfMass;
+			worldCenterOfMass *= pieces.Count - 1;
+			worldCenterOfMass += position;
+			worldCenterOfMass /= pieces.Count;
+			rigid.centerOfMass = trs.InverseTransformPoint(worldCenterOfMass);
+		}
+
+		void RemoveTailPiece ()
 		{
 			SnakePiece tailPiece = TailPiece;
 			Transform tailPieceTrs = tailPiece.trs;
@@ -190,53 +215,53 @@ namespace AmbitiousSnake
 
 		void SetLength (float newLength)
 		{
-			float lengthChange = length.value - newLength;
+			float lengthChange = newLength - length.value;
 			if (lengthChange != 0 && onChangeLength != null)
 			{
 				float previousLengthChange = lengthChange;
 				lengthChange = onChangeLength(lengthChange);
 				newLength += lengthChange - previousLengthChange;
 			}
-			lengthChange -= newLength - currentLength;
-			if (newLength > length.value)
+			float distance;
+			if (lengthChange > 0)
 			{
-				if (pieces.Count > 1 && move.sqrMagnitude == 0)
+				Vector3 tailPosition = TailPosition;
+				move = (tailPosition - pieces[1].trs.position).normalized;
+				float totalMoveAmount = newLength - currentLength;
+				bool shouldBreak = false;
+				while (totalMoveAmount > 0)
 				{
-					move = (HeadPosition - pieces[pieces.Count - 2].trs.position).normalized;
-					move *= (newLength - length.value) / (moveSpeed * Time.deltaTime);
-					Move (move);
+					float moveAmount = Mathf.Min(maxDistanceBetweenPieces, totalMoveAmount);
+					Vector3 position;
+					RaycastHit hit;
+					LayerMask whatICrashIntoExcludingMe = whatICrashInto.RemoveFromMask("Snake");
+					if (Physics.Raycast(tailPosition, move, out hit, moveAmount + SnakePiece.RADIUS + Physics.defaultContactOffset, whatICrashIntoExcludingMe, QueryTriggerInteraction.Ignore))
+					{
+						for (int i = 0; i < pieces.Count; i ++)
+						{
+							SnakePiece piece = pieces[i];
+							RaycastHit hit2;
+							if (Physics.Raycast(piece.trs.position, -move, out hit2, moveAmount + SnakePiece.RADIUS + Physics.defaultContactOffset, whatICrashIntoExcludingMe, QueryTriggerInteraction.Ignore))
+								return;
+						}
+					}
+					position = tailPosition + (move * moveAmount);
+					AddTailPiece (position, moveAmount);
+					if (shouldBreak)
+						break;
+					tailPosition = position;
+					totalMoveAmount -= moveAmount;
 				}
 			}
+			while (currentLength > newLength)
+				RemoveTailPiece ();
 			length.SetValue (newLength);
-			while (lengthChange > 0)
-			{
-				float distanceToPreviousPiece = TailPiece.distanceToPreviousPiece;
-				float lengthDifference = lengthChange - distanceToPreviousPiece;
-				if (lengthDifference >= 0)
-				{
-					RemovePiece ();
-					lengthChange -= distanceToPreviousPiece;
-				}
-				else
-				{
-					SnakePiece tailPiece = TailPiece;
-					Transform tailPieceTrs = tailPiece.trs;
-					Vector3 offset = (pieces[1].trs.position - tailPieceTrs.position).normalized * -lengthDifference;
-					tailPieceTrs.position += offset;
-					tailPiece.distanceToPreviousPiece += lengthDifference;
-					currentLength += lengthDifference;
-					Vector3 worldCenterOfMass = rigid.worldCenterOfMass;
-					worldCenterOfMass *= pieces.Count;
-					worldCenterOfMass += offset;
-					worldCenterOfMass /= pieces.Count;
-					rigid.centerOfMass = trs.InverseTransformPoint(worldCenterOfMass);
-					break;
-				}
-			}
+			distance = 0;
 			for (int i = 0; i < pieces.Count; i ++)
 			{
 				SnakePiece piece = pieces[i];
-				piece.meshRenderer.material.SetFloat("value", (float) (i + 1) / pieces.Count);
+				piece.meshRenderer.material.SetFloat("value", distance / currentLength);
+				distance += piece.distanceToPreviousPiece;
 			}
 		}
 
