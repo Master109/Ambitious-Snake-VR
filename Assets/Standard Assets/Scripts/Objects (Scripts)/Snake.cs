@@ -50,11 +50,6 @@ namespace AmbitiousSnake
 		public float currentLength;
 		public SnakePiece piecePrefab;
 		public float changeLengthRate;
-		public delegate Vector3 OnMove(Vector3 move);
-		public event OnMove onMove;
-		public delegate float OnChangeLength(float amount);
-		public event OnChangeLength onChangeLength;
-		public float lengthTraveled;
 		public SnakePiece HeadPiece
 		{
 			get
@@ -136,8 +131,6 @@ namespace AmbitiousSnake
 		
 		void Move (Vector3 move)
 		{
-			if (onMove != null)
-				move = onMove(move);
 			RaycastHit hit;
 			float totalMoveAmount = move.magnitude * moveSpeed * Time.deltaTime;
 			Vector3 headPosition = HeadPosition;
@@ -170,8 +163,6 @@ namespace AmbitiousSnake
 		{
 			SnakePiece headPiece = ObjectPool.Instance.SpawnComponent<SnakePiece>(piecePrefab.prefabIndex, position, piecePrefab.trs.rotation, trs);
 			headPiece.distanceToPreviousPiece = distanceToPreviousPiece;
-			lengthTraveled += distanceToPreviousPiece;
-			headPiece.lengthTraveledAtSpawn = lengthTraveled;
 			pieces.Add(headPiece);
 			currentLength += distanceToPreviousPiece;
 		}
@@ -185,8 +176,6 @@ namespace AmbitiousSnake
 		{
 			SnakePiece tailPiece = ObjectPool.Instance.SpawnComponent<SnakePiece>(piecePrefab.prefabIndex, position, piecePrefab.trs.rotation, trs);
 			tailPiece.distanceToPreviousPiece = distanceToPreviousPiece;
-			lengthTraveled += distanceToPreviousPiece;
-			tailPiece.lengthTraveledAtSpawn = lengthTraveled;
 			pieces.Insert(0, tailPiece);
 			currentLength += distanceToPreviousPiece;
 		}
@@ -203,12 +192,6 @@ namespace AmbitiousSnake
 		void SetLength (float newLength)
 		{
 			float lengthChange = newLength - length.value;
-			if (lengthChange != 0 && onChangeLength != null)
-			{
-				float previousLengthChange = lengthChange;
-				lengthChange = onChangeLength(lengthChange);
-				newLength += lengthChange - previousLengthChange;
-			}
 			if (lengthChange > 0)
 			{
 				Vector3 tailPosition = TailPosition;

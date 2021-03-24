@@ -217,6 +217,8 @@ namespace AmbitiousSnake
 					output += RightTouchController.thumbstick.ReadValue().y;
 #endif
 				output = Mathf.Clamp(output, -1, 1);
+				if (Mathf.Abs(output) <= Settings.defaultDeadzoneMin)
+					output = 0;
 				return output;
 			}
 		}
