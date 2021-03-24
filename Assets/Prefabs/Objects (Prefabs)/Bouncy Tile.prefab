@@ -18,7 +18,8 @@ MonoBehaviour:
   isSupportingTile: 0
   tileParent: {fileID: 0}
   collider: {fileID: 6348877333432531220}
-  forceAmount: 50
+  forceAmount: 5000
+  bounceCooldown: 0.2
 --- !u!1001 &1585487369490157490
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -109,6 +109,7 @@ namespace AmbitiousSnake
 			HandleMovement ();
 			SetLength (Mathf.Clamp(length.value + InputManager.ChangeLengthInput * changeLengthRate * Time.deltaTime, length.valueRange.min, length.valueRange.max));
 			rigid.ResetCenterOfMass();
+			rigid.ResetInertiaTensor();
 		}
 
 		public void TakeDamage (float amount, Hazard source)
