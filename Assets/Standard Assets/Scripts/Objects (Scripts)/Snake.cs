@@ -108,6 +108,7 @@ namespace AmbitiousSnake
 				return;
 			HandleMovement ();
 			SetLength (Mathf.Clamp(length.value + InputManager.ChangeLengthInput * changeLengthRate * Time.deltaTime, length.valueRange.min, length.valueRange.max));
+			rigid.ResetCenterOfMass();
 		}
 
 		public void TakeDamage (float amount, Hazard source)
@@ -172,11 +173,6 @@ namespace AmbitiousSnake
 			headPiece.lengthTraveledAtSpawn = lengthTraveled;
 			pieces.Add(headPiece);
 			currentLength += distanceToPreviousPiece;
-			Vector3 worldCenterOfMass = rigid.worldCenterOfMass;
-			worldCenterOfMass *= pieces.Count - 1;
-			worldCenterOfMass += position;
-			worldCenterOfMass /= pieces.Count;
-			rigid.centerOfMass = trs.InverseTransformPoint(worldCenterOfMass);
 		}
 
 		void AddTailPiece (Vector3 position)
@@ -192,11 +188,6 @@ namespace AmbitiousSnake
 			tailPiece.lengthTraveledAtSpawn = lengthTraveled;
 			pieces.Insert(0, tailPiece);
 			currentLength += distanceToPreviousPiece;
-			Vector3 worldCenterOfMass = rigid.worldCenterOfMass;
-			worldCenterOfMass *= pieces.Count - 1;
-			worldCenterOfMass += position;
-			worldCenterOfMass /= pieces.Count;
-			rigid.centerOfMass = trs.InverseTransformPoint(worldCenterOfMass);
 		}
 
 		void RemoveTailPiece ()
@@ -206,11 +197,6 @@ namespace AmbitiousSnake
 			ObjectPool.instance.Despawn (tailPiece.prefabIndex, tailPiece.gameObject, tailPieceTrs);
 			pieces.RemoveAt(0);
 			currentLength -= tailPiece.distanceToPreviousPiece;
-			Vector3 worldCenterOfMass = rigid.worldCenterOfMass;
-			worldCenterOfMass *= pieces.Count + 1;
-			worldCenterOfMass -= tailPieceTrs.position;
-			worldCenterOfMass /= pieces.Count;
-			rigid.centerOfMass = trs.InverseTransformPoint(worldCenterOfMass);
 		}
 
 		void SetLength (float newLength)
@@ -222,19 +208,18 @@ namespace AmbitiousSnake
 				lengthChange = onChangeLength(lengthChange);
 				newLength += lengthChange - previousLengthChange;
 			}
-			float distance;
 			if (lengthChange > 0)
 			{
 				Vector3 tailPosition = TailPosition;
 				move = (tailPosition - pieces[1].trs.position).normalized;
 				float totalMoveAmount = newLength - currentLength;
 				bool shouldBreak = false;
+				LayerMask whatICrashIntoExcludingMe = whatICrashInto.RemoveFromMask("Snake");
 				while (totalMoveAmount > 0)
 				{
 					float moveAmount = Mathf.Min(maxDistanceBetweenPieces, totalMoveAmount);
 					Vector3 position;
 					RaycastHit hit;
-					LayerMask whatICrashIntoExcludingMe = whatICrashInto.RemoveFromMask("Snake");
 					if (Physics.Raycast(tailPosition, move, out hit, moveAmount + SnakePiece.RADIUS + Physics.defaultContactOffset, whatICrashIntoExcludingMe, QueryTriggerInteraction.Ignore))
 					{
 						for (int i = 0; i < pieces.Count; i ++)
@@ -256,7 +241,7 @@ namespace AmbitiousSnake
 			while (currentLength > newLength)
 				RemoveTailPiece ();
 			length.SetValue (newLength);
-			distance = 0;
+			float distance = 0;
 			for (int i = 0; i < pieces.Count; i ++)
 			{
 				SnakePiece piece = pieces[i];
