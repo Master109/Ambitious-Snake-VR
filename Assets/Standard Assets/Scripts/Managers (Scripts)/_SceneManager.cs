@@ -18,6 +18,12 @@ namespace AmbitiousSnake
 				return SceneManager.GetActiveScene();
 			}
 		}
+
+		public override void Awake ()
+		{
+			base.Awake ();
+			isLoading = false;
+		}
 		
 		public void LoadSceneWithTransition (string levelName)
 		{

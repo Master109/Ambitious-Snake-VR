@@ -28,20 +28,8 @@ namespace AmbitiousSnake
 			}
 			if (tileParent != null)
 			{
-				Vector3 worldCenterOfMass = tileParent.rigid.worldCenterOfMass;
-				worldCenterOfMass *= tileParent.rigid.mass;
-				Bounds bounds = trs.GetBounds();
-				for (float x = bounds.min.x; x < bounds.max.x; x ++)
-				{
-					for (float y = bounds.min.y; y < bounds.max.y; y ++)
-					{
-						for (float z = bounds.min.z; z < bounds.max.z; z ++)
-							worldCenterOfMass -= new Vector3(x, y, z) + Vector3.one / 2;
-					}
-				}
-				tileParent.rigid.mass -= bounds.GetVolume();
-				worldCenterOfMass /= tileParent.rigid.mass;
-				tileParent.rigid.centerOfMass = tileParent.trs.InverseTransformPoint(worldCenterOfMass);
+				tileParent.rigid.ResetCenterOfMass();
+				tileParent.rigid.ResetInertiaTensor();
 			}
 			for (int i = 0; i < neighbors.Length; i ++)
 			{
@@ -76,19 +64,10 @@ namespace AmbitiousSnake
 				if (tile.tileParent != null && tile.tileParent.trs.childCount == 0)
 					Destroy(tile.tileParent.gameObject);
 				tile.tileParent = tileParent;
-				Bounds tileBounds = tile.trs.GetBounds();
-				tileParent.rigid.mass += tileBounds.GetVolume();
-				for (float x = tileBounds.min.x; x < tileBounds.max.x; x ++)
-				{
-					for (float y = tileBounds.min.y; y < tileBounds.max.y; y ++)
-					{
-						for (float z = tileBounds.min.z; z < tileBounds.max.z; z ++)
-							worldCenterOfMass += new Vector3(x, y, z) + Vector3.one / 2;
-					}
-				}
 			}
-			worldCenterOfMass /= tileParent.rigid.mass;
-			tileParent.rigid.centerOfMass = tileParent.trs.InverseTransformPoint(worldCenterOfMass);
+			tileParent.rigid.ResetCenterOfMass();
+			tileParent.rigid.ResetInertiaTensor();
+			tileParent.rigid.SetDensity(1);
 			tileParent.collisionEnterHandlers = tileParent.GetComponentsInChildren<ICollisionEnterHandler>();
 		}
 
