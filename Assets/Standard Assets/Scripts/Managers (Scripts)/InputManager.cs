@@ -201,7 +201,7 @@ namespace AmbitiousSnake
 			get
 			{
 				float output = 0;
-#if UNITY_EDITOR || UNITY_STANDALONE
+#if UNITY_EDITOR
 				output = Mouse.current.leftButton.isPressed.GetHashCode() - Mouse.current.rightButton.isPressed.GetHashCode();
 #endif
 				if (LeftTouchController != null)
