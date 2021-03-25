@@ -5,7 +5,7 @@ using Extensions;
 
 namespace AmbitiousSnake
 {
-	public class StickyTile : Tile, ICollisionEnterHandler, IUpdatable
+	public class StickyTile : Tile, ICollisionEnterHandler, ICollisionExitHandler, IUpdatable
 	{
 		public Collider collider;
 		public Collider Collider
@@ -28,6 +28,11 @@ namespace AmbitiousSnake
 		void OnCollisionStay (Collision coll)
 		{
 			OnCollisionEnter (coll);
+		}
+
+		public void OnCollisionExit (Collision coll)
+		{
+			OnCollisionStay (coll);
 		}
 
 		void OnEnable ()
