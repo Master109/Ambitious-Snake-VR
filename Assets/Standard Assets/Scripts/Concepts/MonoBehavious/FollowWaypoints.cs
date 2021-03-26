@@ -180,11 +180,10 @@ namespace AmbitiousSnake
 		{
 			if (GameManager.paused || _SceneManager.isLoading)
 				return;
-			print(1);
 			if (moveSpeed != 0)
-				trs.position = Vector2.Lerp(trs.position, waypoints[currentWaypoint].trs.position, moveSpeed * (1f / Vector2.Distance(trs.position, waypoints[currentWaypoint].trs.position)));
+				trs.position = Vector3.Lerp(trs.position, waypoints[currentWaypoint].trs.position, moveSpeed * Time.deltaTime * (1f / Vector2.Distance(trs.position, waypoints[currentWaypoint].trs.position)));
 			if (rotateSpeed != 0)
-				trs.rotation = Quaternion.Slerp(trs.rotation, waypoints[currentWaypoint].trs.rotation, rotateSpeed * (1f / Quaternion.Angle(trs.rotation, waypoints[currentWaypoint].trs.rotation)));
+				trs.rotation = Quaternion.Slerp(trs.rotation, waypoints[currentWaypoint].trs.rotation, rotateSpeed * Time.deltaTime * (1f / Quaternion.Angle(trs.rotation, waypoints[currentWaypoint].trs.rotation)));
 			if ((trs.position == waypoints[currentWaypoint].trs.position || moveSpeed == 0) && (trs.eulerAngles == waypoints[currentWaypoint].trs.eulerAngles || rotateSpeed == 0))
 				OnReachedWaypoint ();
 		}
