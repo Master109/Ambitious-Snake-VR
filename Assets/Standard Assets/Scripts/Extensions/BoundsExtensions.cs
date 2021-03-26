@@ -74,5 +74,46 @@ namespace Extensions
 			output.SetMinMax(b.min.ToVec3Int(MathfExtensions.RoundingMethod.RoundUpIfNotInteger), b.max.ToVec3Int(MathfExtensions.RoundingMethod.RoundDownIfNotInteger));
 			return output;
 		}
+		
+		public static Vector3[] GetCorners (this Bounds b)
+		{
+			Vector3[] corners = new Vector3[8];
+			corners[0] = b.min;
+			corners[1] = new Vector3(b.max.x, b.min.y, b.min.z);
+			corners[2] = new Vector3(b.max.x, b.max.y, b.min.z);
+			corners[3] = b.max;
+			corners[4] = new Vector3(b.min.x, b.max.y, b.min.z);
+			corners[5] = new Vector3(b.min.x, b.max.y, b.max.z);
+			corners[6] = new Vector3(b.min.x, b.min.y, b.max.z);
+			corners[7] = new Vector3(b.max.x, b.min.y, b.max.z);
+			return corners;
+		}
+		
+		public static LineSegment3D[] GetSides (this Bounds b)
+		{
+			LineSegment3D[] sides = new LineSegment3D[12];
+			Vector3[] corners = b.GetCorners();
+			Vector3 corner0 = corners[0];
+			Vector3 corner1 = corners[1];
+			Vector3 corner2 = corners[2];
+			Vector3 corner3 = corners[3];
+			Vector3 corner4 = corners[4];
+			Vector3 corner5 = corners[5];
+			Vector3 corner6 = corners[6];
+			Vector3 corner7 = corners[7];
+			sides[0] = new LineSegment3D(corner0, corner1);
+			sides[1] = new LineSegment3D(corner2, corner3);
+			sides[2] = new LineSegment3D(corner0, corner6);
+			sides[3] = new LineSegment3D(corner6, corner7);
+			sides[4] = new LineSegment3D(corner5, corner6);
+			sides[5] = new LineSegment3D(corner3, corner5);
+			sides[6] = new LineSegment3D(corner3, corner7);
+			sides[7] = new LineSegment3D(corner0, corner4);
+			sides[8] = new LineSegment3D(corner4, corner5);
+			sides[9] = new LineSegment3D(corner2, corner4);
+			sides[10] = new LineSegment3D(corner1, corner7);
+			sides[11] = new LineSegment3D(corner1, corner2);
+			return sides;
+		}
 	}
 }

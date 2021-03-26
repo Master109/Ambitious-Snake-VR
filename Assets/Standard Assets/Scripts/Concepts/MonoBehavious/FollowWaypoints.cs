@@ -45,10 +45,13 @@ namespace AmbitiousSnake
 			}
 			if (moveSpeed != 0)
 			{
-				if (GetComponent<LineRenderer>() == null)
-					line = gameObject.AddComponent<LineRenderer>();
-				else
-					line = GetComponent<LineRenderer>();
+				if (line == null)
+				{
+					if (GetComponent<LineRenderer>() == null)
+						line = gameObject.AddComponent<LineRenderer>();
+					else
+						line = GetComponent<LineRenderer>();
+				}
 				line.positionCount = waypoints.Count + 1;
 				line.SetPosition(0, transform.position);
 				if (moveType == MoveType.Loop)
