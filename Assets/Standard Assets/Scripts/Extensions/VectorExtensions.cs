@@ -74,6 +74,12 @@ namespace Extensions
 		{
 			return rotation * v;
 		}
+
+		public static Vector3 Rotate (this Vector3 v, Vector3 pivotPoint, Quaternion rotation)
+		{
+			Vector3 direction = (rotation * (v - pivotPoint)).normalized;
+			return pivotPoint + (direction * Vector3.Distance(v, pivotPoint));
+		}
 		
 		public static float GetFacingAngle (this Vector2 v)
 		{

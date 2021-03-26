@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System;
+using Extensions;
 
 namespace AmbitiousSnake
 {
@@ -169,7 +170,38 @@ namespace AmbitiousSnake
 		{
 #if UNITY_EDITOR
 			if (!Application.isPlaying)
+			{
+				Bounds bounds = new Bounds(Vector3.one / 2, Vector3.one);
+				LineSegment3D[] sides = bounds.GetSides();
+				foreach (IList permutation in sides.GetPermutations())
+				{
+					bool isWindingSequence = true;
+					LineSegment3D previousSide = (LineSegment3D) permutation[permutation.Count - 1];
+					for (int i = 0; i < permutation.Count; i ++)
+					{
+						LineSegment3D side = (LineSegment3D) permutation[i];
+						if (side.start == previousSide.start || side.start == previousSide.end || side.end == previousSide.start || side.end == previousSide.end)
+						{
+						}
+						else
+						{
+							isWindingSequence = false;
+							break;
+						}
+						previousSide = side;
+					}
+					if (isWindingSequence)
+					{
+						for (int i = 0; i < permutation.Count; i ++)
+						{
+							LineSegment3D side = (LineSegment3D) permutation[i];
+							print(side);
+						}
+						return;
+					}
+				}
 				return;
+			}
 #endif
 			base.OnEnable ();
 			for (int i = 0; i < waypoints.Count; i ++)
