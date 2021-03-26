@@ -1,7 +1,6 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using Extensions;
 using System;
 
 namespace AmbitiousSnake
@@ -21,19 +20,29 @@ namespace AmbitiousSnake
 		LineRenderer line;
 		public WaypointPath path;
 		public Transform rotationViewerPrefab;
-		[HideInInspector]
-		public bool hasTraveledFullCycle;
 		
-		void Start ()
+#if UNITY_EDITOR
+		void OnValidate ()
 		{
 			foreach (SnapPosition snapPosition in GetComponentsInChildren<SnapPosition>())
 				snapPosition.enabled = false;
+			if (trs == null)
+				trs = GetComponent<Transform>();
 			if (autoSetWaypoints)
-				waypointsParent = transform;
-			if (waypointsParent != null)
-				waypoints.AddRange(waypointsParent.GetComponentsInChildren<Waypoint>());
-			foreach (Waypoint waypoint in waypoints)
-				waypoint.trs.SetParent(null);
+			{
+				if (waypointsParent != null)
+				{
+					Waypoint[] _waypoints = new Waypoint[waypointsParent.childCount];
+					for (int i = 0; i < waypointsParent.childCount; i ++)
+					{
+						Transform child = waypointsParent.GetChild(i);
+						_waypoints[i] = new Waypoint(child);
+					}
+					waypoints = new List<Waypoint>(_waypoints);
+				}
+				else
+					waypointsParent = trs;
+			}
 			if (moveSpeed != 0)
 			{
 				if (GetComponent<LineRenderer>() == null)
@@ -151,16 +160,32 @@ namespace AmbitiousSnake
 				}
 			}
 		}
+#endif
+
+		public override void OnEnable ()
+		{
+#if UNITY_EDITOR
+			if (!Application.isPlaying)
+				return;
+#endif
+			base.OnEnable ();
+			for (int i = 0; i < waypoints.Count; i ++)
+			{
+				Waypoint waypoint = waypoints[i];
+				waypoint.trs.SetParent(null);
+			}
+		}
 		
 		public override void DoUpdate ()
 		{
 			if (GameManager.paused || _SceneManager.isLoading)
 				return;
+			print(1);
 			if (moveSpeed != 0)
-				transform.position = Vector2.Lerp(transform.position, waypoints[currentWaypoint].trs.position, moveSpeed * (1f / Vector2.Distance(transform.position, waypoints[currentWaypoint].trs.position)));
+				trs.position = Vector2.Lerp(trs.position, waypoints[currentWaypoint].trs.position, moveSpeed * (1f / Vector2.Distance(trs.position, waypoints[currentWaypoint].trs.position)));
 			if (rotateSpeed != 0)
-				trs.rotation = Quaternion.Slerp(trs.rotation, waypoints[currentWaypoint].trs.rotation, rotateSpeed * (1f / Quaternion.Angle(transform.rotation, waypoints[currentWaypoint].trs.rotation)));
-			if ((trs.position == waypoints[currentWaypoint].trs.position || moveSpeed == 0) && (transform.up == waypoints[currentWaypoint].trs.up || rotateSpeed == 0))
+				trs.rotation = Quaternion.Slerp(trs.rotation, waypoints[currentWaypoint].trs.rotation, rotateSpeed * (1f / Quaternion.Angle(trs.rotation, waypoints[currentWaypoint].trs.rotation)));
+			if ((trs.position == waypoints[currentWaypoint].trs.position || moveSpeed == 0) && (trs.eulerAngles == waypoints[currentWaypoint].trs.eulerAngles || rotateSpeed == 0))
 				OnReachedWaypoint ();
 		}
 		
@@ -174,15 +199,9 @@ namespace AmbitiousSnake
 			{
 				case MoveType.Once:
 					if (currentWaypoint == waypoints.Count)
-					{
-						hasTraveledFullCycle = true;
 						currentWaypoint = waypoints.Count - 1;
-					}
 					else if (currentWaypoint == -1)
-					{
-						hasTraveledFullCycle = true;
 						currentWaypoint = 0;
-					}
 					return;
 				case MoveType.Loop:
 					if (currentWaypoint == waypoints.Count)
@@ -195,13 +214,11 @@ namespace AmbitiousSnake
 					{
 						currentWaypoint -= 2;
 						backTracking = !backTracking;
-						hasTraveledFullCycle = true;
 					}
 					else if (currentWaypoint == -1)
 					{
 						currentWaypoint += 2;
 						backTracking = !backTracking;
-						hasTraveledFullCycle = true;
 					}
 					return;
 			}
@@ -212,6 +229,11 @@ namespace AmbitiousSnake
 	public struct Waypoint
 	{
 		public Transform trs;
+
+		public Waypoint (Transform trs)
+		{
+			this.trs = trs;
+		}
 	}
 
 	[Serializable]
