@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 5628221973568042662}
   - component: {fileID: 1829149984968769263}
   - component: {fileID: 2804029671725097319}
+  - component: {fileID: 4744813924297330904}
   m_Layer: 7
   m_Name: Tile
   m_TagString: Untagged
@@ -54,6 +55,7 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -131,3 +133,21 @@ MonoBehaviour:
   doRepeatedly: 1
   trs: {fileID: 1097746140504088053}
   replaceWithTilePrefab: {fileID: 0}
+--- !u!114 &4744813924297330904
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7440210945223678247}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e7e396c3be0d977cb3c908435ab83fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hotkeys: []
+  doOnce: 0
+  doRepeatedly: 0
+  trs: {fileID: 1097746140504088053}
+  renderer: {fileID: 3813223544051276545}
+  multiplyTextureScale: 1
