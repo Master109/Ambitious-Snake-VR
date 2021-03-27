@@ -52,6 +52,7 @@ namespace AmbitiousSnake
 #if UNITY_EDITOR
 			if (!Application.isPlaying)
 			{
+				pivotOffset = GetBoundsOfChildren().center;
 				AutoSetLineRenderers ();
 				return;
 			}
