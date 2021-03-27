@@ -68,6 +68,16 @@ namespace Extensions
 			return b.min + b.size.Multiply(normalizedPoint);
 		}
 		
+		public static Vector3 ToNormalizedPoint (this Bounds b, Vector3 point)
+		{
+			return point.Divide(b.size) - b.min;
+		}
+		
+		public static Vector3 FlipPoint (this Bounds b, Vector3 point)
+		{
+			return b.FromNormalizedPoint(Vector3.one - b.ToNormalizedPoint(point));
+		}
+		
 		public static BoundsInt ToBoundsInt (this Bounds b)
 		{
 			BoundsInt output = new BoundsInt();
