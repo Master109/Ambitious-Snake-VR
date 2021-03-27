@@ -20,7 +20,7 @@ namespace AmbitiousSnake
 		public bool backTracking;
 		public WaypointPath path;
 		public Transform rotationViewerPrefab;
-		public List<LineRenderer> lineRenderers = new List<LineRenderer>(2);
+		public List<LineRenderer> lineRenderers = new List<LineRenderer>();
 		
 #if UNITY_EDITOR
 		void OnValidate ()
@@ -35,7 +35,7 @@ namespace AmbitiousSnake
 					for (int i = 0; i < waypointsParent.childCount; i ++)
 					{
 						Transform child = waypointsParent.GetChild(i);
-						_waypoints[i] = new Waypoint(child);
+						_waypoints[i] = new Waypoint(child, Vector3.zero);
 					}
 					waypoints = new List<Waypoint>(_waypoints);
 				}
@@ -44,52 +44,44 @@ namespace AmbitiousSnake
 			}
 			if (moveSpeed != 0)
 			{
-				Bounds bounds = GetBoundsOfChildren();
-				lineRenderers = new List<LineRenderer>(GetComponentsInChildren<LineRenderer>());
 				if (lineRenderers.Count == 0)
 				{
-					LineRenderer lineRenderer1 = AddLineRenderer();
-					System.Threading.Thread.Sleep(0);
-					LineRenderer lineRenderer2 = AddLineRenderer();
-					SetLineRenderersToBoundsSides (bounds, lineRenderer1, lineRenderer2);
-					// lineRenderer.positionCount = waypoints.Count + 1;
-					// lineRenderer.SetPosition(0, trs.position);
-					// if (moveType == MoveType.Loop)
-					// {
-					// 	int counter = 1;
-					// 	int waypointIndex = currentWaypoint;
-					// 	while (true)
-					// 	{
-					// 		lineRenderer.SetPosition(counter, waypoints[waypointIndex].trs.position);
-					// 		if (backTracking)
-					// 		{
-					// 			waypointIndex --;
-					// 			if (waypointIndex == -1)
-					// 				waypointIndex = waypoints.Count - 1;
-					// 		}
-					// 		else
-					// 		{
-					// 			waypointIndex ++;
-					// 			if (waypointIndex == waypoints.Count)
-					// 				waypointIndex = 0;
-					// 		}
-					// 		if (waypointIndex == currentWaypoint)
-					// 			break;
-					// 		counter ++;
-					// 	}
-					// }
-					// else
-					// {
-					// 	for (int i = 0; i < waypoints.Count; i ++)
-					// 		lineRenderer.SetPosition(i + 1, waypoints[i].trs.position);
-					// }
-					// lineRenderer.material = path.material;
-					// lineRenderer.startColor = path.color;
-					// lineRenderer.endColor = path.color;
-					// lineRenderer.startWidth = path.width;
-					// lineRenderer.endWidth = path.width;
-					// lineRenderer.sortingLayerName = path.sortingLayerName;
-					// lineRenderer.sortingOrder = Mathf.Clamp(path.sortingOrder, -32768, 32767);
+					lineRenderers = new List<LineRenderer>(GetComponentsInChildren<LineRenderer>());
+					if (moveType == MoveType.Loop)
+					{
+						int waypointIndex = currentWaypoint;
+						Waypoint nextWaypoint = waypoints[waypointIndex];
+						while (true)
+						{
+							Waypoint waypoint = nextWaypoint;
+							if (backTracking)
+							{
+								waypointIndex --;
+								if (waypointIndex == -1)
+									waypointIndex = waypoints.Count - 1;
+							}
+							else
+							{
+								waypointIndex ++;
+								if (waypointIndex == waypoints.Count)
+									waypointIndex = 0;
+							}
+							if (waypointIndex == currentWaypoint)
+								break;
+							nextWaypoint = waypoints[waypointIndex];
+							lineRenderers.AddRange(MakeLineRenderersForWaypoints(waypoint, nextWaypoint));
+						}
+					}
+					else
+					{
+						Waypoint nextWaypoint = waypoints[0];
+						for (int i = 1; i < waypoints.Count; i ++)
+						{
+							Waypoint waypoint = nextWaypoint;
+							nextWaypoint = waypoints[i];
+							lineRenderers.AddRange(MakeLineRenderersForWaypoints(waypoint, nextWaypoint));
+						}
+					}
 				}
 			}
 			if (rotateSpeed != 0)
@@ -272,21 +264,47 @@ namespace AmbitiousSnake
 			return childBoundsArray.Combine();
 		}
 
-		void SetLineRenderersToBoundsSides (Bounds bounds, LineRenderer lineRenderer1, LineRenderer lineRenderer2)
+		void SetLineRenderersToBoundsSides (Bounds bounds, LineRenderer[] lineRenderers)
 		{
-			Vector3[] corners = bounds.GetCorners();
-			Vector3 corner0 = corners[0];
-			Vector3 corner1 = corners[1];
-			Vector3 corner2 = corners[2];
-			Vector3 corner3 = corners[3];
-			Vector3 corner4 = corners[4];
-			Vector3 corner5 = corners[5];
-			Vector3 corner6 = corners[6];
-			Vector3 corner7 = corners[7];
-			lineRenderer1.positionCount = 7;
-			lineRenderer1.SetPositions(new Vector3[7] { corner0, corner6, corner5, corner4, corner0, corner1, corner2 });
-			lineRenderer2.positionCount = 9;
-			lineRenderer2.SetPositions(new Vector3[9] { corner4, corner2, corner3, corner7, corner6, corner5, corner3, corner7, corner1 });
+			LineSegment3D[] sides = bounds.GetSides();
+			for (int i = 0; i < 12; i ++)
+			{
+				LineSegment3D side = sides[i];
+				lineRenderers[i].SetPositions(new Vector3[2] { side.start, side.end });
+			}
+		}
+
+		void SetLineRenderersToBoundsSidesAndRotate (Bounds bounds, LineRenderer[] lineRenderers, Vector3 pivotPoint, Quaternion rotation)
+		{
+			LineSegment3D[] sides = bounds.GetSides();
+			for (int i = 0; i < 12; i ++)
+			{
+				LineSegment3D side = sides[i];
+				lineRenderers[i].SetPositions(new Vector3[2] { side.start.Rotate(pivotPoint, rotation), side.end.Rotate(pivotPoint, rotation) });
+			}
+		}
+
+		LineRenderer[] MakeLineRenderersForWaypoints (Waypoint waypoint, Waypoint nextWaypoint)
+		{
+			List<LineRenderer> output = new List<LineRenderer>();
+			if (waypoint.trs.eulerAngles == nextWaypoint.trs.eulerAngles)
+			{
+				LineRenderer[] lineRenderers = new LineRenderer[12];
+				Bounds bounds = new Bounds(waypoint.trs.position, GetBoundsOfChildren().size);
+				for (int i = 0; i < 12; i ++)
+					lineRenderers[i] = AddLineRenderer();
+				SetLineRenderersToBoundsSidesAndRotate (bounds, lineRenderers, waypoint.trs.position + waypoint.pivotOffset, waypoint.trs.rotation);
+				output.AddRange(lineRenderers);
+				for (int i = 0; i < 12; i ++)
+					lineRenderers[i] = AddLineRenderer();
+				bounds = new Bounds(nextWaypoint.trs.position, GetBoundsOfChildren().size);
+				SetLineRenderersToBoundsSidesAndRotate (bounds, lineRenderers, nextWaypoint.trs.position + nextWaypoint.pivotOffset, nextWaypoint.trs.rotation);
+				output.AddRange(lineRenderers);
+			}
+			else
+			{
+			}
+			return output.ToArray();
 		}
 		
 		public override void DoUpdate ()
@@ -341,10 +359,12 @@ namespace AmbitiousSnake
 	public struct Waypoint
 	{
 		public Transform trs;
+		public Vector3 pivotOffset;
 
-		public Waypoint (Transform trs)
+		public Waypoint (Transform trs, Vector3 pivotOffset)
 		{
 			this.trs = trs;
+			this.pivotOffset = pivotOffset;
 		}
 	}
 
