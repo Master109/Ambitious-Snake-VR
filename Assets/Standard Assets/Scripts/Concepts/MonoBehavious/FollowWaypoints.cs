@@ -52,10 +52,7 @@ namespace AmbitiousSnake
 				for (int i = 0; i < lineRenderers.Count; i ++)
 				{
 					LineRenderer lineRenderer = lineRenderers[i];
-					if (lineRenderer.gameObject == gameObject)
-						Destroy(lineRenderer);
-					else
-						Destroy(lineRenderer.gameObject);
+					RemoveLineRenderer (lineRenderer);
 				}
 				if (followType == FollowType.Loop)
 				{
@@ -93,54 +90,7 @@ namespace AmbitiousSnake
 		{
 #if UNITY_EDITOR
 			if (!Application.isPlaying)
-			{
-				// Bounds bounds = new Bounds(Vector3.one / 2, Vector3.one);
-				// Vector3[] corners = bounds.GetCorners();
-				// for (int i = 0; i < corners.Length; i ++)
-				// {
-				// 	Vector3 corner = corners[i];
-				// 	GameObject newGo = new GameObject();
-				// 	newGo.name = "corner" + i;
-				// 	Transform newTrs = newGo.GetComponent<Transform>();
-				// 	newTrs.position = corner;
-				// }
-				// LineSegment3D[] sides = bounds.GetSides();
-				// foreach (IList permutation in sides.GetPermutations())
-				// {
-				// 	bool isWindingSequence = true;
-				// 	LineSegment3D previousSide = (LineSegment3D) permutation[permutation.Count - 1];
-				// 	for (int i = 0; i < permutation.Count; i ++)
-				// 	{
-				// 		LineSegment3D side = (LineSegment3D) permutation[i];
-				// 		if (side.start == previousSide.end)
-				// 		{
-				// 		}
-				// 		else
-				// 		{
-				// 			side = side.Flip();
-				// 			if (side.start == previousSide.end)
-				// 			{
-				// 			}
-				// 			else
-				// 			{
-				// 				isWindingSequence = false;
-				// 				break;
-				// 			}
-				// 		}
-				// 		previousSide = side;
-				// 	}
-				// 	if (isWindingSequence)
-				// 	{
-				// 		for (int i = 0; i < permutation.Count; i ++)
-				// 		{
-				// 			LineSegment3D side = (LineSegment3D) permutation[i];
-				// 			print(side);
-				// 		}
-				// 		return;
-				// 	}
-				// }
 				return;
-			}
 #endif
 			base.OnEnable ();
 			for (int i = 0; i < waypoints.Count; i ++)
@@ -216,6 +166,14 @@ namespace AmbitiousSnake
 			lineRenderer.sortingOrder = Mathf.Clamp(path.sortingOrder, -32768, 32767);
 			return lineRenderer;
 		}
+
+		void RemoveLineRenderer (LineRenderer lineRenderer)
+		{
+			if (lineRenderer.gameObject == gameObject)
+				Destroy(lineRenderer);
+			else
+				Destroy(lineRenderer.gameObject);
+		}
 		
 		Bounds GetBoundsOfChildren ()
 		{
@@ -264,9 +222,9 @@ namespace AmbitiousSnake
 				LineRenderer[] lineRenderers = new LineRenderer[12];
 				for (int i = 0; i < 12; i ++)
 					lineRenderers[i] = AddLineRenderer();
-				HashSet<LineRenderer> extraLineRenderers = new HashSet<LineRenderer>();
 				if (!previousWaypoint.Equals(default(Waypoint)))
 				{
+					HashSet<LineRenderer> extraLineRenderers = new HashSet<LineRenderer>();
 					if (waypoint.trs.position.x > previousWaypoint.trs.position.x)
 					{
 						extraLineRenderers.Add(lineRenderers[1]);
@@ -274,8 +232,43 @@ namespace AmbitiousSnake
 						extraLineRenderers.Add(lineRenderers[10]);
 						extraLineRenderers.Add(lineRenderers[11]);
 					}
+					else if (waypoint.trs.position.x < previousWaypoint.trs.position.x)
+					{
+						extraLineRenderers.Add(lineRenderers[1]);
+						extraLineRenderers.Add(lineRenderers[4]);
+						extraLineRenderers.Add(lineRenderers[7]);
+						extraLineRenderers.Add(lineRenderers[8]);
+					}
+					if (waypoint.trs.position.y > previousWaypoint.trs.position.y)
+					{
+						extraLineRenderers.Add(lineRenderers[1]);
+						extraLineRenderers.Add(lineRenderers[5]);
+						extraLineRenderers.Add(lineRenderers[8]);
+						extraLineRenderers.Add(lineRenderers[9]);
+					}
+					else if (waypoint.trs.position.y < previousWaypoint.trs.position.y)
+					{
+						extraLineRenderers.Add(lineRenderers[0]);
+						extraLineRenderers.Add(lineRenderers[2]);
+						extraLineRenderers.Add(lineRenderers[3]);
+						extraLineRenderers.Add(lineRenderers[10]);
+					}
+					if (waypoint.trs.position.z > previousWaypoint.trs.position.z)
+					{
+						extraLineRenderers.Add(lineRenderers[3]);
+						extraLineRenderers.Add(lineRenderers[4]);
+						extraLineRenderers.Add(lineRenderers[5]);
+						extraLineRenderers.Add(lineRenderers[6]);
+					}
+					else if (waypoint.trs.position.z < previousWaypoint.trs.position.z)
+					{
+						extraLineRenderers.Add(lineRenderers[0]);
+						extraLineRenderers.Add(lineRenderers[7]);
+						extraLineRenderers.Add(lineRenderers[9]);
+						extraLineRenderers.Add(lineRenderers[11]);
+					}
 					foreach (LineRenderer extraLineRenderer in extraLineRenderers)
-						Destroy(extraLineRenderer);
+						RemoveLineRenderer (extraLineRenderer);
 				}
 				Bounds bounds = new Bounds(waypoint.trs.position, GetBoundsOfChildren().size);
 				SetLineRenderersToBoundsSidesAndRotate (bounds, lineRenderers, waypoint.trs.position + waypoint.pivotOffset, waypoint.trs.rotation);
