@@ -8,7 +8,7 @@ namespace Extensions
 	{
 		public static Bounds NULL = new Bounds(VectorExtensions.NULL3, VectorExtensions.NULL3);
 
-		public static bool IsEncapsulating (Bounds b1, Bounds b2, bool equalBoundsRetunsTrue)
+		public static bool IsEncapsulating (this Bounds b1, Bounds b2, bool equalBoundsRetunsTrue)
 		{
 			if (equalBoundsRetunsTrue)
 			{
@@ -24,7 +24,7 @@ namespace Extensions
 			}
 		}
 		
-		public static Bounds Combine (Bounds[] boundsArray)
+		public static Bounds Combine (this Bounds[] boundsArray)
 		{
 			Bounds output = boundsArray[0];
 			for (int i = 1; i < boundsArray.Length; i ++)
@@ -71,7 +71,7 @@ namespace Extensions
 		public static BoundsInt ToBoundsInt (this Bounds b)
 		{
 			BoundsInt output = new BoundsInt();
-			output.SetMinMax(b.min.ToVec3Int(MathfExtensions.RoundingMethod.RoundUpIfNotInteger), b.max.ToVec3Int(MathfExtensions.RoundingMethod.RoundDownIfNotInteger));
+			output.SetMinMax(b.min.ToVec3Int(MathfExtensions.RoundingMethod.RoundUpIfNotInteger), b.max.ToVec3Int(MathfExtensions.RoundingMethod.RoundUpIfNotInteger));
 			return output;
 		}
 		

@@ -224,9 +224,9 @@ namespace Extensions
 
 		public static void RotateRight (IList list, int count)
 		{
-			object temp = list[count - 1];
+			object element = list[count - 1];
 			list.RemoveAt(count - 1);
-			list.Insert(0, temp);
+			list.Insert(0, element);
 		}
 
 		public static IEnumerable<IList> GetPermutations (this IList list, int count)
@@ -257,6 +257,19 @@ namespace Extensions
 		public static IEnumerable<IList> GetPermutations<T> (this T[] array)
 		{
 			return array.GetPermutations(array.Length);
+		}
+
+		public static IEnumerable<IList>[] GetPermutations<T> (params T[][] arrays)
+		{
+			IList[] output;
+			object[] temporary = new object[arrays.Length];
+			output = new IList[temporary.GetPermutations().Count()];
+			for (int i = 0; i < arrays.Length; i ++)
+			{
+				T[] array = arrays[i];
+				output.AddRange(array.GetPermutations());
+			}
+			return (IEnumerable<IList>[]) output;
 		}
 	}
 }

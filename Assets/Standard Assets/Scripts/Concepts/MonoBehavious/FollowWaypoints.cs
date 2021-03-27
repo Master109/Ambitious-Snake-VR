@@ -18,15 +18,13 @@ namespace AmbitiousSnake
 		public float rotateSpeed;
 		public int currentWaypoint;
 		public bool backTracking;
-		LineRenderer line;
 		public WaypointPath path;
 		public Transform rotationViewerPrefab;
+		public List<LineRenderer> lineRenderers = new List<LineRenderer>(2);
 		
 #if UNITY_EDITOR
 		void OnValidate ()
 		{
-			foreach (SnapPosition snapPosition in GetComponentsInChildren<SnapPosition>())
-				snapPosition.enabled = false;
 			if (trs == null)
 				trs = GetComponent<Transform>();
 			if (autoSetWaypoints)
@@ -46,51 +44,53 @@ namespace AmbitiousSnake
 			}
 			if (moveSpeed != 0)
 			{
-				if (line == null)
+				Bounds bounds = GetBoundsOfChildren();
+				lineRenderers = new List<LineRenderer>(GetComponentsInChildren<LineRenderer>());
+				if (lineRenderers.Count == 0)
 				{
-					if (GetComponent<LineRenderer>() == null)
-						line = gameObject.AddComponent<LineRenderer>();
-					else
-						line = GetComponent<LineRenderer>();
+					LineRenderer lineRenderer1 = AddLineRenderer();
+					System.Threading.Thread.Sleep(0);
+					LineRenderer lineRenderer2 = AddLineRenderer();
+					SetLineRenderersToBoundsSides (bounds, lineRenderer1, lineRenderer2);
+					// lineRenderer.positionCount = waypoints.Count + 1;
+					// lineRenderer.SetPosition(0, trs.position);
+					// if (moveType == MoveType.Loop)
+					// {
+					// 	int counter = 1;
+					// 	int waypointIndex = currentWaypoint;
+					// 	while (true)
+					// 	{
+					// 		lineRenderer.SetPosition(counter, waypoints[waypointIndex].trs.position);
+					// 		if (backTracking)
+					// 		{
+					// 			waypointIndex --;
+					// 			if (waypointIndex == -1)
+					// 				waypointIndex = waypoints.Count - 1;
+					// 		}
+					// 		else
+					// 		{
+					// 			waypointIndex ++;
+					// 			if (waypointIndex == waypoints.Count)
+					// 				waypointIndex = 0;
+					// 		}
+					// 		if (waypointIndex == currentWaypoint)
+					// 			break;
+					// 		counter ++;
+					// 	}
+					// }
+					// else
+					// {
+					// 	for (int i = 0; i < waypoints.Count; i ++)
+					// 		lineRenderer.SetPosition(i + 1, waypoints[i].trs.position);
+					// }
+					// lineRenderer.material = path.material;
+					// lineRenderer.startColor = path.color;
+					// lineRenderer.endColor = path.color;
+					// lineRenderer.startWidth = path.width;
+					// lineRenderer.endWidth = path.width;
+					// lineRenderer.sortingLayerName = path.sortingLayerName;
+					// lineRenderer.sortingOrder = Mathf.Clamp(path.sortingOrder, -32768, 32767);
 				}
-				line.positionCount = waypoints.Count + 1;
-				line.SetPosition(0, transform.position);
-				if (moveType == MoveType.Loop)
-				{
-					int counter = 1;
-					int waypointIndex = currentWaypoint;
-					while (true)
-					{
-						line.SetPosition(counter, waypoints[waypointIndex].trs.position);
-						if (backTracking)
-						{
-							waypointIndex --;
-							if (waypointIndex == -1)
-								waypointIndex = waypoints.Count - 1;
-						}
-						else
-						{
-							waypointIndex ++;
-							if (waypointIndex == waypoints.Count)
-								waypointIndex = 0;
-						}
-						if (waypointIndex == currentWaypoint)
-							break;
-						counter ++;
-					}
-				}
-				else
-				{
-					for (int i = 0; i < waypoints.Count; i ++)
-						line.SetPosition(i + 1, waypoints[i].trs.position);
-				}
-				line.material = path.material;
-				line.startColor = path.color;
-				line.endColor = path.color;
-				line.startWidth = path.width;
-				line.endWidth = path.width;
-				line.sortingLayerName = path.sortingLayerName;
-				line.sortingOrder = Mathf.Clamp(path.sortingOrder, -32768, 32767);
 			}
 			if (rotateSpeed != 0)
 			{
@@ -171,35 +171,51 @@ namespace AmbitiousSnake
 #if UNITY_EDITOR
 			if (!Application.isPlaying)
 			{
-				Bounds bounds = new Bounds(Vector3.one / 2, Vector3.one);
-				LineSegment3D[] sides = bounds.GetSides();
-				foreach (IList permutation in sides.GetPermutations())
-				{
-					bool isWindingSequence = true;
-					LineSegment3D previousSide = (LineSegment3D) permutation[permutation.Count - 1];
-					for (int i = 0; i < permutation.Count; i ++)
-					{
-						LineSegment3D side = (LineSegment3D) permutation[i];
-						if (side.start == previousSide.start || side.start == previousSide.end || side.end == previousSide.start || side.end == previousSide.end)
-						{
-						}
-						else
-						{
-							isWindingSequence = false;
-							break;
-						}
-						previousSide = side;
-					}
-					if (isWindingSequence)
-					{
-						for (int i = 0; i < permutation.Count; i ++)
-						{
-							LineSegment3D side = (LineSegment3D) permutation[i];
-							print(side);
-						}
-						return;
-					}
-				}
+				// Bounds bounds = new Bounds(Vector3.one / 2, Vector3.one);
+				// Vector3[] corners = bounds.GetCorners();
+				// for (int i = 0; i < corners.Length; i ++)
+				// {
+				// 	Vector3 corner = corners[i];
+				// 	GameObject newGo = new GameObject();
+				// 	newGo.name = "corner" + i;
+				// 	Transform newTrs = newGo.GetComponent<Transform>();
+				// 	newTrs.position = corner;
+				// }
+				// LineSegment3D[] sides = bounds.GetSides();
+				// foreach (IList permutation in sides.GetPermutations())
+				// {
+				// 	bool isWindingSequence = true;
+				// 	LineSegment3D previousSide = (LineSegment3D) permutation[permutation.Count - 1];
+				// 	for (int i = 0; i < permutation.Count; i ++)
+				// 	{
+				// 		LineSegment3D side = (LineSegment3D) permutation[i];
+				// 		if (side.start == previousSide.end)
+				// 		{
+				// 		}
+				// 		else
+				// 		{
+				// 			side = side.Flip();
+				// 			if (side.start == previousSide.end)
+				// 			{
+				// 			}
+				// 			else
+				// 			{
+				// 				isWindingSequence = false;
+				// 				break;
+				// 			}
+				// 		}
+				// 		previousSide = side;
+				// 	}
+				// 	if (isWindingSequence)
+				// 	{
+				// 		for (int i = 0; i < permutation.Count; i ++)
+				// 		{
+				// 			LineSegment3D side = (LineSegment3D) permutation[i];
+				// 			print(side);
+				// 		}
+				// 		return;
+				// 	}
+				// }
 				return;
 			}
 #endif
@@ -209,6 +225,68 @@ namespace AmbitiousSnake
 				Waypoint waypoint = waypoints[i];
 				waypoint.trs.SetParent(null);
 			}
+		}
+
+		LineRenderer AddLineRenderer ()
+		{
+			GameObject go = gameObject;
+			if (GetComponent<LineRenderer>() != null)
+			{
+				go = new GameObject();
+				Transform goTrs = go.GetComponent<Transform>();
+				goTrs.SetParent(trs);
+			}
+			return AddLineRenderer(go);
+		}
+
+		LineRenderer AddLineRenderer (GameObject go)
+		{
+			LineRenderer lineRenderer = go.AddComponent<LineRenderer>();
+			lineRenderers.Add(lineRenderer);
+			lineRenderer.material = path.material;
+			lineRenderer.startColor = path.color;
+			lineRenderer.endColor = path.color;
+			lineRenderer.startWidth = path.width;
+			lineRenderer.endWidth = path.width;
+			lineRenderer.sortingLayerName = path.sortingLayerName;
+			lineRenderer.sortingOrder = Mathf.Clamp(path.sortingOrder, -32768, 32767);
+			return lineRenderer;
+		}
+		
+		Bounds GetBoundsOfChildren ()
+		{
+			// Renderer[] renderers = GetComponentsInChildren<Renderer>();
+			// Bounds[] childBoundsArray = new Bounds[renderers.Length];
+			// for (int i = 0; i < renderers.Length; i ++)
+			// {
+			// 	Renderer renderer = renderers[i];
+			// 	childBoundsArray[i] = renderer.GetComponent<Transform>().GetBounds();
+			// }
+			Collider[] colliders = GetComponentsInChildren<Collider>();
+			Bounds[] childBoundsArray = new Bounds[colliders.Length];
+			for (int i = 0; i < colliders.Length; i ++)
+			{
+				Collider collider = colliders[i];
+				childBoundsArray[i] = collider.GetComponent<Transform>().GetBounds();
+			}
+			return childBoundsArray.Combine();
+		}
+
+		void SetLineRenderersToBoundsSides (Bounds bounds, LineRenderer lineRenderer1, LineRenderer lineRenderer2)
+		{
+			Vector3[] corners = bounds.GetCorners();
+			Vector3 corner0 = corners[0];
+			Vector3 corner1 = corners[1];
+			Vector3 corner2 = corners[2];
+			Vector3 corner3 = corners[3];
+			Vector3 corner4 = corners[4];
+			Vector3 corner5 = corners[5];
+			Vector3 corner6 = corners[6];
+			Vector3 corner7 = corners[7];
+			lineRenderer1.positionCount = 7;
+			lineRenderer1.SetPositions(new Vector3[7] { corner0, corner6, corner5, corner4, corner0, corner1, corner2 });
+			lineRenderer2.positionCount = 9;
+			lineRenderer2.SetPositions(new Vector3[9] { corner4, corner2, corner3, corner7, corner6, corner5, corner3, corner7, corner1 });
 		}
 		
 		public override void DoUpdate ()
