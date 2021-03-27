@@ -9,18 +9,22 @@ namespace AmbitiousSnake
 	[ExecuteInEditMode]
 	public class FollowWaypoints : UpdateWhileEnabled
 	{
-		public Transform trs;
-		public MoveType moveType;
-		public Transform waypointsParent;
-		public List<Waypoint> waypoints = new List<Waypoint>();
+#if UNITY_EDITOR
+		public bool autoSetLineRenderers = true;
 		public bool autoSetWaypoints = true;
+		public Transform waypointsParent;
+#endif
+		public Transform trs;
+		public FollowType followType;
+		public List<Waypoint> waypoints = new List<Waypoint>();
 		public float moveSpeed;
 		public float rotateSpeed;
 		public int currentWaypoint;
-		public bool backTracking;
+		public bool isBacktracking;
 		public WaypointPath path;
 		public Transform rotationViewerPrefab;
 		public List<LineRenderer> lineRenderers = new List<LineRenderer>();
+		public Vector3 pivotPoint;
 		
 #if UNITY_EDITOR
 		void OnValidate ()
@@ -42,116 +46,43 @@ namespace AmbitiousSnake
 				else
 					waypointsParent = trs;
 			}
-			if (moveSpeed != 0)
+			if (autoSetLineRenderers)
 			{
-				if (lineRenderers.Count == 0)
+				lineRenderers = new List<LineRenderer>(GetComponentsInChildren<LineRenderer>());
+				for (int i = 0; i < lineRenderers.Count; i ++)
 				{
-					lineRenderers = new List<LineRenderer>(GetComponentsInChildren<LineRenderer>());
-					if (moveType == MoveType.Loop)
-					{
-						int waypointIndex = currentWaypoint;
-						Waypoint nextWaypoint = waypoints[waypointIndex];
-						while (true)
-						{
-							Waypoint waypoint = nextWaypoint;
-							if (backTracking)
-							{
-								waypointIndex --;
-								if (waypointIndex == -1)
-									waypointIndex = waypoints.Count - 1;
-							}
-							else
-							{
-								waypointIndex ++;
-								if (waypointIndex == waypoints.Count)
-									waypointIndex = 0;
-							}
-							if (waypointIndex == currentWaypoint)
-								break;
-							nextWaypoint = waypoints[waypointIndex];
-							lineRenderers.AddRange(MakeLineRenderersForWaypoints(waypoint, nextWaypoint));
-						}
-					}
+					LineRenderer lineRenderer = lineRenderers[i];
+					if (lineRenderer.gameObject == gameObject)
+						Destroy(lineRenderer);
 					else
+						Destroy(lineRenderer.gameObject);
+				}
+				if (followType == FollowType.Loop)
+				{
+					int waypointIndex = currentWaypoint;
+					Waypoint nextWaypoint = waypoints[waypointIndex];
+					Waypoint previousWaypoint = waypoints[GetPreviousWaypointIndex(waypointIndex)];
+					while (true)
 					{
-						Waypoint nextWaypoint = waypoints[0];
-						for (int i = 1; i < waypoints.Count; i ++)
-						{
-							Waypoint waypoint = nextWaypoint;
-							nextWaypoint = waypoints[i];
-							lineRenderers.AddRange(MakeLineRenderersForWaypoints(waypoint, nextWaypoint));
-						}
+						Waypoint waypoint = nextWaypoint;
+						waypointIndex = GetNextWaypointIndex(waypointIndex);
+						if (waypointIndex == currentWaypoint)
+							break;
+						nextWaypoint = waypoints[waypointIndex];
+						lineRenderers.AddRange(MakeLineRenderersForWaypoints(waypoint, previousWaypoint, nextWaypoint));
+						previousWaypoint = waypoint;
 					}
 				}
-			}
-			if (rotateSpeed != 0)
-			{
-				for (int i = 0; i < waypoints.Count; i ++)
+				else
 				{
-					Waypoint waypoint = waypoints[i];
-					Waypoint nextWaypoint = default(Waypoint);
-					if ((i == waypoints.Count - 1 && !backTracking) || (i == 0 && backTracking))
+					Waypoint nextWaypoint = waypoints[0];
+					Waypoint previousWaypoint = default(Waypoint);
+					for (int i = 1; i < waypoints.Count; i ++)
 					{
-						switch (moveType)
-						{
-							case MoveType.Once:
-								return;
-							case MoveType.Loop:
-								if (!backTracking)
-									nextWaypoint = waypoints[0];
-								else
-									nextWaypoint = waypoints[waypoints.Count - 1];
-								break;
-							case MoveType.PingPong:
-								if (!backTracking)
-									nextWaypoint = waypoints[i - 1];
-								else
-									nextWaypoint = waypoints[i + 1];
-								break;
-						}
-					}
-					else
-					{
-						if (!backTracking)
-							nextWaypoint = waypoints[i + 1];
-						else
-							nextWaypoint = waypoints[i - 1];
-					}
-					if (waypoint.trs.eulerAngles != nextWaypoint.trs.eulerAngles)
-					{
-						Transform rotationViewer = (Transform) Instantiate(rotationViewerPrefab);
-						// List<Bounds> boundsInstances = new List<Bounds>();
-						// foreach (SpriteRenderer renderer in GetComponentsInChildren<SpriteRenderer>())
-						// 	boundsInstances.Add(renderer.bounds);
-						// Bounds rotationBounds = BoundsExtensions.Combine(boundsInstances.ToArray());
-						// rotationViewer.position = waypoint.position;
-						// float greatestRadius = Mathf.Max(rotationBounds.extents.x, rotationBounds.extents.y);
-						// foreach (Bounds bounds in boundsInstances)
-						// {
-						// 	Vector2 furthestPoint = bounds.min;
-						// 	float currentRadius = Vector2.Distance(rotationBounds.center, furthestPoint);
-						// 	if (currentRadius > greatestRadius)
-						// 		greatestRadius = currentRadius;
-						// 	furthestPoint = bounds.max;
-						// 	currentRadius = Vector2.Distance(rotationBounds.center, furthestPoint);
-						// 	if (currentRadius > greatestRadius)
-						// 		greatestRadius = currentRadius;
-						// 	furthestPoint = new Vector2(bounds.min.x, bounds.max.y);
-						// 	currentRadius = Vector2.Distance(rotationBounds.center, furthestPoint);
-						// 	if (currentRadius > greatestRadius)
-						// 		greatestRadius = currentRadius;
-						// 	furthestPoint = new Vector2(bounds.max.x, bounds.min.y);
-						// 	currentRadius = Vector2.Distance(rotationBounds.center, furthestPoint);
-						// 	if (currentRadius > greatestRadius)
-						// 		greatestRadius = currentRadius;
-						// }
-						// rotationViewer.localScale = Vector2.one * ((greatestRadius + Vector2.Distance(rotationBounds.center, transform.position)) * 2);
-						// rotationViewer.eulerAngles = waypoint.eulerAngles;
-						// rotationViewer.GetComponent<Image>().color = path.color;
-						// float rotaAmount = Mathf.Abs(Mathf.DeltaAngle(waypoint.eulerAngles.z, nextWaypoint.eulerAngles.z));
-						// if (MathfExtensions.RotationDirectionToAngle(waypoint.eulerAngles.z, nextWaypoint.eulerAngles.z) > 0 == backTracking)
-						// 	rotationViewer.GetComponent<Image>().fillClockwise = false;
-						// rotationViewer.GetComponent<Image>().fillAmount = 1f / (360f / rotaAmount);
+						Waypoint waypoint = nextWaypoint;
+						nextWaypoint = waypoints[i];
+						lineRenderers.AddRange(MakeLineRenderersForWaypoints(waypoint, previousWaypoint, nextWaypoint));
+						previousWaypoint = waypoint;
 					}
 				}
 			}
@@ -216,6 +147,47 @@ namespace AmbitiousSnake
 			{
 				Waypoint waypoint = waypoints[i];
 				waypoint.trs.SetParent(null);
+			}
+		}
+
+		int GetNextWaypointIndex (int waypointIndex)
+		{
+			return GetNextWaypointIndex(waypointIndex, isBacktracking);
+		}
+
+		int GetPreviousWaypointIndex (int waypointIndex)
+		{
+			return GetNextWaypointIndex(waypointIndex, !isBacktracking);
+		}
+
+		int GetNextWaypointIndex (int waypointIndex, bool isBacktracking)
+		{
+			if ((waypointIndex == waypoints.Count - 1 && !isBacktracking) || (waypointIndex == 0 && isBacktracking))
+			{
+				switch (followType)
+				{
+					case FollowType.Once:
+						return waypointIndex;
+					case FollowType.Loop:
+						if (!isBacktracking)
+							return 0;
+						else
+							return waypoints.Count - 1;
+					case FollowType.PingPong:
+						if (!isBacktracking)
+							return waypointIndex - 1;
+						else
+							return waypointIndex + 1;
+					default:
+						return -1;
+				}
+			}
+			else
+			{
+				if (!isBacktracking)
+					return waypointIndex + 1;
+				else
+					return waypointIndex - 1;
 			}
 		}
 
@@ -284,22 +256,35 @@ namespace AmbitiousSnake
 			}
 		}
 
-		LineRenderer[] MakeLineRenderersForWaypoints (Waypoint waypoint, Waypoint nextWaypoint)
+		LineRenderer[] MakeLineRenderersForWaypoints (Waypoint waypoint, Waypoint previousWaypoint, Waypoint nextWaypoint)
 		{
 			List<LineRenderer> output = new List<LineRenderer>();
 			if (waypoint.trs.eulerAngles == nextWaypoint.trs.eulerAngles)
 			{
 				LineRenderer[] lineRenderers = new LineRenderer[12];
-				Bounds bounds = new Bounds(waypoint.trs.position, GetBoundsOfChildren().size);
 				for (int i = 0; i < 12; i ++)
 					lineRenderers[i] = AddLineRenderer();
+				HashSet<LineRenderer> extraLineRenderers = new HashSet<LineRenderer>();
+				if (!previousWaypoint.Equals(default(Waypoint)))
+				{
+					if (waypoint.trs.position.x > previousWaypoint.trs.position.x)
+					{
+						extraLineRenderers.Add(lineRenderers[1]);
+						extraLineRenderers.Add(lineRenderers[6]);
+						extraLineRenderers.Add(lineRenderers[10]);
+						extraLineRenderers.Add(lineRenderers[11]);
+					}
+					foreach (LineRenderer extraLineRenderer in extraLineRenderers)
+						Destroy(extraLineRenderer);
+				}
+				Bounds bounds = new Bounds(waypoint.trs.position, GetBoundsOfChildren().size);
 				SetLineRenderersToBoundsSidesAndRotate (bounds, lineRenderers, waypoint.trs.position + waypoint.pivotOffset, waypoint.trs.rotation);
 				output.AddRange(lineRenderers);
-				for (int i = 0; i < 12; i ++)
-					lineRenderers[i] = AddLineRenderer();
-				bounds = new Bounds(nextWaypoint.trs.position, GetBoundsOfChildren().size);
-				SetLineRenderersToBoundsSidesAndRotate (bounds, lineRenderers, nextWaypoint.trs.position + nextWaypoint.pivotOffset, nextWaypoint.trs.rotation);
-				output.AddRange(lineRenderers);
+				// for (int i = 0; i < 12; i ++)
+				// 	lineRenderers[i] = AddLineRenderer();
+				// bounds = new Bounds(nextWaypoint.trs.position, GetBoundsOfChildren().size);
+				// SetLineRenderersToBoundsSidesAndRotate (bounds, lineRenderers, nextWaypoint.trs.position + nextWaypoint.pivotOffset, nextWaypoint.trs.rotation);
+				// output.AddRange(lineRenderers);
 			}
 			else
 			{
@@ -312,7 +297,7 @@ namespace AmbitiousSnake
 			if (GameManager.paused || _SceneManager.isLoading)
 				return;
 			if (moveSpeed != 0)
-				trs.position = Vector3.Lerp(trs.position, waypoints[currentWaypoint].trs.position, moveSpeed * Time.deltaTime * (1f / Vector2.Distance(trs.position, waypoints[currentWaypoint].trs.position)));
+				trs.position = Vector3.Lerp(trs.position + pivotPoint, waypoints[currentWaypoint].trs.position, moveSpeed * Time.deltaTime * (1f / Vector2.Distance(trs.position, waypoints[currentWaypoint].trs.position)));
 			if (rotateSpeed != 0)
 				trs.rotation = Quaternion.Slerp(trs.rotation, waypoints[currentWaypoint].trs.rotation, rotateSpeed * Time.deltaTime * (1f / Quaternion.Angle(trs.rotation, waypoints[currentWaypoint].trs.rotation)));
 			if ((trs.position == waypoints[currentWaypoint].trs.position || moveSpeed == 0) && (trs.eulerAngles == waypoints[currentWaypoint].trs.eulerAngles || rotateSpeed == 0))
@@ -321,34 +306,34 @@ namespace AmbitiousSnake
 		
 		void OnReachedWaypoint ()
 		{
-			if (backTracking)
+			if (isBacktracking)
 				currentWaypoint --;
 			else
 				currentWaypoint ++;
-			switch (moveType)
+			switch (followType)
 			{
-				case MoveType.Once:
+				case FollowType.Once:
 					if (currentWaypoint == waypoints.Count)
 						currentWaypoint = waypoints.Count - 1;
 					else if (currentWaypoint == -1)
 						currentWaypoint = 0;
 					return;
-				case MoveType.Loop:
+				case FollowType.Loop:
 					if (currentWaypoint == waypoints.Count)
 						currentWaypoint = 0;
 					else if (currentWaypoint == -1)
 						currentWaypoint = waypoints.Count - 1;
 					return;
-				case MoveType.PingPong:
+				case FollowType.PingPong:
 					if (currentWaypoint == waypoints.Count)
 					{
 						currentWaypoint -= 2;
-						backTracking = !backTracking;
+						isBacktracking = !isBacktracking;
 					}
 					else if (currentWaypoint == -1)
 					{
 						currentWaypoint += 2;
-						backTracking = !backTracking;
+						isBacktracking = !isBacktracking;
 					}
 					return;
 			}
@@ -379,7 +364,7 @@ namespace AmbitiousSnake
 		public int sortingOrder;
 	}
 
-	public enum MoveType
+	public enum FollowType
 	{
 		Once = 0,
 		Loop = 1,
