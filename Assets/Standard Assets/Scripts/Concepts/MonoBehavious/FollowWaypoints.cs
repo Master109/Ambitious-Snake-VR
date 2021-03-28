@@ -21,7 +21,6 @@ namespace AmbitiousSnake
 		public int currentWaypointIndex;
 		public bool isBacktracking;
 		public WaypointPath path;
-		public Transform rotationViewerPrefab;
 		public Vector3 pivotOffset;
 		
 #if UNITY_EDITOR

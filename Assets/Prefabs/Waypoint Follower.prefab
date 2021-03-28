@@ -44,23 +44,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b30e3347cc0e1d4a8c589d26216a110, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  trs: {fileID: 8905665468110416743}
-  moveType: 0
+  autoSetWaypoints: 1
   waypointsParent: {fileID: 8905665468770353581}
+  trs: {fileID: 8905665468110416743}
+  followType: 0
   waypoints:
   - trs: {fileID: 8905665469655983106}
-  autoSetWaypoints: 1
+    pivotOffset: {x: 0, y: 0, z: 0}
   moveSpeed: 0
   rotateSpeed: 0
-  currentWaypoint: 0
-  backTracking: 0
+  currentWaypointIndex: 0
+  isBacktracking: 0
   path:
     width: 0.1
-    color: {r: 0.14159843, g: 0.8117647, b: 0.80784315, a: 0.2509804}
+    color: {r: 0.6156863, g: 0.7529412, b: 0.3137255, a: 0.2509804}
     material: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
     sortingLayerName: Default
     sortingOrder: 0
-  rotationViewerPrefab: {fileID: 0}
+  pivotOffset: {x: 0, y: 0, z: 0}
 --- !u!1 &8905665468770353582
 GameObject:
   m_ObjectHideFlags: 0

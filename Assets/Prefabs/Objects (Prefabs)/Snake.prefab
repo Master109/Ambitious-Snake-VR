@@ -63,11 +63,10 @@ MonoBehaviour:
     value: 2
     valueRange:
       min: 2
-      max: 50
+      max: 40
   currentLength: 0
   piecePrefab: {fileID: 2551292470738008868, guid: c90fed61d079a9d6086b1212f3642e33, type: 3}
   changeLengthRate: 15
-  lengthTraveled: 0
 --- !u!54 &7320805966182605979
 Rigidbody:
   m_ObjectHideFlags: 0

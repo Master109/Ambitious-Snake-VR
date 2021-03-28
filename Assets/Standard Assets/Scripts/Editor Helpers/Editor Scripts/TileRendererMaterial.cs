@@ -8,6 +8,8 @@ namespace AmbitiousSnake
 		public Transform trs;
 		public Renderer renderer;
 		public float multiplyTextureScale;
+		public TileMethod tileMethod;
+		public bool useRotation;
 
 		public override void Do ()
 		{
@@ -17,7 +19,41 @@ namespace AmbitiousSnake
 				trs = GetComponent<Transform>();
 			if (renderer == null)
 				renderer = GetComponent<Renderer>();
-			renderer.material.mainTextureScale = trs.rotation * trs.lossyScale * multiplyTextureScale;
+			Vector3 lossyScale = trs.lossyScale;
+			Vector2 textureScale = lossyScale;
+			if (tileMethod == TileMethod.XZ)
+				textureScale.y = lossyScale.z;
+			else if (tileMethod == TileMethod.YZ)
+				textureScale = new Vector2(lossyScale.y, lossyScale.z);
+			else if (tileMethod == TileMethod.YX)
+				textureScale = new Vector2(lossyScale.y, lossyScale.x);
+			else if (tileMethod == TileMethod.ZX)
+				textureScale = new Vector2(lossyScale.z, lossyScale.x);
+			else if (tileMethod == TileMethod.ZY)
+				textureScale = new Vector2(lossyScale.z, lossyScale.y);
+			else if (tileMethod == TileMethod.XX)
+				textureScale = new Vector2(lossyScale.x, lossyScale.x);
+			else if (tileMethod == TileMethod.YY)
+				textureScale = new Vector2(lossyScale.y, lossyScale.y);
+			else if (tileMethod == TileMethod.ZZ)
+				textureScale = new Vector2(lossyScale.z, lossyScale.z);
+			if (useRotation)
+				renderer.material.mainTextureScale = trs.rotation * textureScale * multiplyTextureScale;
+			else
+				renderer.material.mainTextureScale = textureScale * multiplyTextureScale;
+		}
+
+		public enum TileMethod
+		{
+			XY,
+			XZ,
+			YZ,
+			YX,
+			ZX,
+			ZY,
+			XX,
+			YY,
+			ZZ
 		}
 	}
 }
