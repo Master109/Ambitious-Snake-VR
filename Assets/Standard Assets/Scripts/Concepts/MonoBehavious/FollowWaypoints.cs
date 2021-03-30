@@ -253,54 +253,66 @@ namespace AmbitiousSnake
 					Vector3 corner5 = corners[5];
 					Vector3 corner6 = corners[6];
 					Vector3 corner7 = corners[7];
+					Vector3[] corners2 = bounds2.GetCorners();
+					Vector3 corner2_0 = corners2[0];
+					Vector3 corner2_1 = corners2[1];
+					Vector3 corner2_2 = corners2[2];
+					Vector3 corner2_3 = corners2[3];
+					Vector3 corner2_4 = corners2[4];
+					Vector3 corner2_5 = corners2[5];
+					Vector3 corner2_6 = corners2[6];
+					Vector3 corner2_7 = corners2[7];
 					if (nextWaypoint.trs.position.x > waypoint.trs.position.x)
 					{
-						ChangeLineRenderer (lineRenderers[1], bounds2, corner1, ref changedLineRenderers);
-						ChangeLineRenderer (lineRenderers[6], bounds2, corner2, ref changedLineRenderers);
-						ChangeLineRenderer (lineRenderers[10], bounds2, corner3, ref changedLineRenderers);
-						ChangeLineRenderer (lineRenderers[11], bounds2, corner7, ref changedLineRenderers);
+						ChangeLineRenderer (lineRenderers[1], corner1, corner2_1, ref changedLineRenderers);
+						ChangeLineRenderer (lineRenderers[6], corner2, corner2_2, ref changedLineRenderers);
+						ChangeLineRenderer (lineRenderers[10], corner3, corner2_3, ref changedLineRenderers);
+						ChangeLineRenderer (lineRenderers[11], corner7, corner2_7, ref changedLineRenderers);
 					}
 					else if (nextWaypoint.trs.position.x < waypoint.trs.position.x)
 					{
-						ChangeLineRenderer (lineRenderers[1], bounds2, corner0, ref changedLineRenderers);
-						ChangeLineRenderer (lineRenderers[4], bounds2, corner4, ref changedLineRenderers);
-						ChangeLineRenderer (lineRenderers[7], bounds2, corner5, ref changedLineRenderers);
-						ChangeLineRenderer (lineRenderers[8], bounds2, corner6, ref changedLineRenderers);
+						ChangeLineRenderer (lineRenderers[1], corner0, corner2_0, ref changedLineRenderers);
+						ChangeLineRenderer (lineRenderers[4], corner4, corner2_4, ref changedLineRenderers);
+						ChangeLineRenderer (lineRenderers[7], corner5, corner2_5, ref changedLineRenderers);
+						ChangeLineRenderer (lineRenderers[8], corner6, corner2_6, ref changedLineRenderers);
 					}
 					if (nextWaypoint.trs.position.y > waypoint.trs.position.y)
 					{
-						ChangeLineRenderer (lineRenderers[1], bounds2, corner2, ref changedLineRenderers);
-						ChangeLineRenderer (lineRenderers[5], bounds2, corner3, ref changedLineRenderers);
-						ChangeLineRenderer (lineRenderers[8], bounds2, corner4, ref changedLineRenderers);
-						ChangeLineRenderer (lineRenderers[9], bounds2, corner5, ref changedLineRenderers);
+						ChangeLineRenderer (lineRenderers[1], corner2, corner2_2, ref changedLineRenderers);
+						ChangeLineRenderer (lineRenderers[5], corner3, corner2_3, ref changedLineRenderers);
+						ChangeLineRenderer (lineRenderers[8], corner4, corner2_4, ref changedLineRenderers);
+						ChangeLineRenderer (lineRenderers[9], corner5, corner2_5, ref changedLineRenderers);
 					}
 					else if (nextWaypoint.trs.position.y < waypoint.trs.position.y)
 					{
-						ChangeLineRenderer (lineRenderers[0], bounds2, corner0, ref changedLineRenderers);
-						ChangeLineRenderer (lineRenderers[2], bounds2, corner1, ref changedLineRenderers);
-						ChangeLineRenderer (lineRenderers[3], bounds2, corner6, ref changedLineRenderers);
-						ChangeLineRenderer (lineRenderers[10], bounds2, corner7, ref changedLineRenderers);
+						ChangeLineRenderer (lineRenderers[0], corner0, corner2_0, ref changedLineRenderers);
+						ChangeLineRenderer (lineRenderers[2], corner1, corner2_1, ref changedLineRenderers);
+						ChangeLineRenderer (lineRenderers[3], corner6, corner2_6, ref changedLineRenderers);
+						ChangeLineRenderer (lineRenderers[10], corner7, corner2_7, ref changedLineRenderers);
 					}
 					if (nextWaypoint.trs.position.z > waypoint.trs.position.z)
 					{
-						ChangeLineRenderer (lineRenderers[3], bounds2, corner3, ref changedLineRenderers);
-						ChangeLineRenderer (lineRenderers[4], bounds2, corner5, ref changedLineRenderers);
-						ChangeLineRenderer (lineRenderers[5], bounds2, corner6, ref changedLineRenderers);
-						ChangeLineRenderer (lineRenderers[6], bounds2, corner7, ref changedLineRenderers);
+						ChangeLineRenderer (lineRenderers[3], corner3, corner2_3, ref changedLineRenderers);
+						ChangeLineRenderer (lineRenderers[4], corner5, corner2_5, ref changedLineRenderers);
+						ChangeLineRenderer (lineRenderers[5], corner6, corner2_6, ref changedLineRenderers);
+						ChangeLineRenderer (lineRenderers[6], corner7, corner2_7, ref changedLineRenderers);
 					}
 					else if (nextWaypoint.trs.position.z < waypoint.trs.position.z)
 					{
-						ChangeLineRenderer (lineRenderers[0], bounds2, corner0, ref changedLineRenderers);
-						ChangeLineRenderer (lineRenderers[7], bounds2, corner1, ref changedLineRenderers);
-						ChangeLineRenderer (lineRenderers[9], bounds2, corner2, ref changedLineRenderers);
-						ChangeLineRenderer (lineRenderers[11], bounds2, corner4, ref changedLineRenderers);
+						ChangeLineRenderer (lineRenderers[0], corner0, corner2_0, ref changedLineRenderers);
+						ChangeLineRenderer (lineRenderers[7], corner1, corner2_1, ref changedLineRenderers);
+						ChangeLineRenderer (lineRenderers[9], corner2, corner2_2, ref changedLineRenderers);
+						ChangeLineRenderer (lineRenderers[11], corner4, corner2_4, ref changedLineRenderers);
 					}
 					foreach (LineRenderer changedLineRenderer in changedLineRenderers)
 						extraLineRenderers.Remove(changedLineRenderer);
 				}
-				foreach (LineRenderer extraLineRenderer in extraLineRenderers)
-					RemoveLineRenderer (extraLineRenderer);
 				output.AddRange(lineRenderers);
+				// foreach (LineRenderer extraLineRenderer in extraLineRenderers)
+				// {
+				// 	output.Remove(extraLineRenderer);
+				// 	RemoveLineRenderer (extraLineRenderer);
+				// }
 			}
 			else
 			{
@@ -308,9 +320,9 @@ namespace AmbitiousSnake
 			return output.ToArray();
 		}
 
-		void ChangeLineRenderer (LineRenderer lineRenderer, Bounds otherBounds, Vector3 point, ref HashSet<LineRenderer> changedLineRenderers)
+		void ChangeLineRenderer (LineRenderer lineRenderer, Vector3 point, Vector3 otherPoint, ref HashSet<LineRenderer> changedLineRenderers)
 		{
-			lineRenderer.SetPositions(new Vector3[2] { otherBounds.ClosestPoint(point), point });
+			lineRenderer.SetPositions(new Vector3[2] { point, otherPoint });
 			changedLineRenderers.Add(lineRenderer);
 		}
 
