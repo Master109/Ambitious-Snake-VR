@@ -92,7 +92,7 @@ namespace AmbitiousSnake
 				nextWaypoint = waypoints[currentWaypointIndex];
 				if (followType == FollowType.Loop)
 				{
-					if (currentWaypointIndex == previousCurrentWaypointIndex)
+					if (passedPreviousCurrentWaypointCount == 2)
 						break;
 				}
 				else if (followType == FollowType.PingPong)
@@ -102,11 +102,12 @@ namespace AmbitiousSnake
 				}
 				else// if (followType == FollowType.Once)
 				{
-					if (currentWaypointIndex == waypoints.Count - 1 || currentWaypointIndex == 0)
+					if (previousWaypointIndex == currentWaypointIndex)
 						break;
 				}
 				lineRenderers.AddRange(MakeLineRenderersForWaypoint(waypoint, previousWaypoint, nextWaypoint));
 				previousWaypoint = waypoint;
+				previousWaypointIndex = currentWaypointIndex;
 			}
 			currentWaypointIndex = previousCurrentWaypointIndex;
 			isBacktracking = previousIsBacktracking;
