@@ -112,6 +112,7 @@ namespace AmbitiousSnake
 			StartCoroutine(SceneTransition (null));
 			SceneManager.sceneLoaded -= OnSceneLoaded;
 			isLoading = false;
+			mostRecentSceneName = scene.name;
 		}
 		
 		public virtual IEnumerator SceneTransition (string levelName = null, LoadSceneMode loadMode = LoadSceneMode.Single)

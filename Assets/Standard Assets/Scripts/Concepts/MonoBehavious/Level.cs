@@ -11,8 +11,13 @@ using UnityEditor;
 namespace AmbitiousSnake
 {
 	[ExecuteInEditMode]
-	public class Level : SingletonMonoBehaviour<Level>, IUpdatable
+	public class Level : SingletonMonoBehaviour<Level>, IUpdatable, ISaveableAndLoadable
 	{
+		[SaveAndLoadValue]
+		public bool hasWon;
+		[SaveAndLoadValue]
+		public float fastestTime;
+		public float parTime;
 		public TMP_Text timerText;
 		
 		void OnEnable ()
