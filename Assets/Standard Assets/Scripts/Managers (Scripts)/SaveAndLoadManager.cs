@@ -90,7 +90,8 @@ public class SaveAndLoadManager : SingletonMonoBehaviour<SaveAndLoadManager>
 			LastSaveEntryIndex ++;
 		for (int i = 0; i < saveEntries.Length; i ++)
 			saveEntries[i].Save ();
-		StartCoroutine(displayOnSave.DisplayRoutine ());
+		if (displayOnSave.obj != null)
+			StartCoroutine(displayOnSave.DisplayRoutine ());
 	}
 	
 	public virtual void Load (int savedGameIndex)

@@ -20,29 +20,6 @@ namespace AmbitiousSnake
 		static string enabledGosString = "";
 		[SaveAndLoadValue]
 		static string disabledGosString = "";
-		public string Name
-		{
-			get
-			{
-				return name;
-			}
-			set
-			{
-				name = value;
-			}
-		}
-		public int uniqueId;
-		public int UniqueId
-		{
-			get
-			{
-				return uniqueId;
-			}
-			set
-			{
-				uniqueId = value;
-			}
-		}
 		public TileParent tileParentPrefab;
 		bool leftGameplayMenuInput;
 		bool previousLeftGameplayMenuInput;
