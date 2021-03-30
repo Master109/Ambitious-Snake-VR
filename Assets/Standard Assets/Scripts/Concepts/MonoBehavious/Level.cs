@@ -19,6 +19,7 @@ namespace AmbitiousSnake
 		public float fastestTime;
 		public float parTime;
 		public TMP_Text timerText;
+		public Color pastParTimeTimerColor;
 		
 		void OnEnable ()
 		{
@@ -40,7 +41,10 @@ namespace AmbitiousSnake
 
 		public void DoUpdate ()
 		{
-			timerText.text = string.Format("{0:0.#}", Time.timeSinceLevelLoad);
+			float timeSinceLevelLoad = Time.timeSinceLevelLoad;
+			timerText.text = string.Format("{0:0.#}", timeSinceLevelLoad);
+			if (timeSinceLevelLoad > parTime)
+				timerText.color = pastParTimeTimerColor;
 		}
 
 #if UNITY_EDITOR
