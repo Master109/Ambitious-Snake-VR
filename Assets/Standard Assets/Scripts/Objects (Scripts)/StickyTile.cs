@@ -5,7 +5,7 @@ using Extensions;
 
 namespace AmbitiousSnake
 {
-	public class StickyTile : Tile, ICollisionEnterHandler, ICollisionExitHandler, IUpdatable
+	public class StickyTile : Tile, ICollisionEnterHandler, IUpdatable
 	{
 		public Collider collider;
 		public Collider Collider
@@ -16,11 +16,12 @@ namespace AmbitiousSnake
 			}
 		}
 		List<Rigidbody> stuckRigids = new List<Rigidbody>();
-		List<Rigidbody> previousStuckRigids = new List<Rigidbody>();
 
 		public void OnCollisionEnter (Collision coll)
 		{
 			Rigidbody rigid = coll.gameObject.GetComponentInParent<Rigidbody>();
+			if (stuckRigids.Contains(rigid))
+				return;
 			stuckRigids.Add(rigid);
 			rigid.isKinematic = true;
 		}
@@ -30,11 +31,6 @@ namespace AmbitiousSnake
 			OnCollisionEnter (coll);
 		}
 
-		public void OnCollisionExit (Collision coll)
-		{
-			OnCollisionStay (coll);
-		}
-
 		void OnEnable ()
 		{
 			GameManager.updatables = GameManager.updatables.Add(this);
@@ -42,14 +38,27 @@ namespace AmbitiousSnake
 
 		public virtual void DoUpdate ()
 		{
-			for (int i = 0; i < previousStuckRigids.Count; i ++)
+			for (int i = 0; i < stuckRigids.Count; i ++)
 			{
-				Rigidbody previousStuckRigid = previousStuckRigids[i];
-				if (!stuckRigids.Contains(previousStuckRigid))
-					previousStuckRigid.isKinematic = false;
+				Rigidbody stuckRigid = stuckRigids[i];
+				bool isHittingRigid = false;
+				Collider[] hits = Physics.OverlapBox(trs.position, trs.lossyScale / 2 + Vector3.one * Physics.defaultContactOffset, trs.rotation);
+				for (int i2 = 0; i2 < hits.Length; i2 ++)
+				{
+					Collider hit = hits[i2];
+					if (hit.GetComponentInParent<Rigidbody>() == stuckRigid)
+					{
+						isHittingRigid = true;
+						break;
+					}
+				}
+				if (!isHittingRigid)
+				{
+					stuckRigid.isKinematic = false;
+					stuckRigids.RemoveAt(i);
+					i --;
+				}
 			}
-			previousStuckRigids = new List<Rigidbody>(stuckRigids);
-			stuckRigids.Clear();
 		}
 
 		void OnDisable ()
