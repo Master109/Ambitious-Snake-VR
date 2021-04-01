@@ -56,6 +56,7 @@ MonoBehaviour:
   hpText: {fileID: 0}
   dead: 0
   maxDistanceBetweenPieces: 0.25
+  pieces: []
   whatICrashInto:
     serializedVersion: 2
     m_Bits: 12224
@@ -67,6 +68,7 @@ MonoBehaviour:
   currentLength: 0
   piecePrefab: {fileID: 2551292470738008868, guid: c90fed61d079a9d6086b1212f3642e33, type: 3}
   changeLengthRate: 15
+  collisionAudioClip: {fileID: 8300000, guid: 646e92e9999b33ca88dcb2e291e25cac, type: 3}
 --- !u!54 &7320805966182605979
 Rigidbody:
   m_ObjectHideFlags: 0

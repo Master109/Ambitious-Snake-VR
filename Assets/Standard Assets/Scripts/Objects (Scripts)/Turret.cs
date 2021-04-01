@@ -31,7 +31,7 @@ namespace AmbitiousSnake
 			{
 				Vector3 snakePiecePosition = Snake.instance.pieces[i].trs.position;
 				Vector3 toSnakePiecePosition = snakePiecePosition - trs.position;
-				trs.rotation = Quaternion.LookRotation(Vector3.forward, toSnakePiecePosition);
+				trs.rotation = Quaternion.LookRotation(toSnakePiecePosition);
 				laser.DoUpdate ();
 				if (laser.hit.collider != null && laser.hit.transform.root == Snake.instance.trs)
 				{
@@ -42,14 +42,14 @@ namespace AmbitiousSnake
 			}
 			if (shootDirection != VectorExtensions.NULL3)
 			{
-				trs.rotation = Quaternion.LookRotation(Vector3.forward, shootDirection);
+				trs.rotation = Quaternion.LookRotation(shootDirection);
 				line.startColor = lockedOnColor;
 				line.endColor = lockedOnColor;
 				if (reloadTimer.timeRemaining <= 0)
 				{
 					reloadTimer.Reset ();
 					reloadTimer.Start ();
-					ObjectPool.Instance.SpawnComponent<Bullet> (bulletPrefab, trs.position, Quaternion.LookRotation(Vector3.forward, shootDirection));
+					ObjectPool.Instance.SpawnComponent<Bullet> (bulletPrefab, trs.position, Quaternion.LookRotation(shootDirection));
 				}
 			}
 			else

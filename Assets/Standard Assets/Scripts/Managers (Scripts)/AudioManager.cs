@@ -1,43 +1,52 @@
-﻿using System.Collections;
+﻿﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Extensions;
 
-public class AudioManager : SingletonMonoBehaviour<AudioManager>
+namespace AmbitiousSnake
 {
-	public float Volume
+	public class AudioManager : SingletonMonoBehaviour<AudioManager>
 	{
-		get
+		public float Volume
 		{
-			return PlayerPrefs.GetFloat("Volume", 1);
+			get
+			{
+				return PlayerPrefs.GetFloat("Volume", 1);
+			}
+			set
+			{
+				AudioListener.volume = value;
+				PlayerPrefs.SetFloat("Volume", value);
+			}
 		}
-		set
+		public bool Mute
 		{
-			AudioListener.volume = value;
-			PlayerPrefs.SetFloat("Volume", value);
+			get
+			{
+				return PlayerPrefsExtensions.GetBool("Mute");
+			}
+			set
+			{
+				AudioListener.pause = value;
+				PlayerPrefsExtensions.SetBool("Mute", value);
+			}
 		}
-	}
-	public bool Mute
-	{
-		get
+		public SoundEffect soundEffectPrefab;
+		
+		public SoundEffect MakeSoundEffect (AudioClip audioClip, Vector3 position)
 		{
-			return PlayerPrefsExtensions.GetBool("Mute");
+			SoundEffect.Settings soundEffectSettings = soundEffectPrefab.settings;
+			soundEffectSettings.audioClip = audioClip;
+			soundEffectSettings.Position = position;
+			return MakeSoundEffect(soundEffectSettings);
 		}
-		set
+		
+		public SoundEffect MakeSoundEffect (SoundEffect.Settings soundEffectSettings)
 		{
-			AudioListener.pause = value;
-			PlayerPrefsExtensions.SetBool("Mute", value);
+			SoundEffect output = ObjectPool.instance.SpawnComponent<SoundEffect>(soundEffectPrefab, soundEffectSettings.Position, soundEffectSettings.Rotation);
+			output.settings = soundEffectSettings;
+			output.Play();
+			return output;
 		}
-	}
-	public SoundEffect soundEffectPrefab;
-	public AudioClip[] deathSounds;
-	public AudioClip[] deathResponses;
-	
-	public virtual SoundEffect MakeSoundEffect (SoundEffect.Settings soundEffectSettings)
-	{
-		SoundEffect output = Instantiate(soundEffectPrefab, soundEffectSettings.Position, soundEffectSettings.Rotation);
-		output.settings = soundEffectSettings;
-		output.Play();
-		return output;
 	}
 }

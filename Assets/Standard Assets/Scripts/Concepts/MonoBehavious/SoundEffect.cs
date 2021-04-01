@@ -4,113 +4,116 @@ using UnityEngine;
 using Extensions;
 using System;
 
-public class SoundEffect : MonoBehaviour
+namespace AmbitiousSnake
 {
-	public Transform trs;
-	public AudioSource audioSource;
-	public Settings settings = new Settings();
-	
-	public virtual void Play ()
+	public class SoundEffect : MonoBehaviour
 	{
-		audioSource.clip = settings.audioClip;
-		audioSource.volume = settings.Volume;
-		audioSource.maxDistance = settings.MaxDistance;
-		audioSource.minDistance = settings.MinDistance;
-		audioSource.Play();
-		if (settings.persistant)
-			DontDestroyOnLoad(gameObject);
-		Destroy(gameObject, audioSource.clip.length);
-	}
-	
-	[Serializable]
-	public class Settings
-	{
-		public AudioClip audioClip;
-		public bool persistant;
-		float volume = MathfExtensions.NULL_FLOAT;
-		public float Volume
+		public Transform trs;
+		public AudioSource audioSource;
+		public Settings settings = new Settings();
+		
+		public virtual void Play ()
 		{
-			get
-			{
-				if (volume == MathfExtensions.NULL_FLOAT)
-					return AudioManager.Instance.soundEffectPrefab.audioSource.volume;
-				else
-					return volume;
-			}
-			set
-			{
-				volume = value;
-			}
+			audioSource.clip = settings.audioClip;
+			audioSource.volume = settings.Volume;
+			audioSource.maxDistance = settings.MaxDistance;
+			audioSource.minDistance = settings.MinDistance;
+			audioSource.Play();
+			if (settings.persistant)
+				DontDestroyOnLoad(gameObject);
+			Destroy(gameObject, audioSource.clip.length);
 		}
-		float maxDistance = MathfExtensions.NULL_FLOAT;
-		public float MaxDistance
+		
+		[Serializable]
+		public class Settings
 		{
-			get
+			public AudioClip audioClip;
+			public bool persistant;
+			float volume = MathfExtensions.NULL_FLOAT;
+			public float Volume
 			{
-				if (maxDistance == MathfExtensions.NULL_FLOAT)
-					return AudioManager.Instance.soundEffectPrefab.audioSource.maxDistance;
-				else
-					return maxDistance;
-			}
-			set
-			{
-				maxDistance = value;
-			}
-		}
-		float minDistance = MathfExtensions.NULL_FLOAT;
-		public float MinDistance
-		{
-			get
-			{
-				if (minDistance == MathfExtensions.NULL_FLOAT)
-					return AudioManager.Instance.soundEffectPrefab.audioSource.minDistance;
-				else
-					return minDistance;
-			}
-			set
-			{
-				minDistance = value;
-			}
-		}
-		public Transform speakerTrs;
-		Vector3 position = VectorExtensions.NULL3;
-		public Vector3 Position
-		{
-			get
-			{
-				if (speakerTrs != null)
-					return speakerTrs.position;
-				else
+				get
 				{
-					if (position == VectorExtensions.NULL3)
-						return AudioManager.Instance.soundEffectPrefab.trs.position;
+					if (volume == MathfExtensions.NULL_FLOAT)
+						return AudioManager.Instance.soundEffectPrefab.audioSource.volume;
 					else
-						return position;
+						return volume;
+				}
+				set
+				{
+					volume = value;
 				}
 			}
-			set
+			float maxDistance = MathfExtensions.NULL_FLOAT;
+			public float MaxDistance
 			{
-				position = value;
-			}
-		}
-		Quaternion rotation = QuaternionExtensions.NULL;
-		public Quaternion Rotation
-		{
-			get
-			{
-				if (speakerTrs != null)
-					return speakerTrs.rotation;
-				else
+				get
 				{
-					if (rotation == QuaternionExtensions.NULL)
-						return AudioManager.Instance.soundEffectPrefab.trs.rotation;
+					if (maxDistance == MathfExtensions.NULL_FLOAT)
+						return AudioManager.Instance.soundEffectPrefab.audioSource.maxDistance;
 					else
-						return rotation;
+						return maxDistance;
+				}
+				set
+				{
+					maxDistance = value;
 				}
 			}
-			set
+			float minDistance = MathfExtensions.NULL_FLOAT;
+			public float MinDistance
 			{
-				rotation = value;
+				get
+				{
+					if (minDistance == MathfExtensions.NULL_FLOAT)
+						return AudioManager.Instance.soundEffectPrefab.audioSource.minDistance;
+					else
+						return minDistance;
+				}
+				set
+				{
+					minDistance = value;
+				}
+			}
+			public Transform speakerTrs;
+			Vector3 position = VectorExtensions.NULL3;
+			public Vector3 Position
+			{
+				get
+				{
+					if (speakerTrs != null)
+						return speakerTrs.position;
+					else
+					{
+						if (position == VectorExtensions.NULL3)
+							return AudioManager.Instance.soundEffectPrefab.trs.position;
+						else
+							return position;
+					}
+				}
+				set
+				{
+					position = value;
+				}
+			}
+			Quaternion rotation = QuaternionExtensions.NULL;
+			public Quaternion Rotation
+			{
+				get
+				{
+					if (speakerTrs != null)
+						return speakerTrs.rotation;
+					else
+					{
+						if (rotation == QuaternionExtensions.NULL)
+							return AudioManager.Instance.soundEffectPrefab.trs.rotation;
+						else
+							return rotation;
+					}
+				}
+				set
+				{
+					rotation = value;
+				}
 			}
 		}
 	}

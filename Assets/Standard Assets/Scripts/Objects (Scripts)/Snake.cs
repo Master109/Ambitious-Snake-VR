@@ -1,4 +1,4 @@
-﻿using System.Collections;
+﻿﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Extensions;
@@ -78,6 +78,7 @@ namespace AmbitiousSnake
 				return TailPiece.trs.position;
 			}
 		}
+		public AudioClip collisionAudioClip;
 
 		public override void Awake ()
 		{
@@ -238,5 +239,21 @@ namespace AmbitiousSnake
 		{
 			GameManager.updatables = GameManager.updatables.Remove(this);
 		}
+
+		// void OnCollisionEnter (Collision coll)
+		// {
+		// 	ContactPoint[] contactPoints = new ContactPoint[coll.contactCount];
+		// 	coll.GetContacts(contactPoints);
+		// 	for (int i = 0; i < coll.contactCount; i ++)
+		// 		AudioManager.instance.MakeSoundEffect (collisionAudioClip, contactPoints[i].point);
+		// }
+
+		// void OnCollisionExit (Collision coll)
+		// {
+		// 	ContactPoint[] contactPoints = new ContactPoint[coll.contactCount];
+		// 	coll.GetContacts(contactPoints);
+		// 	for (int i = 0; i < coll.contactCount; i ++)
+		// 		AudioManager.instance.MakeSoundEffect (collisionAudioClip, contactPoints[i].point);
+		// }
 	}
 }
