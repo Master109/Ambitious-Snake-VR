@@ -35,7 +35,7 @@ public class LineSegment2D
 		return (end - start).GetFacingAngle();
 	}
 
-	public bool DoIIntersectWith (LineSegment2D other, bool shouldIncludeEndPoints)
+	public bool DoIIntersectWithLineSegment (LineSegment2D other, bool shouldIncludeEndPoints)
 	{
 		bool output = false;
 		float denominator = (other.end.y - other.start.y) * (end.x - start.x) - (other.end.x - other.start.x) * (end.y - start.y);

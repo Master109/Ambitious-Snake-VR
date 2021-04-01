@@ -118,13 +118,6 @@ public class LineSegment3D
 
 	public virtual bool DoIIntersectWithLineSegment (LineSegment3D other, bool shouldIncludeEndPoints)
 	{
-		Vector3 da = end - start; 
-		Vector3 db = other.end - other.start;
-		Vector3 dc = other.start - start;
-		if (Vector3.Dot(dc, Vector3.Cross(da, db)) != 0) // lines are not coplanar
-			return false;
-		float s = Vector3.Dot(Vector3.Cross(dc, db), Vector3.Cross(da, db)) / Vector3.Dot(Vector3.Cross(da, db), Vector3.Cross(da, db));
-		float t = Vector3.Dot(Vector3.Cross(dc, da), Vector3.Cross(da, db)) / Vector3.Dot(Vector3.Cross(da, db), Vector3.Cross(da, db));
-		return s >= 0 && s <= 1 && t >= 0 && t <= 1;
+		throw new NotImplementedException();
 	}
 }

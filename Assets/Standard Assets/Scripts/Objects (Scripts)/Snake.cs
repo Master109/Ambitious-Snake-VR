@@ -44,7 +44,7 @@ namespace AmbitiousSnake
 		public bool dead;
 		Vector3 move;
 		public float maxDistanceBetweenPieces;
-		List<SnakePiece> pieces = new List<SnakePiece>();
+		public List<SnakePiece> pieces = new List<SnakePiece>();
 		public LayerMask whatICrashInto;
 		public ClampedFloat length;
 		public float currentLength;
