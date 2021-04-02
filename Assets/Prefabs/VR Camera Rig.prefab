@@ -109,7 +109,7 @@ MonoBehaviour:
   lookRate: 20
   whatICollideWith:
     serializedVersion: 2
-    m_Bits: 896
+    m_Bits: 257920
   cameraDistance: 0
   positionOffset: {x: 0, y: 0, z: 0}
 --- !u!1 &1435133479702998454
@@ -176,7 +176,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 32727
+    m_Bits: 262103
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
