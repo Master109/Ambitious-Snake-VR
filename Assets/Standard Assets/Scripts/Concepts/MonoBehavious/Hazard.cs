@@ -10,7 +10,7 @@ namespace AmbitiousSnake
 		
 		public virtual void OnCollisionEnter (Collision coll)
 		{
-			IDestructable destructable = coll.rigidbody.GetComponent<IDestructable>();
+			IDestructable destructable = coll.collider.GetComponentInParent<IDestructable>();
 			if (destructable != null)
 				ApplyDamage (destructable, damage);
 		}

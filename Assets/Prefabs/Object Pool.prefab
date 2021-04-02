@@ -58,3 +58,8 @@ MonoBehaviour:
     prefabIndex: 0
     createdCount: 0
     preload: 20
+  - prefab: {fileID: 3157004881315518420, guid: 7c07db2b727dad823ba8c43396b46e30, type: 3}
+    trs: {fileID: 3157004881315518423, guid: 7c07db2b727dad823ba8c43396b46e30, type: 3}
+    prefabIndex: 0
+    createdCount: 0
+    preload: 30

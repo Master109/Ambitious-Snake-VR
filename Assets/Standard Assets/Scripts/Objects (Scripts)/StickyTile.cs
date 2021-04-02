@@ -23,7 +23,9 @@ namespace AmbitiousSnake
 			if (stuckRigids.Contains(rigid))
 				return;
 			stuckRigids.Add(rigid);
-			rigid.isKinematic = true;
+			// rigid.isKinematic = true;
+			rigid.useGravity = false;
+			rigid.constraints = RigidbodyConstraints.FreezeAll;
 		}
 
 		void OnCollisionStay (Collision coll)
@@ -36,7 +38,7 @@ namespace AmbitiousSnake
 			GameManager.updatables = GameManager.updatables.Add(this);
 		}
 
-		public virtual void DoUpdate ()
+		public void DoUpdate ()
 		{
 			for (int i = 0; i < stuckRigids.Count; i ++)
 			{
@@ -54,7 +56,9 @@ namespace AmbitiousSnake
 				}
 				if (!isHittingRigid)
 				{
-					stuckRigid.isKinematic = false;
+					// stuckRigid.isKinematic = false;
+					stuckRigid.constraints = RigidbodyConstraints.None;
+					stuckRigid.useGravity = true;
 					stuckRigids.RemoveAt(i);
 					i --;
 				}

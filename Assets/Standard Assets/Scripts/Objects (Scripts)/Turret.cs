@@ -20,6 +20,7 @@ namespace AmbitiousSnake
 		public Color searchingColor;
 		public Transform trs;
 		public Laser laser;
+		public new Collider collider;
 		Vector3 shootDirection;
 
 		public override void DoUpdate ()
@@ -27,7 +28,7 @@ namespace AmbitiousSnake
 			if (GameManager.paused)
 				return;
 			shootDirection = VectorExtensions.NULL3;
-			for (int i = Snake.instance.pieces.Count; i >= 0; i --)
+			for (int i = Snake.instance.pieces.Count - 1; i >= 0; i --)
 			{
 				Vector3 snakePiecePosition = Snake.instance.pieces[i].trs.position;
 				Vector3 toSnakePiecePosition = snakePiecePosition - trs.position;
@@ -49,7 +50,9 @@ namespace AmbitiousSnake
 				{
 					reloadTimer.Reset ();
 					reloadTimer.Start ();
-					ObjectPool.Instance.SpawnComponent<Bullet> (bulletPrefab, trs.position, Quaternion.LookRotation(shootDirection));
+					Bullet bullet = ObjectPool.Instance.SpawnComponent<Bullet> (bulletPrefab, trs.position, Quaternion.LookRotation(shootDirection));
+					bullet.shooter = this;
+					Physics.IgnoreCollision(collider, bullet.collider, true);
 				}
 			}
 			else
