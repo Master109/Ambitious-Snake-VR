@@ -70,8 +70,8 @@ MonoBehaviour:
   bulletPrefab: {fileID: 8882596669603613708, guid: 7c07db2b727dad823ba8c43396b46e30, type: 3}
   bulletWidth: 0.2
   line: {fileID: 1985160938632946837}
-  lockedOnColor: {r: 0.7882353, g: 0.03524386, b: 0.2627451, a: 1}
-  searchingColor: {r: 0.9372549, g: 0.87058824, b: 0.08627451, a: 1}
+  lockedOnColor: {r: 0.7882353, g: 0.03524386, b: 0.2627451, a: 0.2509804}
+  searchingColor: {r: 0.9372549, g: 0.87058824, b: 0.08627451, a: 0.2509804}
   trs: {fileID: 2044134707789399109}
   laser: {fileID: 1985160938632946838}
   collider: {fileID: 6573802070151520709}
