@@ -13,6 +13,7 @@ namespace AmbitiousSnake
 		{
 			InputManager inputManager = (InputManager) AssetDatabase.LoadAssetAtPath(PATH_TO_INPUT_MANAGER, typeof(InputManager));
 			inputManager.inputDevice = InputManager.InputDevice.KeyboardAndMouse;
+			PrefabUtility.SavePrefabAsset(inputManager.gameObject);
 		}
 
 		[MenuItem("Game/Use Oculus Rift")]
@@ -20,6 +21,7 @@ namespace AmbitiousSnake
 		{
 			InputManager inputManager = (InputManager) AssetDatabase.LoadAssetAtPath(PATH_TO_INPUT_MANAGER, typeof(InputManager));
 			inputManager.inputDevice = InputManager.InputDevice.OculusRift;
+			PrefabUtility.SavePrefabAsset(inputManager.gameObject);
 		}
 	}
 }
