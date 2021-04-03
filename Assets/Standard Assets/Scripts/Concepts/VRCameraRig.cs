@@ -67,9 +67,14 @@ namespace AmbitiousSnake
 					trackingSpaceTrs.RotateAround(trackingSpaceTrs.position, trackingSpaceTrs.right, rotaInput.y);
 					trackingSpaceTrs.RotateAround(trackingSpaceTrs.position, Vector3.up, rotaInput.x);
 				}
+				RaycastHit hit;
+				if (Physics.Raycast(Snake.instance.HeadPosition, trs.position - Snake.instance.HeadPosition, out hit, cameraDistance, whatICollideWith))
+					positionOffset = positionOffset.normalized * hit.distance;
+				else
+					positionOffset = positionOffset.normalized * cameraDistance;
 				trs.position = Snake.instance.HeadPosition + (rota * positionOffset);
 			}
-			if (setOrientationInput && !previousSetOrientationInput)
+			if (setOrientationInput && (!previousSetOrientationInput || InputManager._InputDevice == InputManager.InputDevice.KeyboardAndMouse))
 				SetOrientation ();
 			previousSetOrientationInput = setOrientationInput;
 		}
@@ -101,7 +106,8 @@ namespace AmbitiousSnake
 		void SetOrientation ()
 		{
 			rota = eyesTrs.rotation;
-			trackingSpaceTrs.forward = eyesTrs.forward.GetXZ();
+			if (InputManager._InputDevice != InputManager.InputDevice.KeyboardAndMouse)
+				trackingSpaceTrs.forward = eyesTrs.forward.GetXZ();
 		}
 	}
 }

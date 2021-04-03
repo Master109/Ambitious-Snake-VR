@@ -180,7 +180,7 @@ namespace AmbitiousSnake
 #if UNITY_EDITOR
 				if (Keyboard.current.wKey.isPressed)
 					// output = Snake.Instance.followTrs.position - Snake.instance.HeadPosition;
-					output = Snake.Instance.followTrs.forward;
+					output = -VRCameraRig.instance.eyesTrs.right;
 #endif
 				if (LeftMoveInput)
 					output = LeftHandRotation * Vector3.forward;
