@@ -50,7 +50,7 @@ namespace AmbitiousSnake
 				{
 					reloadTimer.Reset ();
 					reloadTimer.Start ();
-					Bullet bullet = ObjectPool.Instance.SpawnComponent<Bullet> (bulletPrefab, trs.position, Quaternion.LookRotation(shootDirection));
+					Bullet bullet = ObjectPool.Instance.SpawnComponent<Bullet>(bulletPrefab, trs.position, Quaternion.LookRotation(shootDirection));
 					bullet.shooter = this;
 					Physics.IgnoreCollision(collider, bullet.collider, true);
 				}

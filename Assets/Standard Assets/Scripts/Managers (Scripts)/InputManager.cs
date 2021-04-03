@@ -178,7 +178,7 @@ namespace AmbitiousSnake
 			{
 				Vector3 output = Vector3.zero;
 #if UNITY_EDITOR
-				if (Keyboard.current.spaceKey.isPressed)
+				if (Keyboard.current.wKey.isPressed)
 					// output = Snake.Instance.followTrs.position - Snake.instance.HeadPosition;
 					output = Snake.Instance.followTrs.forward;
 #endif
