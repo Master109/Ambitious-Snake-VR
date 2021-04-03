@@ -79,6 +79,7 @@ namespace AmbitiousSnake
 			GameplayMenu.instance.trs.position = VRCameraRig.instance.eyesTrs.position + (VRCameraRig.instance.eyesTrs.forward * GameplayMenu.instance.distanceFromCamera);
 			GameplayMenu.instance.trs.rotation = VRCameraRig.instance.eyesTrs.rotation;
 			GameplayMenu.instance.gameObject.SetActive(true);
+			paused = true;
 		}
 
 		void HandleRestart ()

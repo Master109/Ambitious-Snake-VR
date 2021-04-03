@@ -16,8 +16,8 @@ namespace AmbitiousSnake
 		public Option centerOption;
 		public float optionSeperationFromCenterOption;
 		public Option[] options = new Option[0];
-		public static Transform selectorTrs;
 		public bool isInteractive;
+		public static Transform selectorTrs;
 		Option selectedOption;
 		bool leftGameplayMenuInput;
 		bool previousLeftGameplayMenuInput;
@@ -46,6 +46,13 @@ namespace AmbitiousSnake
 			if (isTopTier)
 				instance = this;
 			gameObject.SetActive(false);
+		}
+
+		public override void OnDisable ()
+		{
+			base.OnDisable ();
+			if (isTopTier)
+				GameManager.paused = false;
 		}
 
 		public override void DoUpdate ()
@@ -113,6 +120,7 @@ namespace AmbitiousSnake
 				selectedOption = option;
 				selectedOption.deselectedGo.SetActive(false);
 				selectedOption.selectedGo.SetActive(true);
+				selectedOption.selectUnityEvent.Invoke();
 			}
 			else
 				selectedOption = default(Option);
@@ -137,6 +145,11 @@ namespace AmbitiousSnake
 			_SceneManager.instance.LoadSceneWithoutTransition (index);
 		}
 
+		public void PreviewLevel (int index)
+		{
+			_SceneManager.instance.LoadSceneWithoutTransition (index);
+		}
+
 		[Serializable]
 		public struct Option
 		{
@@ -145,6 +158,7 @@ namespace AmbitiousSnake
 			public GameObject deselectedGo;
 			public bool isInteractive;
 			public GameObject uninteractiveGo;
+			public UnityEvent selectUnityEvent;
 			public UnityEvent interactUnityEvent;
 		}
 	}
