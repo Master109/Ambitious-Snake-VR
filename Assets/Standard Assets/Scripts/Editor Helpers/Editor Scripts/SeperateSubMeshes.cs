@@ -14,8 +14,7 @@ namespace AmbitiousSnake
 		{
 			if (meshFilter == null)
 				meshFilter = GetComponent<MeshFilter>();
-			Mesh mesh = meshFilter.mesh;
-			_Do (mesh);
+			_Do (meshFilter.sharedMesh);
 		}
 
 		static void _Do (Mesh mesh)
@@ -32,7 +31,7 @@ namespace AmbitiousSnake
 				Transform selectedTrs = selectedTransforms[i];
 				MeshFilter meshFilter = selectedTrs.GetComponent<MeshFilter>();
 				if (meshFilter != null)
-					_Do (meshFilter.mesh);
+					_Do (meshFilter.sharedMesh);
 			}
 		}
 	}

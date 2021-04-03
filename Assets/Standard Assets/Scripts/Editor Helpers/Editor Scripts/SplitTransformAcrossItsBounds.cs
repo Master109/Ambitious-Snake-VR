@@ -22,9 +22,12 @@ namespace AmbitiousSnake
 		static void _Do (Transform trs)
 		{
 			Vector3[] pointsInside = trs.GetBounds().ToBoundsInt(MathfExtensions.RoundingMethod.RoundUpIfNotInteger, MathfExtensions.RoundingMethod.RoundDownIfNotInteger).ToBounds().GetPointsInside(Vector3.one);
-			for (int i = 0; i < pointsInside.Length; i ++)
+			trs.position = pointsInside[0];
+			trs.SetWorldScale(Vector3.one);
+			for (int i = 1; i < pointsInside.Length; i ++)
 			{
 				Vector3 pointInside = pointsInside[i];
+				Instantiate(trs, pointInside, trs.rotation, trs.parent);
 			}
 		}
 

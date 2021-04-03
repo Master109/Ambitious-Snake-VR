@@ -30,14 +30,6 @@ namespace Extensions
 		{
 			return Mathf.Abs(Sign(f1) - Sign(f2)) == 2;
 		}
-		
-		public enum RoundingMethod
-		{
-			HalfOrMoreRoundsUp,
-			HalfOrLessRoundsDown,
-			RoundUpIfNotInteger,
-			RoundDownIfNotInteger
-		}
 
 		public static float GetClosestNumber (float f, params float[] numbers)
 		{
@@ -82,9 +74,10 @@ namespace Extensions
 			min = WrapAngle(min);
 			max = WrapAngle(max);
 			float minDist = Mathf.Min(Mathf.DeltaAngle(ang, min), Mathf.DeltaAngle(ang, max));
-			if (WrapAngle(ang + Mathf.DeltaAngle(ang, minDist)) == min)
+			float _ang = WrapAngle(ang + Mathf.DeltaAngle(ang, minDist));
+			if (_ang == min)
 				return min;
-			else if (WrapAngle(ang + Mathf.DeltaAngle(ang, minDist)) == max)
+			else if (_ang == max)
 				return max;
 			else
 				return ang;
@@ -97,6 +90,39 @@ namespace Extensions
 			else if (ang > 360)
 				ang = 360 - ang;
 			return ang;
+		}
+
+		public static float Round (float f, RoundingMethod roundingMethod)
+		{
+			if (roundingMethod == RoundingMethod.HalfOrMoreRoundsUp)
+			{
+				if (f % 1 >= 0.5f)
+					return Mathf.Round(f);
+			}
+			else if (roundingMethod == RoundingMethod.HalfOrLessRoundsDown)
+			{
+				if (f % 1 <= 0.5f)
+					return (int) f;
+			}
+			else if (roundingMethod == RoundingMethod.RoundUpIfNotInteger)
+			{
+				if (f % 1 != 0)
+					return Mathf.Round(f);
+			}
+			else// if (roundingMethod == RoundingMethod.RoundDownIfNotInteger)
+			{
+				if (f % 1 != 0)
+					return (int) f;
+			}
+			return f;
+		}
+		
+		public enum RoundingMethod
+		{
+			HalfOrMoreRoundsUp,
+			HalfOrLessRoundsDown,
+			RoundUpIfNotInteger,
+			RoundDownIfNotInteger
 		}
 	}
 }
