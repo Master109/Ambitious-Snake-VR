@@ -1,7 +1,7 @@
 # Ambitious Snake VR
 To find the code look in Assets->Standard Assets->Scripts  
 The game is meant to be played on Oculus devices, and although it works with keyboard and mouse, it is a terrible way of controlling the game  
-In the top menu bar of Unity, select the "Game" dropdown and then select "Use keyboard and mouse" or "Use Oculus Rift" to change the input devices  
+In the top menu bar of Unity, select the "Game" dropdown and then select one of the options to change the input devices  
 ## Controls
 ### Oculus Rift and Oculus Quest
 Hold either hand-grip button to move towards where your hand is facing  
