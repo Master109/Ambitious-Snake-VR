@@ -5,13 +5,6 @@ namespace AmbitiousSnake
 {
 	public class Turret : UpdateWhileEnabled
 	{
-		public bool PauseWhileUnfocused
-		{
-			get
-			{
-				return true;
-			}
-		}
 		public Timer reloadTimer;
 		public Bullet bulletPrefab;
 		public float bulletWidth;

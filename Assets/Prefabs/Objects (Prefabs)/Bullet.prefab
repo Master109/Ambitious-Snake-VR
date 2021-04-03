@@ -64,7 +64,7 @@ MonoBehaviour:
   damage: 0
   range: 100
   rigid: {fileID: 5808448369572887482}
-  moveSpeed: 7
+  moveSpeed: 8
   shooter: {fileID: 0}
   collider: {fileID: 7239543796457762911}
   dead: 0

@@ -52,6 +52,7 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -100,6 +101,8 @@ MonoBehaviour:
   trs: {fileID: 2230208251904817887}
   renderer: {fileID: 2349561425855643621}
   multiplyTextureScale: 0.05
+  tileMethod: 0
+  useRotation: 0
 --- !u!114 &3612605181463563794
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -193,6 +196,7 @@ PrefabInstance:
     m_RemovedComponents:
     - {fileID: 3813223544051276545, guid: 4fb6fbb20e22c03b9997215fca7e749d, type: 3}
     - {fileID: 1616256648988468688, guid: 4fb6fbb20e22c03b9997215fca7e749d, type: 3}
+    - {fileID: 4744813924297330904, guid: 4fb6fbb20e22c03b9997215fca7e749d, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 4fb6fbb20e22c03b9997215fca7e749d, type: 3}
 --- !u!1 &6540843748066575077 stripped
 GameObject:

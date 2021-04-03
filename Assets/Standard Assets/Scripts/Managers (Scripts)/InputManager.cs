@@ -177,11 +177,8 @@ namespace AmbitiousSnake
 			get
 			{
 				Vector3 output = Vector3.zero;
-#if UNITY_EDITOR
-				if (Keyboard.current.wKey.isPressed)
-					// output = Snake.Instance.followTrs.position - Snake.instance.HeadPosition;
+				if (_InputDevice == InputDevice.KeyboardAndMouse && Keyboard.current.wKey.isPressed)
 					output = -VRCameraRig.instance.eyesTrs.right;
-#endif
 				if (LeftMoveInput)
 					output = LeftHandRotation * Vector3.forward;
 				if (RightMoveInput)
@@ -201,9 +198,8 @@ namespace AmbitiousSnake
 			get
 			{
 				float output = 0;
-#if UNITY_EDITOR
-				output = Mouse.current.leftButton.isPressed.GetHashCode() - Mouse.current.rightButton.isPressed.GetHashCode();
-#endif
+				if (_InputDevice == InputDevice.KeyboardAndMouse)
+					output = Mouse.current.leftButton.isPressed.GetHashCode() - Mouse.current.rightButton.isPressed.GetHashCode();
 				if (LeftTouchController != null)
 					// output = LeftTouchController.gripPressed.isPressed.GetHashCode();
 					output = LeftTouchController.thumbstick.ReadValue().y;
@@ -266,9 +262,6 @@ namespace AmbitiousSnake
 		{
 			get
 			{
-#if UNITY_EDITOR
-				return Keyboard.current.leftArrowKey.isPressed;
-#endif
 				if (_InputDevice == InputDevice.KeyboardAndMouse)
 					return Keyboard.current.leftArrowKey.isPressed;
 				else
@@ -286,11 +279,8 @@ namespace AmbitiousSnake
 		{
 			get
 			{
-#if UNITY_EDITOR
-				return Keyboard.current.leftArrowKey.isPressed;
-#endif
 				if (_InputDevice == InputDevice.KeyboardAndMouse)
-					return Keyboard.current.leftArrowKey.isPressed;
+					return Keyboard.current.rightArrowKey.isPressed;
 				else
 					return RightTouchController != null && (RightTouchController.primaryButton.isPressed || RightTouchController.secondaryButton.isPressed);
 			}
@@ -306,9 +296,6 @@ namespace AmbitiousSnake
 		{
 			get
 			{
-#if UNITY_EDITOR
-				return Keyboard.current.escapeKey.isPressed;
-#endif
 				if (_InputDevice == InputDevice.KeyboardAndMouse)
 					return Keyboard.current.escapeKey.isPressed;
 				else

@@ -8,9 +8,6 @@ namespace AmbitiousSnake
 {
 	public class Snake : SingletonMonoBehaviour<Snake>, IDestructable, IUpdatable
 	{
-#if UNITY_EDITOR
-		public Transform followTrs;
-#endif
 		public Transform trs;
 		public Rigidbody rigid;
 		public float moveSpeed;

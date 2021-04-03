@@ -66,14 +66,14 @@ namespace AmbitiousSnake
 
 		void HandleGameplayMenu ()
 		{
-			if (GameplayMenu.instance.gameObject.activeSelf || !GameplayMenu.instance.interactive)
+			if (GameplayMenu.instance.gameObject.activeSelf || !GameplayMenu.instance.isInteractive)
 				return;
 			if (leftGameplayMenuInput && !previousLeftGameplayMenuInput)
-				GameplayMenu.instance.selectorTrs = VRCameraRig.instance.leftHandTrs;
+				GameplayMenu.selectorTrs = VRCameraRig.instance.leftHandTrs;
 			else if (rightGameplayMenuInput && !previousRightGameplayMenuInput)
-				GameplayMenu.instance.selectorTrs = VRCameraRig.instance.rightHandTrs;
+				GameplayMenu.selectorTrs = VRCameraRig.instance.rightHandTrs;
 			else if (gameplayMenuInput && !previousGameplayMenuInput)
-				GameplayMenu.instance.selectorTrs = VRCameraRig.instance.eyesTrs;
+				GameplayMenu.selectorTrs = VRCameraRig.instance.eyesTrs;
 			else
 				return;
 			GameplayMenu.instance.trs.position = VRCameraRig.instance.eyesTrs.position + (VRCameraRig.instance.eyesTrs.forward * GameplayMenu.instance.distanceFromCamera);

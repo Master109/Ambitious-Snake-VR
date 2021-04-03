@@ -16,9 +16,8 @@ namespace AmbitiousSnake
 		public Option centerOption;
 		public float optionSeperationFromCenterOption;
 		public Option[] options = new Option[0];
-		public Transform selectorTrs;
-		[HideInInspector]
-		public bool interactive;
+		public static Transform selectorTrs;
+		public bool isInteractive;
 		Option selectedOption;
 		bool leftGameplayMenuInput;
 		bool previousLeftGameplayMenuInput;
@@ -131,6 +130,11 @@ namespace AmbitiousSnake
 		public void RestartLevel ()
 		{
 			_SceneManager.instance.RestartSceneWithoutTransition ();
+		}
+
+		public void LoadLevel (int index)
+		{
+			_SceneManager.instance.LoadSceneWithoutTransition (index);
 		}
 
 		[Serializable]
