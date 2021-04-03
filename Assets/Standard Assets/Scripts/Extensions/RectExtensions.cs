@@ -173,9 +173,9 @@ namespace Extensions
 			return new Bounds(rect.center, rect.size.ToVec2());
 		}
 
-		public static BoundsInt ToBoundsInt (this RectInt rect)
+		public static BoundsInt ToBoundsInt (this RectInt rect, MathfExtensions.RoundingMethod minRoundingMethod = MathfExtensions.RoundingMethod.RoundUpIfNotInteger, MathfExtensions.RoundingMethod maxRoundingMethod = MathfExtensions.RoundingMethod.RoundUpIfNotInteger)
 		{
-			return new BoundsInt(rect.center.ToVec3Int(), rect.size.ToVec3Int());
+			return rect.ToBounds().ToBoundsInt(minRoundingMethod, maxRoundingMethod);
 		}
 
 		public static Rect GrowToPoint (this Rect rect, Vector2 point)

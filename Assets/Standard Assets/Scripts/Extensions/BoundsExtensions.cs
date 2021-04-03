@@ -78,10 +78,10 @@ namespace Extensions
 			return b.FromNormalizedPoint(Vector3.one - b.ToNormalizedPoint(point));
 		}
 		
-		public static BoundsInt ToBoundsInt (this Bounds b)
+		public static BoundsInt ToBoundsInt (this Bounds b, MathfExtensions.RoundingMethod minRoundingMethod = MathfExtensions.RoundingMethod.RoundUpIfNotInteger, MathfExtensions.RoundingMethod maxRoundingMethod = MathfExtensions.RoundingMethod.RoundUpIfNotInteger)
 		{
 			BoundsInt output = new BoundsInt();
-			output.SetMinMax(b.min.ToVec3Int(MathfExtensions.RoundingMethod.RoundUpIfNotInteger), b.max.ToVec3Int(MathfExtensions.RoundingMethod.RoundUpIfNotInteger));
+			output.SetMinMax(b.min.ToVec3Int(minRoundingMethod), b.max.ToVec3Int(maxRoundingMethod));
 			return output;
 		}
 		
@@ -124,6 +124,32 @@ namespace Extensions
 			sides[10] = new LineSegment3D(corner1, corner7);
 			sides[11] = new LineSegment3D(corner1, corner2);
 			return sides;
+		}
+		
+		public static Vector3[] GetPointsInside (this Bounds b, Vector3 checkInterval)
+		{
+			List<Vector3> output = new List<Vector3>();
+			for (float x = b.min.x; x <= b.max.x; x += checkInterval.x)
+			{
+				for (float y = b.min.y; y <= b.max.y; y += checkInterval.y)
+				{
+					for (float z = b.min.z; z <= b.max.z; z += checkInterval.z)
+						output.Add(new Vector3(x, y, z));
+				}
+			}
+			return output.ToArray();
+		}
+		
+		public static Bounds GetNewBounds (this Bounds b, Vector3 normalizedStart, Vector3 normalizedEnd)
+		{
+			Bounds output = new Bounds();
+			output.SetMinMax(b.FromNormalizedPoint(normalizedStart), b.FromNormalizedPoint(normalizedEnd));
+			return output;
+		}
+		
+		public static Bounds ToBounds (this BoundsInt b)
+		{
+			return new Bounds(b.center, b.size);
 		}
 	}
 }

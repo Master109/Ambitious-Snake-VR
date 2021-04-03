@@ -9,9 +9,7 @@ namespace Extensions
 	{
 		public static List<T> ToList<T> (this T[] array)
 		{
-			List<T> output = new List<T>();
-			output.AddRange(array);
-			return output;
+			return new List<T>(array);
 		}
 
 		public static T[] Add<T> (this T[] array, T element)
