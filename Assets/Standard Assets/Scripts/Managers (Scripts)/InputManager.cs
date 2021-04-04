@@ -8,7 +8,7 @@ using Extensions;
 
 namespace AmbitiousSnake
 {
-	public class InputManager : SingletonMonoBehaviour<InputManager>
+	public class InputManager : SingletonMonoBehaviour<InputManager>, IUpdatable
 	{
 		public InputDevice inputDevice;
 		public static InputDevice _InputDevice
@@ -179,10 +179,20 @@ namespace AmbitiousSnake
 				Vector3 output = Vector3.zero;
 				if (_InputDevice == InputDevice.KeyboardAndMouse && Keyboard.current.wKey.isPressed)
 					output = -VRCameraRig.instance.eyesTrs.right;
-				if (LeftMoveInput)
-					output = LeftHandRotation * Vector3.forward;
-				if (RightMoveInput)
-					output += RightHandRotation * Vector3.forward;
+				if (!GameManager.ModifierIsActiveAndExists("Move hand to change direction"))
+				{
+					if (LeftMoveInput)
+						output = LeftHandRotation * Vector3.forward;
+					if (RightMoveInput)
+						output += RightHandRotation * Vector3.forward;
+				}
+				else
+				{
+					if (LeftMoveInput)
+						output = LeftHandPosition - leftHandPositionAtBeginMove;
+					if (RightMoveInput)
+						output += RightHandPosition - rightHandPositionAtBeginMove;
+				}
 				return Vector3.ClampMagnitude(output, 1);
 			}
 		}
@@ -246,8 +256,6 @@ namespace AmbitiousSnake
 				if (_InputDevice == InputDevice.KeyboardAndMouse)
 					return Keyboard.current.rKey.isPressed;
 				else
-					// return ((LeftTouchController != null && (LeftTouchController.primaryButton.isPressed || LeftTouchController.secondaryButton.isPressed))
-					// || (RightTouchController != null && (RightTouchController.primaryButton.isPressed || RightTouchController.secondaryButton.isPressed)));
 					return false;
 			}
 		}
@@ -515,6 +523,34 @@ namespace AmbitiousSnake
 			{
 				return (OculusTouchController) OculusTouchController.rightHand;
 			}
+		}
+		public static Vector3 leftHandPositionAtBeginMove;
+		public static Vector3 rightHandPositionAtBeginMove;
+		public static bool leftMoveInput;
+		public static bool previousLeftMoveInput;
+		public static bool rightMoveInput;
+		public static bool previousRightMoveInput;
+
+		void OnEnable ()
+		{
+			GameManager.updatables = GameManager.updatables.Add(this);
+		}
+
+		public void DoUpdate ()
+		{
+			leftMoveInput = LeftMoveInput;
+			rightMoveInput = RightMoveInput;
+			if (!previousLeftMoveInput && leftMoveInput)
+				leftHandPositionAtBeginMove = LeftHandPosition;
+			if (!previousRightMoveInput && rightMoveInput)
+				rightHandPositionAtBeginMove = RightHandPosition;
+			previousLeftMoveInput = leftMoveInput;
+			previousRightMoveInput = rightMoveInput;
+		}
+
+		void OnDisable ()
+		{
+			GameManager.updatables = GameManager.updatables.Remove(this);
 		}
 
 		public static float GetAxis (InputControl<float> positiveButton, InputControl<float> negativeButton)

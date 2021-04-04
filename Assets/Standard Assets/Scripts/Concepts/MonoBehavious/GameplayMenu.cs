@@ -4,6 +4,7 @@ using Extensions;
 using System;
 using UnityEngine.Events;
 using System.Collections.Generic;
+using TMPro;
 
 namespace AmbitiousSnake
 {
@@ -16,8 +17,9 @@ namespace AmbitiousSnake
 		public Option centerOption;
 		public float optionSeperationFromCenterOption;
 		public Option[] options = new Option[0];
-		public bool isInteractive;
 		public static Transform selectorTrs;
+		public TMP_Text[] movementModeTexts = new TMP_Text[0];
+		public GameObject optionsParent;
 		Option selectedOption;
 		bool leftGameplayMenuInput;
 		bool previousLeftGameplayMenuInput;
@@ -57,6 +59,8 @@ namespace AmbitiousSnake
 
 		public override void DoUpdate ()
 		{
+			if (!optionsParent.activeSelf)
+				return;
 			leftGameplayMenuInput = InputManager.LeftGameplayMenuInput;
 			rightGameplayMenuInput = InputManager.RightGameplayMenuInput;
 			gameplayMenuInput = InputManager.GameplayMenuInput;
@@ -147,7 +151,26 @@ namespace AmbitiousSnake
 
 		public void PreviewLevel (int index)
 		{
-			_SceneManager.instance.LoadSceneWithoutTransition (index);
+		}
+
+		public void ToggleMovementMode ()
+		{
+			bool moveHandToChangeDirection = GameManager.ModifierIsActive("Move hand to change direction");
+			GameManager.gameModifierDict["Move hand to change direction"].isActive = !moveHandToChangeDirection;
+			for (int i = 0; i < movementModeTexts.Length; i ++)
+			{
+				TMP_Text movementModeText = movementModeTexts[i];
+				if (moveHandToChangeDirection)
+					movementModeText.text = "Move Hand";
+				else
+					movementModeText.text = "Rotate Hand";
+			}
+		}
+
+		public void SwitchGameplayMenu (GameplayMenu switchTo)
+		{
+			optionsParent.SetActive(false);
+			switchTo.gameObject.SetActive(true);
 		}
 
 		[Serializable]

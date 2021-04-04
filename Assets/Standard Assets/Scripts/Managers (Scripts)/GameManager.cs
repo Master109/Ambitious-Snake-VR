@@ -21,6 +21,8 @@ namespace AmbitiousSnake
 		[SaveAndLoadValue]
 		static string disabledGosString = "";
 		public TileParent tileParentPrefab;
+		public GameModifier[] gameModifiers = new GameModifier[0];
+		public static Dictionary<string, GameModifier> gameModifierDict = new Dictionary<string, GameModifier>();
 		bool leftGameplayMenuInput;
 		bool previousLeftGameplayMenuInput;
 		bool rightGameplayMenuInput;
@@ -31,6 +33,9 @@ namespace AmbitiousSnake
 		public override void Awake ()
 		{
 			base.Awake ();
+			gameModifierDict.Clear();
+			foreach (GameModifier gameModifier in gameModifiers)
+				gameModifierDict.Add(gameModifier.name, gameModifier);
 			SceneManager.sceneLoaded += OnSceneLoaded;
 		}
 
@@ -66,7 +71,7 @@ namespace AmbitiousSnake
 
 		void HandleGameplayMenu ()
 		{
-			if (GameplayMenu.instance.gameObject.activeSelf || !GameplayMenu.instance.isInteractive)
+			if (GameplayMenu.instance.gameObject.activeSelf)
 				return;
 			if (leftGameplayMenuInput && !previousLeftGameplayMenuInput)
 				GameplayMenu.selectorTrs = VRCameraRig.instance.leftHandTrs;
@@ -102,6 +107,32 @@ namespace AmbitiousSnake
 		{
 			// PlayerPrefs.DeleteAll();
 			isQuittingGame = true;
+		}
+		
+		public static bool ModifierIsActiveAndExists (string name)
+		{
+			GameModifier gameModifier;
+			if (gameModifierDict.TryGetValue(name, out gameModifier))
+				return gameModifier.isActive;
+			else
+				return false;
+		}
+
+		public static bool ModifierIsActive (string name)
+		{
+			return gameModifierDict[name].isActive;
+		}
+
+		public static bool ModifierExists (string name)
+		{
+			return gameModifierDict.ContainsKey(name);
+		}
+
+		[Serializable]
+		public class GameModifier
+		{
+			public string name;
+			public bool isActive;
 		}
 	}
 }

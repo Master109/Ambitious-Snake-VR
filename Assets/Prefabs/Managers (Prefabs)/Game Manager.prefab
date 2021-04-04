@@ -52,6 +52,9 @@ MonoBehaviour:
   persistant: 1
   registeredGos: []
   tileParentPrefab: {fileID: 7443350915100600320, guid: dee869748e5143aebbace3fb8a4b6289, type: 3}
+  gameModifiers:
+  - name: Move hand to change direction
+    isActive: 0
 --- !u!114 &8830635312940386714
 MonoBehaviour:
   m_ObjectHideFlags: 0
