@@ -33,6 +33,8 @@ namespace AmbitiousSnake
 		public override void Awake ()
 		{
 			base.Awake ();
+			if (instance != this)
+				return;
 			gameModifierDict.Clear();
 			foreach (GameModifier gameModifier in gameModifiers)
 				gameModifierDict.Add(gameModifier.name, gameModifier);
@@ -41,7 +43,8 @@ namespace AmbitiousSnake
 
 		void OnDestroy ()
 		{
-			SceneManager.sceneLoaded -= OnSceneLoaded;
+			if (instance == this)
+				SceneManager.sceneLoaded -= OnSceneLoaded;
 		}
 		
 		void OnSceneLoaded (Scene scene = new Scene(), LoadSceneMode loadMode = LoadSceneMode.Single)
@@ -53,8 +56,11 @@ namespace AmbitiousSnake
 		void Update ()
 		{
 			Physics.Simulate(Time.deltaTime);
-			foreach (IUpdatable updatable in updatables)
+			for (int i = 0; i < updatables.Length; i ++)
+			{
+				IUpdatable updatable = updatables[i];
 				updatable.DoUpdate ();
+			}
 			if (ObjectPool.Instance != null && ObjectPool.instance.enabled)
 				ObjectPool.instance.DoUpdate ();
 			InputSystem.Update ();
@@ -109,7 +115,7 @@ namespace AmbitiousSnake
 			isQuittingGame = true;
 		}
 		
-		public static bool ModifierIsActiveAndExists (string name)
+		public static bool ModifierExistsAndIsActive (string name)
 		{
 			GameModifier gameModifier;
 			if (gameModifierDict.TryGetValue(name, out gameModifier))

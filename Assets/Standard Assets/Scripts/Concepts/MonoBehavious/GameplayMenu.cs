@@ -50,6 +50,13 @@ namespace AmbitiousSnake
 			gameObject.SetActive(false);
 		}
 
+		public override void OnEnable ()
+		{
+			base.OnEnable ();
+			bool moveHandToChangeDirection = GameManager.gameModifierDict["Move hand to change direction"].isActive;
+			UpdateMovementModeTexts (moveHandToChangeDirection);
+		}
+
 		public override void OnDisable ()
 		{
 			base.OnDisable ();
@@ -155,15 +162,20 @@ namespace AmbitiousSnake
 
 		public void ToggleMovementMode ()
 		{
-			bool moveHandToChangeDirection = GameManager.ModifierIsActive("Move hand to change direction");
+			bool moveHandToChangeDirection = GameManager.gameModifierDict["Move hand to change direction"].isActive;
+			UpdateMovementModeTexts (!moveHandToChangeDirection);
 			GameManager.gameModifierDict["Move hand to change direction"].isActive = !moveHandToChangeDirection;
+		}
+
+		void UpdateMovementModeTexts (bool moveHandToChangeDirection)
+		{
 			for (int i = 0; i < movementModeTexts.Length; i ++)
 			{
 				TMP_Text movementModeText = movementModeTexts[i];
 				if (moveHandToChangeDirection)
-					movementModeText.text = "Move Hand";
-				else
 					movementModeText.text = "Rotate Hand";
+				else
+					movementModeText.text = "Move Hand";
 			}
 		}
 

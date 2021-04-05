@@ -179,7 +179,7 @@ namespace AmbitiousSnake
 				Vector3 output = Vector3.zero;
 				if (_InputDevice == InputDevice.KeyboardAndMouse && Keyboard.current.wKey.isPressed)
 					output = -VRCameraRig.instance.eyesTrs.right;
-				if (!GameManager.ModifierIsActiveAndExists("Move hand to change direction"))
+				if (!GameManager.ModifierIsActive("Move hand to change direction"))
 				{
 					if (LeftMoveInput)
 						output = LeftHandRotation * Vector3.forward;
@@ -189,9 +189,10 @@ namespace AmbitiousSnake
 				else
 				{
 					if (LeftMoveInput)
-						output = LeftHandPosition - leftHandPositionAtBeginMove;
+						output = VRCameraRig.instance.leftHandTrs.position - instance.leftHandTrsAtBeginMove.position;
 					if (RightMoveInput)
-						output += RightHandPosition - rightHandPositionAtBeginMove;
+						output += VRCameraRig.instance.rightHandTrs.position - instance.rightHandTrsAtBeginMove.position;
+					output = Quaternion.Inverse(VRCameraRig.instance.eyesTrs.rotation) * output.normalized;
 				}
 				return Vector3.ClampMagnitude(output, 1);
 			}
@@ -524,15 +525,19 @@ namespace AmbitiousSnake
 				return (OculusTouchController) OculusTouchController.rightHand;
 			}
 		}
-		public static Vector3 leftHandPositionAtBeginMove;
-		public static Vector3 rightHandPositionAtBeginMove;
 		public static bool leftMoveInput;
 		public static bool previousLeftMoveInput;
 		public static bool rightMoveInput;
 		public static bool previousRightMoveInput;
+		public Transform trs;
+		public Transform leftHandTrsAtBeginMove;
+		public Transform rightHandTrsAtBeginMove;
 
-		void OnEnable ()
+		public override void Awake ()
 		{
+			trs.SetParent(null);
+			leftHandTrsAtBeginMove.SetParent(VRCameraRig.instance.trs);
+			rightHandTrsAtBeginMove.SetParent(VRCameraRig.instance.trs);
 			GameManager.updatables = GameManager.updatables.Add(this);
 		}
 
@@ -541,14 +546,24 @@ namespace AmbitiousSnake
 			leftMoveInput = LeftMoveInput;
 			rightMoveInput = RightMoveInput;
 			if (!previousLeftMoveInput && leftMoveInput)
-				leftHandPositionAtBeginMove = LeftHandPosition;
+			{
+				leftHandTrsAtBeginMove.position = VRCameraRig.instance.leftHandTrs.position;
+				leftHandTrsAtBeginMove.gameObject.SetActive(true);
+			}
+			else if (previousLeftMoveInput && !leftMoveInput)
+				leftHandTrsAtBeginMove.gameObject.SetActive(false);
 			if (!previousRightMoveInput && rightMoveInput)
-				rightHandPositionAtBeginMove = RightHandPosition;
+			{
+				rightHandTrsAtBeginMove.position = VRCameraRig.instance.rightHandTrs.position;
+				rightHandTrsAtBeginMove.gameObject.SetActive(true);
+			}
+			else if (previousRightMoveInput && !rightMoveInput)
+				rightHandTrsAtBeginMove.gameObject.SetActive(false);
 			previousLeftMoveInput = leftMoveInput;
 			previousRightMoveInput = rightMoveInput;
 		}
 
-		void OnDisable ()
+		void OnDestroy ()
 		{
 			GameManager.updatables = GameManager.updatables.Remove(this);
 		}
