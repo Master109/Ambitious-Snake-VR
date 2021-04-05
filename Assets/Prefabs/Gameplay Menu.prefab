@@ -95,32 +95,23 @@ MonoBehaviour:
     selectUnityEvent:
       m_PersistentCalls:
         m_Calls: []
+    deselectUnityEvent:
+      m_PersistentCalls:
+        m_Calls: []
     interactUnityEvent:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 780650882704921640}
-          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-          m_MethodName: SetActive
-          m_Mode: 6
+        - m_Target: {fileID: 3482976002721976206}
+          m_TargetAssemblyTypeName: AmbitiousSnake.GameplayMenu, Assembly-CSharp-firstpass
+          m_MethodName: SwitchGameplayMenu
+          m_Mode: 2
           m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_ObjectArgument: {fileID: 8324649378454795725}
+            m_ObjectArgumentAssemblyTypeName: AmbitiousSnake.GameplayMenu, Assembly-CSharp-firstpass
             m_IntArgument: 0
             m_FloatArgument: 0
             m_StringArgument: 
             m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 634285158161871940}
-          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-          m_MethodName: SetActive
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 1
           m_CallState: 2
   optionSeperationFromCenterOption: 0.5
   options:
@@ -131,7 +122,34 @@ MonoBehaviour:
     uninteractiveGo: {fileID: 8595983489185596119}
     selectUnityEvent:
       m_PersistentCalls:
-        m_Calls: []
+        m_Calls:
+        - m_Target: {fileID: 3482976002721976206}
+          m_TargetAssemblyTypeName: AmbitiousSnake.GameplayMenu, Assembly-CSharp-firstpass
+          m_MethodName: StartLevelPreview
+          m_Mode: 3
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+    deselectUnityEvent:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 3482976002721976206}
+          m_TargetAssemblyTypeName: AmbitiousSnake.GameplayMenu, Assembly-CSharp-firstpass
+          m_MethodName: StopLevelPreview
+          m_Mode: 3
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
     interactUnityEvent:
       m_PersistentCalls:
         m_Calls:
@@ -154,7 +172,34 @@ MonoBehaviour:
     uninteractiveGo: {fileID: 3922690398360445359}
     selectUnityEvent:
       m_PersistentCalls:
-        m_Calls: []
+        m_Calls:
+        - m_Target: {fileID: 3482976002721976206}
+          m_TargetAssemblyTypeName: AmbitiousSnake.GameplayMenu, Assembly-CSharp-firstpass
+          m_MethodName: StartLevelPreview
+          m_Mode: 3
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 1
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+    deselectUnityEvent:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 3482976002721976206}
+          m_TargetAssemblyTypeName: AmbitiousSnake.GameplayMenu, Assembly-CSharp-firstpass
+          m_MethodName: StopLevelPreview
+          m_Mode: 3
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 1
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
     interactUnityEvent:
       m_PersistentCalls:
         m_Calls:
@@ -177,7 +222,34 @@ MonoBehaviour:
     uninteractiveGo: {fileID: 4155590357857554060}
     selectUnityEvent:
       m_PersistentCalls:
-        m_Calls: []
+        m_Calls:
+        - m_Target: {fileID: 3482976002721976206}
+          m_TargetAssemblyTypeName: AmbitiousSnake.GameplayMenu, Assembly-CSharp-firstpass
+          m_MethodName: StartLevelPreview
+          m_Mode: 3
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 2
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+    deselectUnityEvent:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 3482976002721976206}
+          m_TargetAssemblyTypeName: AmbitiousSnake.GameplayMenu, Assembly-CSharp-firstpass
+          m_MethodName: StopLevelPreview
+          m_Mode: 3
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 2
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
     interactUnityEvent:
       m_PersistentCalls:
         m_Calls:
@@ -200,7 +272,34 @@ MonoBehaviour:
     uninteractiveGo: {fileID: 5032112095671050377}
     selectUnityEvent:
       m_PersistentCalls:
-        m_Calls: []
+        m_Calls:
+        - m_Target: {fileID: 3482976002721976206}
+          m_TargetAssemblyTypeName: AmbitiousSnake.GameplayMenu, Assembly-CSharp-firstpass
+          m_MethodName: StartLevelPreview
+          m_Mode: 3
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 3
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+    deselectUnityEvent:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 3482976002721976206}
+          m_TargetAssemblyTypeName: AmbitiousSnake.GameplayMenu, Assembly-CSharp-firstpass
+          m_MethodName: StopLevelPreview
+          m_Mode: 3
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 3
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
     interactUnityEvent:
       m_PersistentCalls:
         m_Calls:
@@ -223,7 +322,34 @@ MonoBehaviour:
     uninteractiveGo: {fileID: 2849792408692529597}
     selectUnityEvent:
       m_PersistentCalls:
-        m_Calls: []
+        m_Calls:
+        - m_Target: {fileID: 3482976002721976206}
+          m_TargetAssemblyTypeName: AmbitiousSnake.GameplayMenu, Assembly-CSharp-firstpass
+          m_MethodName: StartLevelPreview
+          m_Mode: 3
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 4
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+    deselectUnityEvent:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 3482976002721976206}
+          m_TargetAssemblyTypeName: AmbitiousSnake.GameplayMenu, Assembly-CSharp-firstpass
+          m_MethodName: StopLevelPreview
+          m_Mode: 3
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 4
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
     interactUnityEvent:
       m_PersistentCalls:
         m_Calls:
@@ -246,7 +372,34 @@ MonoBehaviour:
     uninteractiveGo: {fileID: 1770305855864780950}
     selectUnityEvent:
       m_PersistentCalls:
-        m_Calls: []
+        m_Calls:
+        - m_Target: {fileID: 3482976002721976206}
+          m_TargetAssemblyTypeName: AmbitiousSnake.GameplayMenu, Assembly-CSharp-firstpass
+          m_MethodName: StartLevelPreview
+          m_Mode: 3
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 5
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+    deselectUnityEvent:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 3482976002721976206}
+          m_TargetAssemblyTypeName: AmbitiousSnake.GameplayMenu, Assembly-CSharp-firstpass
+          m_MethodName: StopLevelPreview
+          m_Mode: 3
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 5
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
     interactUnityEvent:
       m_PersistentCalls:
         m_Calls:
@@ -269,7 +422,34 @@ MonoBehaviour:
     uninteractiveGo: {fileID: 89306524742870372}
     selectUnityEvent:
       m_PersistentCalls:
-        m_Calls: []
+        m_Calls:
+        - m_Target: {fileID: 3482976002721976206}
+          m_TargetAssemblyTypeName: AmbitiousSnake.GameplayMenu, Assembly-CSharp-firstpass
+          m_MethodName: StartLevelPreview
+          m_Mode: 3
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 6
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+    deselectUnityEvent:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 3482976002721976206}
+          m_TargetAssemblyTypeName: AmbitiousSnake.GameplayMenu, Assembly-CSharp-firstpass
+          m_MethodName: StopLevelPreview
+          m_Mode: 3
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 6
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
     interactUnityEvent:
       m_PersistentCalls:
         m_Calls:
@@ -285,8 +465,8 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-  movementModeTexts: []
   optionsParent: {fileID: 7357140905929191580}
+  movementModeTexts: []
 --- !u!135 &8555213882344497749
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -300,13 +480,13 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
---- !u!223 &3681026194761674046
+--- !u!223 &2454799130637412022
 Canvas:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6563971988916079519}
+  m_GameObject: {fileID: 2885286845181276043}
   m_Enabled: 1
   serializedVersion: 3
   m_RenderMode: 2
@@ -396,6 +576,27 @@ Transform:
   m_Father: {fileID: 8324649378454795714}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!223 &3681026194761674046
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6563971988916079519}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 2
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 0
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_AdditionalShaderChannelsFlag: 25
+  m_SortingLayerID: 738715335
+  m_SortingOrder: 32767
+  m_TargetDisplay: 0
 --- !u!1 &6684993900971293687
 GameObject:
   m_ObjectHideFlags: 0
@@ -557,32 +758,23 @@ MonoBehaviour:
     selectUnityEvent:
       m_PersistentCalls:
         m_Calls: []
+    deselectUnityEvent:
+      m_PersistentCalls:
+        m_Calls: []
     interactUnityEvent:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 7373650982938746406}
-          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-          m_MethodName: SetActive
-          m_Mode: 6
+        - m_Target: {fileID: 8813365611769318165}
+          m_TargetAssemblyTypeName: AmbitiousSnake.GameplayMenu, Assembly-CSharp-firstpass
+          m_MethodName: SwitchGameplayMenu
+          m_Mode: 2
           m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_ObjectArgument: {fileID: 8324649378454795725}
+            m_ObjectArgumentAssemblyTypeName: AmbitiousSnake.GameplayMenu, Assembly-CSharp-firstpass
             m_IntArgument: 0
             m_FloatArgument: 0
             m_StringArgument: 
             m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 634285158161871940}
-          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-          m_MethodName: SetActive
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 1
           m_CallState: 2
   optionSeperationFromCenterOption: 0.5
   options:
@@ -592,6 +784,9 @@ MonoBehaviour:
     isInteractive: 1
     uninteractiveGo: {fileID: 7931437485539609681}
     selectUnityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+    deselectUnityEvent:
       m_PersistentCalls:
         m_Calls: []
     interactUnityEvent:
@@ -609,32 +804,11 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+  optionsParent: {fileID: 6868121537244963289}
   movementModeTexts:
   - {fileID: 8592186933257518195}
   - {fileID: 1077435024283166406}
   - {fileID: 5266219573733345}
-  optionsParent: {fileID: 6868121537244963289}
---- !u!223 &2454799130637412022
-Canvas:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2885286845181276043}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_RenderMode: 2
-  m_Camera: {fileID: 0}
-  m_PlaneDistance: 100
-  m_PixelPerfect: 0
-  m_ReceivesEvents: 1
-  m_OverrideSorting: 0
-  m_OverridePixelPerfect: 0
-  m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 25
-  m_SortingLayerID: 738715335
-  m_SortingOrder: 32767
-  m_TargetDisplay: 0
 --- !u!1 &8324649378454795724
 GameObject:
   m_ObjectHideFlags: 0
@@ -684,7 +858,7 @@ MonoBehaviour:
   persistant: 0
   isTopTier: 1
   trs: {fileID: 8324649378454795714}
-  distanceFromCamera: 2
+  distanceFromCamera: 3
   centerOptionRange: {fileID: 230748963962394804}
   centerOption:
     trs: {fileID: 8753775269316593643}
@@ -693,6 +867,9 @@ MonoBehaviour:
     isInteractive: 1
     uninteractiveGo: {fileID: 7751110556822050897}
     selectUnityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+    deselectUnityEvent:
       m_PersistentCalls:
         m_Calls: []
     interactUnityEvent:
@@ -720,6 +897,9 @@ MonoBehaviour:
     selectUnityEvent:
       m_PersistentCalls:
         m_Calls: []
+    deselectUnityEvent:
+      m_PersistentCalls:
+        m_Calls: []
     interactUnityEvent:
       m_PersistentCalls:
         m_Calls:
@@ -743,39 +923,7 @@ MonoBehaviour:
     selectUnityEvent:
       m_PersistentCalls:
         m_Calls: []
-    interactUnityEvent:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 634285158161871940}
-          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-          m_MethodName: SetActive
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 780650882704921640}
-          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-          m_MethodName: SetActive
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 1
-          m_CallState: 2
-  - trs: {fileID: 3863759951354241552}
-    selectedGo: {fileID: 8144759113896084520}
-    deselectedGo: {fileID: 8757882847770543359}
-    isInteractive: 1
-    uninteractiveGo: {fileID: 2842902718392450474}
-    selectUnityEvent:
+    deselectUnityEvent:
       m_PersistentCalls:
         m_Calls: []
     interactUnityEvent:
@@ -793,32 +941,46 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-        - m_Target: {fileID: 7373650982938746406}
-          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-          m_MethodName: SetActive
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 1
-          m_CallState: 2
         - m_Target: {fileID: 8324649378454795725}
-          m_TargetAssemblyTypeName: UnityEngine.Component, UnityEngine
-          m_MethodName: SendMessage
-          m_Mode: 5
+          m_TargetAssemblyTypeName: AmbitiousSnake.GameplayMenu, Assembly-CSharp-firstpass
+          m_MethodName: SwitchGameplayMenu
+          m_Mode: 2
           m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_ObjectArgument: {fileID: 3482976002721976206}
+            m_ObjectArgumentAssemblyTypeName: AmbitiousSnake.GameplayMenu, Assembly-CSharp-firstpass
             m_IntArgument: 0
             m_FloatArgument: 0
             m_StringArgument: 
             m_BoolArgument: 1
           m_CallState: 2
-  movementModeTexts: []
+  - trs: {fileID: 3863759951354241552}
+    selectedGo: {fileID: 8144759113896084520}
+    deselectedGo: {fileID: 8757882847770543359}
+    isInteractive: 1
+    uninteractiveGo: {fileID: 2842902718392450474}
+    selectUnityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+    deselectUnityEvent:
+      m_PersistentCalls:
+        m_Calls: []
+    interactUnityEvent:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 8324649378454795725}
+          m_TargetAssemblyTypeName: AmbitiousSnake.GameplayMenu, Assembly-CSharp-firstpass
+          m_MethodName: SwitchGameplayMenu
+          m_Mode: 2
+          m_Arguments:
+            m_ObjectArgument: {fileID: 8813365611769318165}
+            m_ObjectArgumentAssemblyTypeName: AmbitiousSnake.GameplayMenu, Assembly-CSharp-firstpass
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
   optionsParent: {fileID: 634285158161871940}
+  movementModeTexts: []
 --- !u!135 &230748963962394804
 SphereCollider:
   m_ObjectHideFlags: 0

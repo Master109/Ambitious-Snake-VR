@@ -19,7 +19,7 @@ namespace AmbitiousSnake
 
 		public virtual void OnDestroy ()
 		{
-			if (_SceneManager.isLoading || GameManager.isQuittingGame)
+			if (GameManager.paused || _SceneManager.isLoading || GameManager.isQuittingGame)
 				return;
 			for (int i = 0; i < neighbors.Length; i ++)
 			{

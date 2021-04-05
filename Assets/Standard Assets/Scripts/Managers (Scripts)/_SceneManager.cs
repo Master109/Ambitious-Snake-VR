@@ -27,86 +27,105 @@ namespace AmbitiousSnake
 		
 		public void LoadSceneWithTransition (string levelName)
 		{
-			if (_SceneManager.Instance != this)
+			if (Instance != this)
 			{
-				_SceneManager.Instance.LoadSceneWithTransition (levelName);
+				instance.LoadSceneWithTransition (levelName);
 				return;
 			}
 			isLoading = true;
-			Time.timeScale = 1;
 			StartCoroutine (SceneTransition (levelName));
 		}
 		
 		public void LoadSceneWithoutTransition (string levelName)
 		{
 			isLoading = true;
-			Time.timeScale = 1;
 			SceneManager.LoadScene(levelName);
 		}
 		
 		public void LoadSceneWithTransition (int levelId)
 		{
-			if (_SceneManager.Instance != this)
+			if (Instance != this)
 			{
-				_SceneManager.Instance.LoadSceneWithTransition (levelId);
+				instance.LoadSceneWithTransition (levelId);
 				return;
 			}
 			isLoading = true;
-			Time.timeScale = 1;
 			StartCoroutine (SceneTransition (levelId));
 		}
 		
 		public void LoadSceneWithoutTransition (int levelId)
 		{
 			isLoading = true;
-			Time.timeScale = 1;
 			SceneManager.LoadScene(levelId);
 		}
 		
 		public void LoadSceneAdditiveWithTransition (string levelName)
 		{
-			if (_SceneManager.Instance != this)
+			if (Instance != this)
 			{
-				_SceneManager.Instance.LoadSceneAdditiveWithTransition (levelName);
+				Instance.LoadSceneAdditiveWithTransition (levelName);
 				return;
 			}
 			isLoading = true;
-			Time.timeScale = 1;
 			StartCoroutine (SceneTransition (levelName, LoadSceneMode.Additive));
 		}
 		
 		public void LoadSceneAdditiveWithoutTransition (string levelName)
 		{
 			isLoading = true;
-			Time.timeScale = 1;
 			SceneManager.LoadScene(levelName, LoadSceneMode.Additive);
+		}
+
+		public void LoadSceneAdditiveWithTransition (int levelId)
+		{
+			if (Instance != this)
+			{
+				Instance.LoadSceneAdditiveWithTransition (levelId);
+				return;
+			}
+			isLoading = true;
+			StartCoroutine (SceneTransition (levelId, LoadSceneMode.Additive));
+		}
+		
+		public void LoadSceneAdditiveWithoutTransition (int levelId)
+		{
+			isLoading = true;
+			SceneManager.LoadScene(levelId, LoadSceneMode.Additive);
+		}
+		
+		public AsyncOperation LoadSceneAsyncAdditiveWithoutTransition (string levelName)
+		{
+			isLoading = true;
+			return SceneManager.LoadSceneAsync(levelName, LoadSceneMode.Additive);
+		}
+		
+		public AsyncOperation LoadSceneAsyncAdditiveWithoutTransition (int levelId)
+		{
+			isLoading = true;
+			return SceneManager.LoadSceneAsync(levelId, LoadSceneMode.Additive);
 		}
 		
 		public void RestartSceneWithTransition ()
 		{
-			isLoading = true;
 			LoadSceneWithTransition (SceneManager.GetActiveScene().name);
 		}
 		
 		public void RestartSceneWithoutTransition ()
 		{
-			isLoading = true;
 			LoadSceneWithoutTransition (SceneManager.GetActiveScene().name);
 		}
 		
 		public void NextSceneWithTransition ()
 		{
-			isLoading = true;
 			LoadSceneWithTransition (SceneManager.GetActiveScene().buildIndex + 1);
 		}
 		
 		public void NextSceneWithoutTransition ()
 		{
-			isLoading = true;
 			LoadSceneWithoutTransition (SceneManager.GetActiveScene().buildIndex + 1);
 		}
 		
-		public virtual void OnSceneLoaded (Scene scene = new Scene(), LoadSceneMode loadMode = LoadSceneMode.Single)
+		public void OnSceneLoaded (Scene scene = new Scene(), LoadSceneMode loadMode = LoadSceneMode.Single)
 		{
 			Camera.main.rect = new Rect(.5f, .5f, 0, 0);
 			StartCoroutine(SceneTransition (null));
@@ -115,7 +134,7 @@ namespace AmbitiousSnake
 			mostRecentSceneName = scene.name;
 		}
 		
-		public virtual IEnumerator SceneTransition (string levelName = null, LoadSceneMode loadMode = LoadSceneMode.Single)
+		public IEnumerator SceneTransition (string levelName = null, LoadSceneMode loadMode = LoadSceneMode.Single)
 		{
 			bool transitioningIn = string.IsNullOrEmpty(levelName);
 			float transitionRateMultiplier = 1;
@@ -140,7 +159,7 @@ namespace AmbitiousSnake
 			}
 		}
 
-		public virtual IEnumerator SceneTransition (int levelId = -1, LoadSceneMode loadMode = LoadSceneMode.Single)
+		public IEnumerator SceneTransition (int levelId = -1, LoadSceneMode loadMode = LoadSceneMode.Single)
 		{
 			yield return StartCoroutine(SceneTransition (SceneManager.GetSceneByBuildIndex(levelId).name, loadMode));
 		}

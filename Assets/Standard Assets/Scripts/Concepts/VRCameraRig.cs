@@ -9,13 +9,6 @@ namespace AmbitiousSnake
 {
 	public class VRCameraRig : SingletonMonoBehaviour<VRCameraRig>, IUpdatable
 	{
-		public bool PauseWhileUnfocused
-		{
-			get
-			{
-				return true;
-			}
-		}
 		public new Camera camera;
 		public Transform trackingSpaceTrs;
 		public Transform eyesTrs;
@@ -44,8 +37,9 @@ namespace AmbitiousSnake
 		bool setOrientationInput;
 		bool previousSetOrientationInput;
 		
-		void Start ()
+		void OnEnable ()
 		{
+			instance = this;
 			CurrentHand = rightHandTrs;
 			cameraDistance = trs.localPosition.magnitude;
 			positionOffset = trs.localPosition;
@@ -61,7 +55,7 @@ namespace AmbitiousSnake
 				UpdateAnchors ();
 			else
 			{
-				Vector2 rotaInput = Mouse.current.delta.ReadValue().FlipY() * lookRate * Time.deltaTime;
+				Vector2 rotaInput = Mouse.current.delta.ReadValue().FlipY() * lookRate * Time.unscaledDeltaTime;
 				if (rotaInput != Vector2.zero)
 				{
 					trackingSpaceTrs.RotateAround(trackingSpaceTrs.position, trackingSpaceTrs.right, rotaInput.y);
@@ -79,7 +73,7 @@ namespace AmbitiousSnake
 			previousSetOrientationInput = setOrientationInput;
 		}
 
-		void OnDestroy ()
+		void OnDisable ()
 		{
 			GameManager.updatables = GameManager.updatables.Remove(this);
 		}

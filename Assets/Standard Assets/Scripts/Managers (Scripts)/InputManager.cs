@@ -535,6 +535,7 @@ namespace AmbitiousSnake
 
 		public override void Awake ()
 		{
+			base.Awake ();
 			trs.SetParent(null);
 			leftHandTrsAtBeginMove.SetParent(VRCameraRig.instance.trs);
 			rightHandTrsAtBeginMove.SetParent(VRCameraRig.instance.trs);

@@ -77,7 +77,7 @@ namespace AmbitiousSnake
 
 		void HandleGameplayMenu ()
 		{
-			if (GameplayMenu.instance.gameObject.activeSelf)
+			if (GameplayMenu.instance == null || GameplayMenu.instance.gameObject.activeSelf)
 				return;
 			if (leftGameplayMenuInput && !previousLeftGameplayMenuInput)
 				GameplayMenu.selectorTrs = VRCameraRig.instance.leftHandTrs;
@@ -87,10 +87,8 @@ namespace AmbitiousSnake
 				GameplayMenu.selectorTrs = VRCameraRig.instance.eyesTrs;
 			else
 				return;
-			GameplayMenu.instance.trs.position = VRCameraRig.instance.eyesTrs.position + (VRCameraRig.instance.eyesTrs.forward * GameplayMenu.instance.distanceFromCamera);
-			GameplayMenu.instance.trs.rotation = VRCameraRig.instance.eyesTrs.rotation;
+			GameplayMenu.instance.SetOrientation ();
 			GameplayMenu.instance.gameObject.SetActive(true);
-			paused = true;
 		}
 
 		void HandleRestart ()

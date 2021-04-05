@@ -27,6 +27,7 @@ namespace AmbitiousSnake
 			if (!Application.isPlaying)
 				return;
 #endif
+			instance = this;
 			GameManager.updatables = GameManager.updatables.Add(this);
 		}
 

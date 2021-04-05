@@ -5,6 +5,8 @@ using System;
 using UnityEngine.Events;
 using System.Collections.Generic;
 using TMPro;
+using UnityEngine.SceneManagement;
+using UnityEngine.InputSystem;
 
 namespace AmbitiousSnake
 {
@@ -17,9 +19,12 @@ namespace AmbitiousSnake
 		public Option centerOption;
 		public float optionSeperationFromCenterOption;
 		public Option[] options = new Option[0];
-		public static Transform selectorTrs;
-		public TMP_Text[] movementModeTexts = new TMP_Text[0];
 		public GameObject optionsParent;
+		public TMP_Text[] movementModeTexts = new TMP_Text[0];
+		public static Transform selectorTrs;
+		Level currentLevel;
+		Coroutine startLevelPreviewCoroutine;
+		Coroutine stopLevelPreviewCoroutine;
 		Option selectedOption;
 		bool leftGameplayMenuInput;
 		bool previousLeftGameplayMenuInput;
@@ -45,7 +50,7 @@ namespace AmbitiousSnake
 
 		public override void Awake ()
 		{
-			if (isTopTier)
+			if (isTopTier && instance == null)
 				instance = this;
 			gameObject.SetActive(false);
 		}
@@ -53,6 +58,11 @@ namespace AmbitiousSnake
 		public override void OnEnable ()
 		{
 			base.OnEnable ();
+			if (instance == this)
+			{
+				GameManager.paused = true;
+				Time.timeScale = 0;
+			}
 			bool moveHandToChangeDirection = GameManager.gameModifierDict["Move hand to change direction"].isActive;
 			UpdateMovementModeTexts (moveHandToChangeDirection);
 		}
@@ -60,8 +70,11 @@ namespace AmbitiousSnake
 		public override void OnDisable ()
 		{
 			base.OnDisable ();
-			if (isTopTier)
+			if (instance == this)
+			{
+				Time.timeScale = 1;
 				GameManager.paused = false;
+			}
 		}
 
 		public override void DoUpdate ()
@@ -143,6 +156,7 @@ namespace AmbitiousSnake
 			{
 				option.selectedGo.SetActive(false);
 				option.deselectedGo.SetActive(true);
+				option.deselectUnityEvent.Invoke();
 			}
 		}
 
@@ -156,8 +170,53 @@ namespace AmbitiousSnake
 			_SceneManager.instance.LoadSceneWithoutTransition (index);
 		}
 
-		public void PreviewLevel (int index)
+		public void StartLevelPreview (int index)
 		{
+			startLevelPreviewCoroutine = StartCoroutine(StartLevelPreviewRoutine (index));
+		}
+
+		IEnumerator StartLevelPreviewRoutine (int index)
+		{
+			yield return new WaitUntil(() => (SceneManager.sceneCount == 1 && stopLevelPreviewCoroutine == null));
+			if (index == SceneManager.GetActiveScene().buildIndex)
+			{
+				if (currentLevel != null)
+					currentLevel.gameObject.SetActive(true);
+			}
+			else
+			{
+				if (currentLevel == null)
+					currentLevel = Level.instance;
+				GameplayMenu.instance.trs.SetParent(null);
+				// enabled = false;
+				currentLevel.gameObject.SetActive(false);
+				yield return _SceneManager.instance.LoadSceneAsyncAdditiveWithoutTransition(index);
+			}
+			InputSystem.Update ();
+			VRCameraRig.instance.DoUpdate ();
+			SetOrientation ();
+			startLevelPreviewCoroutine = null;
+		}
+
+		public void StopLevelPreview (int index)
+		{
+			if (index != SceneManager.GetActiveScene().buildIndex && SceneManager.sceneCount == 2 && SceneManager.GetSceneByBuildIndex(index).isLoaded && stopLevelPreviewCoroutine == null)
+			{
+				if (startLevelPreviewCoroutine != null)
+					StopCoroutine(startLevelPreviewCoroutine);
+				startLevelPreviewCoroutine = null;
+				stopLevelPreviewCoroutine = StartCoroutine(StopLevelPreviewRoutine (index));
+			}
+		}
+
+		IEnumerator StopLevelPreviewRoutine (int index)
+		{
+			yield return SceneManager.UnloadSceneAsync(index, UnloadSceneOptions.UnloadAllEmbeddedSceneObjects);
+			currentLevel.gameObject.SetActive(true);
+			InputSystem.Update ();
+			VRCameraRig.instance.DoUpdate ();
+			SetOrientation ();
+			stopLevelPreviewCoroutine = null;
 		}
 
 		public void ToggleMovementMode ()
@@ -181,8 +240,27 @@ namespace AmbitiousSnake
 
 		public void SwitchGameplayMenu (GameplayMenu switchTo)
 		{
-			optionsParent.SetActive(false);
+			if (isTopTier)
+				optionsParent.SetActive(false);
+			else
+				gameObject.SetActive(false);
 			switchTo.gameObject.SetActive(true);
+			if (switchTo.isTopTier)
+				switchTo.optionsParent.SetActive(true);
+			else
+				switchTo.gameObject.SetActive(true);
+		}
+
+		public void SetOrientation ()
+		{
+			if (instance != this)
+			{
+				instance.SetOrientation ();
+				return;
+			}
+			// trs.SetParent(VRCameraRig.instance.trs);
+			trs.position = VRCameraRig.instance.eyesTrs.position + (VRCameraRig.instance.eyesTrs.forward * distanceFromCamera);
+			trs.rotation = VRCameraRig.instance.eyesTrs.rotation;
 		}
 
 		[Serializable]
@@ -194,6 +272,7 @@ namespace AmbitiousSnake
 			public bool isInteractive;
 			public GameObject uninteractiveGo;
 			public UnityEvent selectUnityEvent;
+			public UnityEvent deselectUnityEvent;
 			public UnityEvent interactUnityEvent;
 		}
 	}

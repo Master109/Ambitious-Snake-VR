@@ -80,6 +80,7 @@ namespace AmbitiousSnake
 		public override void Awake ()
 		{
 			base.Awake ();
+			instance = this;
 			AddHeadPiece (trs.position, 0);
 			for (float distance = maxDistanceBetweenPieces; distance <= length.value; distance += maxDistanceBetweenPieces)
 				AddHeadPiece (trs.position + trs.forward * distance, maxDistanceBetweenPieces);
@@ -97,7 +98,7 @@ namespace AmbitiousSnake
 		
 		public void DoUpdate ()
 		{
-			if (dead)
+			if (GameManager.paused || dead)
 				return;
 			HandleMovement ();
 			SetLength (Mathf.Clamp(length.value + InputManager.ChangeLengthInput * changeLengthRate * Time.deltaTime, length.valueRange.min, length.valueRange.max));
