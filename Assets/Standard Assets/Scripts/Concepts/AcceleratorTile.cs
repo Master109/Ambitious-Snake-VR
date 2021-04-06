@@ -42,7 +42,7 @@ namespace AmbitiousSnake
 			{
 				Rigidbody touchingRigid = touchingRigids[i];
 				bool isHittingRigid = false;
-				Collider[] hits = Physics.OverlapBox(trs.position, trs.lossyScale / 2 + Vector3.one * Physics.defaultContactOffset, trs.rotation);
+				Collider[] hits = Physics.OverlapBox(collider.bounds.center, collider.bounds.extents + Vector3.one * Physics.defaultContactOffset);
 				for (int i2 = 0; i2 < hits.Length; i2 ++)
 				{
 					Collider hit = hits[i2];

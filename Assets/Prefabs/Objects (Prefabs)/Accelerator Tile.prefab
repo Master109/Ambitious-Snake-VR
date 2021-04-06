@@ -18,7 +18,7 @@ MonoBehaviour:
   isSupportingTile: 0
   tileParent: {fileID: 0}
   collider: {fileID: 6348877333432531220}
-  forceAmount: 5000
+  forceAmount: 10000
 --- !u!1 &4512435803948650155
 GameObject:
   m_ObjectHideFlags: 0
