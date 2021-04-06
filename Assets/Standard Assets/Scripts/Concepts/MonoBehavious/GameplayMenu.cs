@@ -189,7 +189,7 @@ namespace AmbitiousSnake
 			{
 				GameplayMenu.instance.trs.SetParent(null);
 				Level.instance.gameObject.SetActive(false);
-				yield return StartCoroutine(_SceneManager.instance.LoadSceneAsyncAdditiveWithoutTransition(index));
+				yield return _SceneManager.instance.LoadSceneAsyncAdditiveWithoutTransition(index);
 			}
 			// Snake.instance = Snake.Instance;
 			// InputSystem.Update();

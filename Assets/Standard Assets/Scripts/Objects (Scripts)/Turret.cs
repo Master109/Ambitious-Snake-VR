@@ -21,13 +21,14 @@ namespace AmbitiousSnake
 			if (GameManager.paused)
 				return;
 			shootDirection = VectorExtensions.NULL3;
+			// for (int i = 0; i < Snake.instance.pieces.Count; i ++)
 			for (int i = Snake.instance.pieces.Count - 1; i >= 0; i --)
 			{
 				Vector3 snakePiecePosition = Snake.instance.pieces[i].trs.position;
 				Vector3 toSnakePiecePosition = snakePiecePosition - trs.position;
 				trs.rotation = Quaternion.LookRotation(toSnakePiecePosition);
 				laser.DoUpdate ();
-				if (laser.hit.collider != null && laser.hit.transform.root == Snake.instance.trs)
+				if (laser.hit.collider != null && laser.hit.transform == Snake.instance.trs)
 				{
 					shootDirection = toSnakePiecePosition;
 					line.SetPosition(1, snakePiecePosition);
