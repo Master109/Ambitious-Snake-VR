@@ -21,6 +21,7 @@ namespace AmbitiousSnake
 		[SaveAndLoadValue]
 		static string disabledGosString = "";
 		public TileParent tileParentPrefab;
+		[SaveAndLoadValue]
 		public GameModifier[] gameModifiers = new GameModifier[0];
 		public static Dictionary<string, GameModifier> gameModifierDict = new Dictionary<string, GameModifier>();
 		bool leftGameplayMenuInput;
@@ -36,8 +37,11 @@ namespace AmbitiousSnake
 			if (instance != this)
 				return;
 			gameModifierDict.Clear();
-			foreach (GameModifier gameModifier in gameModifiers)
+			for (int i = 0; i < gameModifiers.Length; i ++)
+			{
+				GameModifier gameModifier = gameModifiers[i];
 				gameModifierDict.Add(gameModifier.name, gameModifier);
+			}
 			SceneManager.sceneLoaded += OnSceneLoaded;
 		}
 

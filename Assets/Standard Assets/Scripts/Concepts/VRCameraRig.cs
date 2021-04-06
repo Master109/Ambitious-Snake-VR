@@ -37,12 +37,12 @@ namespace AmbitiousSnake
 		bool setOrientationInput;
 		bool previousSetOrientationInput;
 		
-		void OnEnable ()
+		public void OnEnable ()
 		{
 			instance = this;
 			CurrentHand = rightHandTrs;
-			cameraDistance = trs.localPosition.magnitude;
 			positionOffset = trs.localPosition;
+			cameraDistance = positionOffset.magnitude;
 			trs.SetParent(null);
 			SetOrientation ();
 			GameManager.updatables = GameManager.updatables.Add(this);

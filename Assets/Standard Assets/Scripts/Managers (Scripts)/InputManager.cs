@@ -179,7 +179,7 @@ namespace AmbitiousSnake
 				Vector3 output = Vector3.zero;
 				if (_InputDevice == InputDevice.KeyboardAndMouse && Keyboard.current.wKey.isPressed)
 					output = -VRCameraRig.instance.eyesTrs.right;
-				if (!GameManager.ModifierIsActive("Move hand to change direction"))
+				if (!GameManager.gameModifierDict["Move hand to change direction"].isActive)
 				{
 					if (LeftMoveInput)
 						output = LeftHandRotation * Vector3.forward;
@@ -546,20 +546,28 @@ namespace AmbitiousSnake
 		{
 			leftMoveInput = LeftMoveInput;
 			rightMoveInput = RightMoveInput;
-			if (!previousLeftMoveInput && leftMoveInput)
+			if (GameManager.gameModifierDict["Move hand to change direction"].isActive)
 			{
-				leftHandTrsAtBeginMove.position = VRCameraRig.instance.leftHandTrs.position;
-				leftHandTrsAtBeginMove.gameObject.SetActive(true);
+				if (!previousLeftMoveInput && leftMoveInput)
+				{
+					leftHandTrsAtBeginMove.position = VRCameraRig.instance.leftHandTrs.position;
+					leftHandTrsAtBeginMove.gameObject.SetActive(true);
+				}
+				else if (previousLeftMoveInput && !leftMoveInput)
+					leftHandTrsAtBeginMove.gameObject.SetActive(false);
+				if (!previousRightMoveInput && rightMoveInput)
+				{
+					rightHandTrsAtBeginMove.position = VRCameraRig.instance.rightHandTrs.position;
+					rightHandTrsAtBeginMove.gameObject.SetActive(true);
+				}
+				else if (previousRightMoveInput && !rightMoveInput)
+					rightHandTrsAtBeginMove.gameObject.SetActive(false);
 			}
-			else if (previousLeftMoveInput && !leftMoveInput)
+			else
+			{
 				leftHandTrsAtBeginMove.gameObject.SetActive(false);
-			if (!previousRightMoveInput && rightMoveInput)
-			{
-				rightHandTrsAtBeginMove.position = VRCameraRig.instance.rightHandTrs.position;
-				rightHandTrsAtBeginMove.gameObject.SetActive(true);
-			}
-			else if (previousRightMoveInput && !rightMoveInput)
 				rightHandTrsAtBeginMove.gameObject.SetActive(false);
+			}
 			previousLeftMoveInput = leftMoveInput;
 			previousRightMoveInput = rightMoveInput;
 		}

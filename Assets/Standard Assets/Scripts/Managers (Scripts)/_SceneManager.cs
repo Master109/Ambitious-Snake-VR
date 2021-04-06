@@ -93,16 +93,16 @@ namespace AmbitiousSnake
 			SceneManager.LoadScene(levelId, LoadSceneMode.Additive);
 		}
 		
-		public AsyncOperation LoadSceneAsyncAdditiveWithoutTransition (string levelName)
+		public IEnumerator LoadSceneAsyncAdditiveWithoutTransition (string levelName)
 		{
 			isLoading = true;
-			return SceneManager.LoadSceneAsync(levelName, LoadSceneMode.Additive);
+			yield return SceneManager.LoadSceneAsync(levelName, LoadSceneMode.Additive);
 		}
 		
-		public AsyncOperation LoadSceneAsyncAdditiveWithoutTransition (int levelId)
+		public IEnumerator LoadSceneAsyncAdditiveWithoutTransition (int levelId)
 		{
 			isLoading = true;
-			return SceneManager.LoadSceneAsync(levelId, LoadSceneMode.Additive);
+			yield return SceneManager.LoadSceneAsync(levelId, LoadSceneMode.Additive);
 		}
 		
 		public void RestartSceneWithTransition ()

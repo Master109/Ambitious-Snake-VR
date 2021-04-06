@@ -172,6 +172,11 @@ namespace AmbitiousSnake
 
 		public void StartLevelPreview (int index)
 		{
+			if (startLevelPreviewCoroutine != null)
+				StopCoroutine(startLevelPreviewCoroutine);
+			if (stopLevelPreviewCoroutine != null)
+				StopCoroutine(stopLevelPreviewCoroutine);
+			stopLevelPreviewCoroutine = null;
 			startLevelPreviewCoroutine = StartCoroutine(StartLevelPreviewRoutine (index));
 		}
 
@@ -179,44 +184,52 @@ namespace AmbitiousSnake
 		{
 			yield return new WaitUntil(() => (SceneManager.sceneCount == 1 && stopLevelPreviewCoroutine == null));
 			if (index == SceneManager.GetActiveScene().buildIndex)
-			{
-				if (currentLevel != null)
-					currentLevel.gameObject.SetActive(true);
-			}
+				Level.instance.gameObject.SetActive(true);
 			else
 			{
-				if (currentLevel == null)
-					currentLevel = Level.instance;
 				GameplayMenu.instance.trs.SetParent(null);
-				// enabled = false;
-				currentLevel.gameObject.SetActive(false);
-				yield return _SceneManager.instance.LoadSceneAsyncAdditiveWithoutTransition(index);
+				Level.instance.gameObject.SetActive(false);
+				yield return StartCoroutine(_SceneManager.instance.LoadSceneAsyncAdditiveWithoutTransition(index));
 			}
-			InputSystem.Update ();
-			VRCameraRig.instance.DoUpdate ();
-			SetOrientation ();
+			// Snake.instance = Snake.Instance;
+			// InputSystem.Update();
+			// VRCameraRig.Instance.DoUpdate ();
+			// GameplayMenu.instance.SetOrientation ();
 			startLevelPreviewCoroutine = null;
 		}
 
 		public void StopLevelPreview (int index)
 		{
-			if (index != SceneManager.GetActiveScene().buildIndex && SceneManager.sceneCount == 2 && SceneManager.GetSceneByBuildIndex(index).isLoaded && stopLevelPreviewCoroutine == null)
+			if (index != SceneManager.GetActiveScene().buildIndex && SceneManager.sceneCount == 2 && SceneManager.GetSceneByBuildIndex(index).isLoaded)
 			{
 				if (startLevelPreviewCoroutine != null)
 					StopCoroutine(startLevelPreviewCoroutine);
 				startLevelPreviewCoroutine = null;
+				if (stopLevelPreviewCoroutine != null)
+					StopCoroutine(stopLevelPreviewCoroutine);
 				stopLevelPreviewCoroutine = StartCoroutine(StopLevelPreviewRoutine (index));
 			}
 		}
 
 		IEnumerator StopLevelPreviewRoutine (int index)
 		{
+			SceneManager.sceneLoaded += OnSceneLoaded;
 			yield return SceneManager.UnloadSceneAsync(index, UnloadSceneOptions.UnloadAllEmbeddedSceneObjects);
-			currentLevel.gameObject.SetActive(true);
-			InputSystem.Update ();
-			VRCameraRig.instance.DoUpdate ();
-			SetOrientation ();
+			Level.instance.gameObject.SetActive(true);
+			// Snake.instance = Snake.Instance;
+			// InputSystem.Update();
+			// VRCameraRig.Instance.DoUpdate ();
+			// GameplayMenu.instance.SetOrientation ();
 			stopLevelPreviewCoroutine = null;
+		}
+
+		void OnSceneLoaded (Scene scene = new Scene(), LoadSceneMode loadSceneMode = LoadSceneMode.Single)
+		{
+			SceneManager.sceneLoaded -= OnSceneLoaded;
+			Snake.instance = Snake.Instance;
+			InputSystem.Update();
+			VRCameraRig.Instance.DoUpdate ();
+			GameplayMenu.instance.SetOrientation ();
 		}
 
 		public void ToggleMovementMode ()
