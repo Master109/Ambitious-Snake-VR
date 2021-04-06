@@ -178,7 +178,7 @@ namespace AmbitiousSnake
 			{
 				Vector3 output = Vector3.zero;
 				if (_InputDevice == InputDevice.KeyboardAndMouse && Keyboard.current.wKey.isPressed)
-					output = -VRCameraRig.instance.eyesTrs.right;
+					output = Quaternion.Inverse(VRCameraRig.instance.eyesTrs.rotation) * VRCameraRig.instance.eyesTrs.forward;
 				if (!GameManager.gameModifierDict["Move hand to change direction"].isActive)
 				{
 					if (LeftMoveInput)
