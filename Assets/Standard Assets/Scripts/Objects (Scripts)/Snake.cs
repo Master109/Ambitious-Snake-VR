@@ -39,7 +39,6 @@ namespace AmbitiousSnake
 		public TMP_Text hpText;
 		[HideInInspector]
 		public bool dead;
-		Vector3 move;
 		public float maxDistanceBetweenPieces;
 		public List<SnakePiece> pieces = new List<SnakePiece>();
 		public LayerMask whatICrashInto;
@@ -47,6 +46,8 @@ namespace AmbitiousSnake
 		public float currentLength;
 		public SnakePiece piecePrefab;
 		public float changeLengthRate;
+		public AudioClip collisionAudioClip;
+		public LineRenderer lengthIndicator;
 		public SnakePiece HeadPiece
 		{
 			get
@@ -75,7 +76,7 @@ namespace AmbitiousSnake
 				return TailPiece.trs.position;
 			}
 		}
-		public AudioClip collisionAudioClip;
+		Vector3 move;
 
 		public override void Awake ()
 		{
@@ -196,7 +197,6 @@ namespace AmbitiousSnake
 				Vector3 tailPosition = TailPosition;
 				move = (tailPosition - pieces[1].trs.position).normalized;
 				float totalMoveAmount = newLength - currentLength;
-				bool shouldBreak = false;
 				LayerMask whatICrashIntoExcludingMe = whatICrashInto.RemoveFromMask("Snake");
 				while (totalMoveAmount > 0)
 				{
@@ -210,13 +210,14 @@ namespace AmbitiousSnake
 							SnakePiece piece = pieces[i];
 							RaycastHit hit2;
 							if (Physics.Raycast(piece.trs.position, -move, out hit2, moveAmount + SnakePiece.RADIUS + Physics.defaultContactOffset, whatICrashIntoExcludingMe, QueryTriggerInteraction.Ignore))
+							{
+								OnSetLength ();
 								return;
+							}
 						}
 					}
 					position = tailPosition + (move * moveAmount);
 					AddTailPiece (position, moveAmount);
-					if (shouldBreak)
-						break;
 					tailPosition = position;
 					totalMoveAmount -= moveAmount;
 				}
@@ -224,6 +225,11 @@ namespace AmbitiousSnake
 			while (currentLength > newLength)
 				RemoveTailPiece ();
 			length.SetValue (newLength);
+			OnSetLength ();
+		}
+
+		void OnSetLength ()
+		{
 			float distance = 0;
 			for (int i = 0; i < pieces.Count; i ++)
 			{
@@ -231,6 +237,7 @@ namespace AmbitiousSnake
 				piece.meshRenderer.material.SetFloat("value", distance / currentLength);
 				distance += piece.distanceToPreviousPiece;
 			}
+			lengthIndicator.SetPosition(0, Vector3.up * currentLength / length.valueRange.max);
 		}
 
 		void OnDisable ()
