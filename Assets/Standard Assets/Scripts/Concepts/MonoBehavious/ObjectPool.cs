@@ -164,7 +164,7 @@ namespace AmbitiousSnake
 		
 		public virtual KeyValuePair<GameObject, Transform> Despawn (SpawnedEntry spawnedEntry)
 		{
-			return Despawn (spawnedEntry.prefabIndex, spawnedEntry.go, spawnedEntry.trs);
+			return Despawn(spawnedEntry.prefabIndex, spawnedEntry.go, spawnedEntry.trs);
 		}
 		
 		public virtual KeyValuePair<GameObject, Transform> Despawn (int prefabIndex, GameObject go, Transform trs)

@@ -6,9 +6,8 @@ using System;
 
 namespace AmbitiousSnake
 {
-	public class SoundEffect : MonoBehaviour
+	public class SoundEffect : Spawnable
 	{
-		public Transform trs;
 		public AudioSource audioSource;
 		public Settings settings = new Settings();
 		

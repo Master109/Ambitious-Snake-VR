@@ -43,7 +43,7 @@ namespace AmbitiousSnake
 		
 		public SoundEffect MakeSoundEffect (SoundEffect.Settings soundEffectSettings)
 		{
-			SoundEffect output = ObjectPool.instance.SpawnComponent<SoundEffect>(soundEffectPrefab, soundEffectSettings.Position, soundEffectSettings.Rotation);
+			SoundEffect output = ObjectPool.instance.SpawnComponent<SoundEffect>(soundEffectPrefab.prefabIndex, soundEffectSettings.Position, soundEffectSettings.Rotation);
 			output.settings = soundEffectSettings;
 			output.Play();
 			return output;

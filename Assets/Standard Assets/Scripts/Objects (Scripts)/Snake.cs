@@ -97,7 +97,7 @@ namespace AmbitiousSnake
 			_SceneManager.instance.RestartSceneWithoutTransition ();
 		}
 		
-		public void DoUpdate ()
+		public virtual void DoUpdate ()
 		{
 			if (GameManager.paused || dead)
 				return;
@@ -107,7 +107,7 @@ namespace AmbitiousSnake
 			rigid.ResetInertiaTensor();
 		}
 
-		public void TakeDamage (float amount, Hazard source)
+		public virtual void TakeDamage (float amount, Hazard source)
 		{
 			if (dead)
 				return;
@@ -129,7 +129,7 @@ namespace AmbitiousSnake
 			Move (move);
 		}
 		
-		void Move (Vector3 move)
+		public virtual void Move (Vector3 move)
 		{
 			RaycastHit hit;
 			float totalMoveAmount = move.magnitude * moveSpeed * Time.deltaTime;
@@ -243,6 +243,16 @@ namespace AmbitiousSnake
 		void OnDisable ()
 		{
 			GameManager.updatables = GameManager.updatables.Remove(this);
+		}
+
+		public Vector3 GetPiecePosition (int index)
+		{
+			return pieces[index].trs.position;
+		}
+
+		public Vector3 GetPieceLocalPosition (int index)
+		{
+			return pieces[index].trs.localPosition;
 		}
 
 		// void OnCollisionEnter (Collision coll)

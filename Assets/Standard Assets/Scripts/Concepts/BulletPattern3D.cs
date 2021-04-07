@@ -18,7 +18,7 @@ namespace AmbitiousSnake
 		public virtual Bullet[] Shoot (Transform spawner, Bullet bulletPrefab, float positionOffset = 0)
 		{
 			Vector3 direction = GetShootDirection(spawner);
-			Bullet bullet = ObjectPool.Instance.SpawnComponent<Bullet>(bulletPrefab, spawner.position + direction * positionOffset, Quaternion.LookRotation(direction));
+			Bullet bullet = ObjectPool.Instance.SpawnComponent<Bullet>(bulletPrefab.prefabIndex, spawner.position + direction * positionOffset, Quaternion.LookRotation(direction));
 			// if (bullet == default(Bullet))
 			// 	return null;
 			return new Bullet[] { bullet };
@@ -26,7 +26,7 @@ namespace AmbitiousSnake
 		
 		public virtual Bullet[] Shoot (Vector3 spawnPos, Vector3 direction, Bullet bulletPrefab, float positionOffset = 0)
 		{
-			Bullet bullet = ObjectPool.Instance.SpawnComponent<Bullet>(bulletPrefab, spawnPos + direction.normalized * positionOffset, Quaternion.LookRotation(direction));
+			Bullet bullet = ObjectPool.Instance.SpawnComponent<Bullet>(bulletPrefab.prefabIndex, spawnPos + direction.normalized * positionOffset, Quaternion.LookRotation(direction));
 			// if (bullet == default(Bullet))
 			// 	return null;
 			return new Bullet[] { bullet };

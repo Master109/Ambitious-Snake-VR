@@ -34,31 +34,37 @@ namespace Extensions
 		public static float GetClosestNumber (float f, params float[] numbers)
 		{
 			float closestNumber = numbers[0];
-			float number;
+			float closestDistance = Mathf.Abs(f - closestNumber);
 			for (int i = 1; i < numbers.Length; i ++)
 			{
-				number = numbers[i];
-				if (Mathf.Abs(f - number) < Mathf.Abs(f - closestNumber))
+				float number = numbers[i];
+				float distance = Mathf.Abs(f - number);
+				if (distance < closestDistance)
+				{
+					closestDistance = distance;
 					closestNumber = number;
+				}
 			}
 			return closestNumber;
 		}
 
 		public static int GetIndexOfClosestNumber (float f, params float[] numbers)
 		{
-			int indexOfClosestNumber = 0;
+			int output = 0;
 			float closestNumber = numbers[0];
-			float number;
+			float closestDistance = Mathf.Abs(f - closestNumber);
 			for (int i = 1; i < numbers.Length; i ++)
 			{
-				number = numbers[i];
-				if (Mathf.Abs(f - number) < Mathf.Abs(f - closestNumber))
+				float number = numbers[i];
+				float distance = Mathf.Abs(f - number);
+				if (distance < closestDistance)
 				{
+					closestDistance = distance;
 					closestNumber = number;
-					indexOfClosestNumber = i;
+					output = i;
 				}
 			}
-			return indexOfClosestNumber;
+			return output;
 		}
 
 		public static float RegularizeAngle (float angle)
@@ -70,9 +76,9 @@ namespace Extensions
 
 		public static float ClampAngle (float ang, float min, float max)
 		{
-			ang = WrapAngle(ang);
-			min = WrapAngle(min);
-			max = WrapAngle(max);
+			ang = RegularizeAngle(ang);
+			min = RegularizeAngle(min);
+			max = RegularizeAngle(max);
 			float minDist = Mathf.Min(Mathf.DeltaAngle(ang, min), Mathf.DeltaAngle(ang, max));
 			float _ang = WrapAngle(ang + Mathf.DeltaAngle(ang, minDist));
 			if (_ang == min)
