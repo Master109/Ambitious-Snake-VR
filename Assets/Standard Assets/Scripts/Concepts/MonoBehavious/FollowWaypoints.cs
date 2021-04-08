@@ -331,11 +331,12 @@ namespace AmbitiousSnake
 		{
 			if (GameManager.paused || _SceneManager.isLoading)
 				return;
+			Transform waypointTrs = waypoints[currentWaypointIndex].trs;
 			if (moveSpeed != 0)
-				trs.position = Vector3.Lerp(trs.position, waypoints[currentWaypointIndex].trs.position - pivotOffset, moveSpeed * Time.deltaTime * (1f / Vector2.Distance(trs.position, waypoints[currentWaypointIndex].trs.position - pivotOffset)));
+				trs.position = Vector3.Lerp(trs.position, waypointTrs.position - pivotOffset, moveSpeed * Time.deltaTime * (1f / Vector2.Distance(trs.position, waypointTrs.position - pivotOffset)));
 			if (rotateSpeed != 0)
-				trs.rotation = Quaternion.Slerp(trs.rotation, waypoints[currentWaypointIndex].trs.rotation, rotateSpeed * Time.deltaTime * (1f / Quaternion.Angle(trs.rotation, waypoints[currentWaypointIndex].trs.rotation)));
-			if ((trs.position == waypoints[currentWaypointIndex].trs.position - pivotOffset || moveSpeed == 0) && (trs.eulerAngles == waypoints[currentWaypointIndex].trs.eulerAngles || rotateSpeed == 0))
+				trs.rotation = Quaternion.Slerp(trs.rotation, waypointTrs.rotation, rotateSpeed * Time.deltaTime * (1f / Quaternion.Angle(trs.rotation, waypointTrs.rotation)));
+			if ((trs.position == waypointTrs.position - pivotOffset || moveSpeed == 0) && (trs.eulerAngles == waypointTrs.eulerAngles || rotateSpeed == 0))
 				OnReachedWaypoint ();
 		}
 		
@@ -401,8 +402,8 @@ namespace AmbitiousSnake
 
 	public enum FollowType
 	{
-		Once = 0,
-		Loop = 1,
-		PingPong = 2
+		Once,
+		Loop,
+		PingPong
 	}
 }
