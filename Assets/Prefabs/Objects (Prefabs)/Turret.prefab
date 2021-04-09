@@ -222,7 +222,7 @@ MonoBehaviour:
   line: {fileID: 1985160938632946837}
   whatBlocksMe:
     serializedVersion: 2
-    m_Bits: 61376
+    m_Bits: 1896384
   trs: {fileID: 6785246667089287282}
 --- !u!1001 &2044134706884938491
 PrefabInstance:

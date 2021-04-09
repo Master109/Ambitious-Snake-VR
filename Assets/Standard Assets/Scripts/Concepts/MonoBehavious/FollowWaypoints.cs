@@ -52,6 +52,7 @@ namespace AmbitiousSnake
 			if (!Application.isPlaying)
 			{
 				pivotOffset = GetBoundsOfChildren().center - trs.position;
+				waypoints[currentWaypointIndex].trs.position = GetBoundsOfChildren().center;
 				AutoSetLineRenderers ();
 				return;
 			}
