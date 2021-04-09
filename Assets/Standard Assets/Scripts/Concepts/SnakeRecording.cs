@@ -5,11 +5,16 @@ namespace AmbitiousSnake
 {
 	public struct SnakeRecording
 	{
-		public List<Vector3[]> newHeadLocalPositions;
-		public List<Vector3[]> newTailLocalPositions;
-		public List<int> removedTailPieces;
-		public List<Vector3> translations;
-		public List<Vector3> rotations;
-		public List<float> timesSinceCreation;
+		public List<Frame> frames;
+
+		public struct Frame
+		{
+			public Vector3[] newHeadPositions;
+			public Vector3[] newTailPositions;
+			public int removedTailPiecesCount;
+			public Vector3 trsPosition;
+			public Vector3 trsRotation;
+			public float timeSinceCreated;
+		}
 	}
 }

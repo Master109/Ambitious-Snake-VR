@@ -33,10 +33,10 @@ namespace AmbitiousSnake
 			do
 			{
 				yield return new WaitForEndOfFrame();
-				meshRenderer.material.color = meshRenderer.material.color.AddAlpha(-Time.deltaTime / dissolveDuration);
+				meshRenderer.material.color = meshRenderer.material.color.GetWithAddedAlpha(-Time.deltaTime / dissolveDuration);
 				if (meshRenderer.material.color.a <= 0)
 				{
-					meshRenderer.material.color = meshRenderer.material.color.SetAlpha(0);
+					meshRenderer.material.color = meshRenderer.material.color.GetWithAlpha(0);
 					break;
 				}
 			} while (true);

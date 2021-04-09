@@ -48,6 +48,12 @@ namespace AmbitiousSnake
 		public float changeLengthRate;
 		public AudioClip collisionAudioClip;
 		public LineRenderer lengthIndicator;
+		public delegate void OnAddHeadPiece(Vector3 position);
+		public event OnAddHeadPiece onAddHeadPiece;
+		public delegate void OnAddTailPiece(Vector3 position);
+		public event OnAddTailPiece onAddTailPiece;
+		public delegate void OnRemoveTailPiece();
+		public event OnRemoveTailPiece onRemoveTailPiece;
 		public SnakePiece HeadPiece
 		{
 			get
@@ -74,6 +80,20 @@ namespace AmbitiousSnake
 			get
 			{
 				return TailPiece.trs.position;
+			}
+		}
+		public Vector3 HeadLocalPosition
+		{
+			get
+			{
+				return HeadPiece.trs.localPosition;
+			}
+		}
+		public Vector3 TailLocalPosition
+		{
+			get
+			{
+				return TailPiece.trs.localPosition;
 			}
 		}
 		Vector3 move;
@@ -154,7 +174,7 @@ namespace AmbitiousSnake
 			}
 		}
 
-		void AddHeadPiece (Vector3 position)
+		public void AddHeadPiece (Vector3 position)
 		{
 			AddHeadPiece (position, (HeadPosition - position).magnitude);
 		}
@@ -165,9 +185,11 @@ namespace AmbitiousSnake
 			headPiece.distanceToPreviousPiece = distanceToPreviousPiece;
 			pieces.Add(headPiece);
 			currentLength += distanceToPreviousPiece;
+			if (onAddHeadPiece != null)
+				onAddHeadPiece (position);
 		}
 
-		void AddTailPiece (Vector3 position)
+		public void AddTailPiece (Vector3 position)
 		{
 			AddHeadPiece (position, (TailPosition - position).magnitude);
 		}
@@ -178,15 +200,19 @@ namespace AmbitiousSnake
 			tailPiece.distanceToPreviousPiece = distanceToPreviousPiece;
 			pieces.Insert(0, tailPiece);
 			currentLength += distanceToPreviousPiece;
+			if (onAddTailPiece != null)
+				onAddTailPiece (position);
 		}
 
-		void RemoveTailPiece ()
+		public void RemoveTailPiece ()
 		{
 			SnakePiece tailPiece = TailPiece;
 			Transform tailPieceTrs = tailPiece.trs;
 			ObjectPool.instance.Despawn (tailPiece.prefabIndex, tailPiece.gameObject, tailPieceTrs);
 			pieces.RemoveAt(0);
 			currentLength -= tailPiece.distanceToPreviousPiece;
+			if (onRemoveTailPiece != null)
+				onRemoveTailPiece ();
 		}
 
 		void SetLength (float newLength)
@@ -228,7 +254,7 @@ namespace AmbitiousSnake
 			OnSetLength ();
 		}
 
-		void OnSetLength ()
+		public virtual void OnSetLength ()
 		{
 			float distance = 0;
 			for (int i = 0; i < pieces.Count; i ++)

@@ -6,7 +6,7 @@ using Extensions;
 
 namespace AmbitiousSnake
 {
-	public class RecorderTile : Tile, ICollisionEnterHandler
+	public class RecorderTile : Tile, ICollisionEnterHandler, IUpdatable
 	{
 		public Collider collider;
 		public Collider Collider
@@ -16,13 +16,12 @@ namespace AmbitiousSnake
 				return collider;
 			}
 		}
-		[HideInInspector]
-		public bool isRecording;
 		public MeshRenderer meshRenderer;
 		public static RecorderTile[] areRecording = new RecorderTile[0];
 		public SnakeRecording currentRecording;
-		Vector3 latestHeadPieceLocalPosition;
-		Vector3 latestTailPieceLocalPosition;
+		List<Vector3> newHeadPositions = new List<Vector3>();
+		List<Vector3> newTailPositions = new List<Vector3>();
+		int removedTailPiecesCount;
 		float timeStarted;
 		bool hasBeenUsed;
 		
@@ -31,32 +30,65 @@ namespace AmbitiousSnake
 			if (hasBeenUsed)
 				return;
 			hasBeenUsed = true;
-			timeStarted = Time.timeSinceLevelLoad;
-			meshRenderer.material.color = meshRenderer.material.color.DivideAlpha(2);
-			StartCoroutine(Record ());
+			meshRenderer.material.color = meshRenderer.material.color.Divide(2);
+			StartRecording ();
 		}
 
-		public IEnumerator Record ()
+		void StartRecording ()
 		{
 			areRecording = areRecording.Add(this);
-			isRecording = true;
+			timeStarted = Time.timeSinceLevelLoad;
 			currentRecording = new SnakeRecording();
-			Vector3[] headPositions = new Vector3[Snake.instance.pieces.Count];
+			SnakeRecording.Frame frame = new SnakeRecording.Frame();
+			frame.newHeadPositions = new Vector3[Snake.instance.pieces.Count];
 			for (int i = 0; i < Snake.instance.pieces.Count; i ++)
-				headPositions[i] = Snake.instance.GetPieceLocalPosition(i);
-			currentRecording.newHeadLocalPositions.Add(headPositions);
-			currentRecording.translations.Add(Snake.instance.trs.position);
-			currentRecording.rotations.Add(Snake.instance.trs.eulerAngles);
-			currentRecording.timesSinceCreation.Add(0);
-			while (isRecording)
-			{
-				yield return new WaitForEndOfFrame();
-				// currentRecording.newHeadLocalPositions.Add(Snake.instance.GetPieceLocalPosition(Snake.instance.pieces.Count - 1));
-				currentRecording.translations.Add(Snake.instance.trs.position);
-				currentRecording.rotations.Add(Snake.instance.trs.eulerAngles);
-				currentRecording.timesSinceCreation.Add(Time.timeSinceLevelLoad - timeStarted);
-			}
+				frame.newHeadPositions[i] = Snake.instance.GetPiecePosition(i);
+			frame.trsPosition = Snake.instance.trs.position;
+			frame.trsRotation = Snake.instance.trs.eulerAngles;
+			currentRecording.frames.Add(frame);
+			Snake.instance.onAddHeadPiece += OnAddHeadPiece;
+			Snake.instance.onAddTailPiece += OnAddTailPiece;
+			Snake.instance.onRemoveTailPiece += OnRemoveTailPiece;
+			GameManager.updatables = GameManager.updatables.Add(this);
+		}
+
+		public void DoUpdate ()
+		{
+			SnakeRecording.Frame frame = new SnakeRecording.Frame();
+			frame.newHeadPositions = newHeadPositions.ToArray();
+			newHeadPositions.Clear();
+			frame.newTailPositions = newTailPositions.ToArray();
+			newTailPositions.Clear();
+			frame.removedTailPiecesCount = removedTailPiecesCount;
+			removedTailPiecesCount = 0;
+			frame.trsPosition = Snake.instance.trs.position;
+			frame.trsRotation = Snake.instance.trs.eulerAngles;
+			frame.timeSinceCreated = Time.timeSinceLevelLoad - timeStarted;
+			currentRecording.frames.Add(frame);
+		}
+
+		void OnAddHeadPiece (Vector3 position)
+		{
+			newHeadPositions.Add(position);
+		}
+
+		void OnAddTailPiece (Vector3 position)
+		{
+			newTailPositions.Add(position);
+		}
+
+		void OnRemoveTailPiece ()
+		{
+			removedTailPiecesCount ++;
+		}
+
+		public void StopRecording ()
+		{
 			areRecording = areRecording.Remove(this);
+			Snake.instance.onAddHeadPiece -= OnAddHeadPiece;
+			Snake.instance.onAddTailPiece -= OnAddTailPiece;
+			Snake.instance.onRemoveTailPiece -= OnRemoveTailPiece;
+			GameManager.updatables = GameManager.updatables.Remove(this);
 		}
 	}
 }
