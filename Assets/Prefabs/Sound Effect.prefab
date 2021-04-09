@@ -45,6 +45,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   trs: {fileID: 2168445788478178006}
+  prefabIndex: 1
   audioSource: {fileID: 6376335579781397265}
   settings:
     audioClip: {fileID: 0}

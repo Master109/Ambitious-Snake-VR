@@ -14,6 +14,8 @@ namespace AmbitiousSnake
 		public Transform trs;
 		public Laser laser;
 		public new Collider collider;
+		public new Collider suspensionRodCollider;
+		public int snakePieceCheckInterval = 1;
 		Vector3 shootDirection;
 
 		public override void DoUpdate ()
@@ -22,7 +24,7 @@ namespace AmbitiousSnake
 				return;
 			shootDirection = VectorExtensions.NULL3;
 			// for (int i = 0; i < Snake.instance.pieces.Count; i ++)
-			for (int i = Snake.instance.pieces.Count - 1; i >= 0; i --)
+			for (int i = Snake.instance.pieces.Count - 1; i >= 0; i -= snakePieceCheckInterval)
 			{
 				Vector3 snakePiecePosition = Snake.instance.pieces[i].trs.position;
 				Vector3 toSnakePiecePosition = snakePiecePosition - trs.position;
@@ -37,16 +39,16 @@ namespace AmbitiousSnake
 			}
 			if (shootDirection != VectorExtensions.NULL3)
 			{
-				trs.rotation = Quaternion.LookRotation(shootDirection);
 				line.startColor = lockedOnColor;
 				line.endColor = lockedOnColor;
 				if (reloadTimer.timeRemaining <= 0)
 				{
 					reloadTimer.Reset ();
 					reloadTimer.Start ();
-					Bullet bullet = ObjectPool.Instance.SpawnComponent<Bullet>(bulletPrefab, trs.position, Quaternion.LookRotation(shootDirection));
+					Bullet bullet = ObjectPool.Instance.SpawnComponent<Bullet>(bulletPrefab.prefabIndex, trs.position, Quaternion.LookRotation(shootDirection));
 					bullet.shooter = this;
 					Physics.IgnoreCollision(collider, bullet.collider, true);
+					Physics.IgnoreCollision(suspensionRodCollider, bullet.collider, true);
 				}
 			}
 			else

@@ -41,8 +41,8 @@ namespace AmbitiousSnake
 				delayedDespawn.timeRemaining -= Time.deltaTime;
 				if (delayedDespawn.timeRemaining < 0)
 				{
-					// Despawn (delayedDespawn.prefabIndex, delayedDespawn.go, delayedDespawn.trs);
-					Destroy(delayedDespawn.go);
+					Despawn (delayedDespawn.prefabIndex, delayedDespawn.go, delayedDespawn.trs);
+					// Destroy(delayedDespawn.go);
 					delayedDespawns = delayedDespawns.RemoveAt(i);
 					i --;
 					if (delayedDespawns.Length == 0 && rangedDespawns.Length == 0)
@@ -54,12 +54,12 @@ namespace AmbitiousSnake
 			for (int i = 0; i < rangedDespawns.Length; i ++)
 			{
 				RangedDespawn rangedDespawn = rangedDespawns[i];
-				rangedDespawn.range -= Vector3.Distance(rangedDespawn.trs.position, rangedDespawn.previousPos);
-				rangedDespawn.previousPos = rangedDespawn.trs.position;
+				rangedDespawn.range -= Vector3.Distance(rangedDespawn.trs.position, rangedDespawn.previousPosition);
+				rangedDespawn.previousPosition = rangedDespawn.trs.position;
 				if (rangedDespawn.range < 0)
 				{
-					// Despawn (rangedDespawn.prefabIndex, rangedDespawn.go, rangedDespawn.trs);
-					Destroy(rangedDespawn.go);
+					Despawn (rangedDespawn.prefabIndex, rangedDespawn.go, rangedDespawn.trs);
+					// Destroy(rangedDespawn.go);
 					rangedDespawns = rangedDespawns.RemoveAt(i);
 					i --;
 					if (rangedDespawns.Length == 0 && delayedDespawns.Length == 0)
@@ -111,7 +111,7 @@ namespace AmbitiousSnake
 			rangedDespawn.trs = trs;
 			// rangedDespawn.prefab = spawnEntries[prefabIndex].prefab;
 			rangedDespawn.prefabIndex = prefabIndex;
-			rangedDespawn.previousPos = trs.position;
+			rangedDespawn.previousPosition = trs.position;
 			rangedDespawns = rangedDespawns.Add(rangedDespawn);
 			enabled = true;
 			return rangedDespawn;
@@ -264,16 +264,16 @@ namespace AmbitiousSnake
 		
 		public class RangedDespawn : SpawnedEntry
 		{
-			public Vector3 previousPos;
+			public Vector3 previousPosition;
 			public float range;
 			
 			public RangedDespawn ()
 			{
 			}
 			
-			public RangedDespawn (Vector3 previousPos, float range)
+			public RangedDespawn (Vector3 previousPosition, float range)
 			{
-				this.previousPos = previousPos;
+				this.previousPosition = previousPosition;
 				this.range = range;
 			}
 		}

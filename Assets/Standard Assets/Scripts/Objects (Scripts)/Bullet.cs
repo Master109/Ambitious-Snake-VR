@@ -18,21 +18,20 @@ namespace AmbitiousSnake
 		void OnEnable ()
 		{
 			dead = false;
-			rangedDespawn = ObjectPool.Instance.RangeDespawn(prefabIndex, gameObject, trs, range);
+			rangedDespawn = ObjectPool.instance.RangeDespawn(prefabIndex, gameObject, trs, range);
 			rigid.velocity = trs.forward * moveSpeed;
 		}
 
 		void OnDisable ()
 		{
 			StopAllCoroutines();
-			Physics.IgnoreCollision(collider, shooter.collider, false);
-			dead = true;
-		}
-
-		void OnDestroy ()
-		{
-			ObjectPool.Instance.CancelRangedDespawn (rangedDespawn);
-			Physics.IgnoreCollision(collider, shooter.collider, false);
+			if (ObjectPool.instance != null)
+				ObjectPool.instance.CancelRangedDespawn (rangedDespawn);
+			if (shooter != null)
+			{
+				Physics.IgnoreCollision(collider, shooter.collider, false);
+				Physics.IgnoreCollision(collider, shooter.suspensionRodCollider, false);
+			}
 			dead = true;
 		}
 
@@ -41,7 +40,7 @@ namespace AmbitiousSnake
 			if (!dead)
 			{
 				base.OnCollisionEnter (coll);
-				ObjectPool.Instance.Despawn (prefabIndex, gameObject, trs);
+				ObjectPool.instance.Despawn (prefabIndex, gameObject, trs);
 			}
 		}
 	}
