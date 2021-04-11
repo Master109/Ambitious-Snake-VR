@@ -16,8 +16,10 @@ namespace AmbitiousSnake
 		}
 		[HideInInspector]
 		public SnakeRecording playing;
+		public float shrinkSphereChecks;
 		SnakeRecording.Frame currentFrame;
 		int currentFrameIndex;
+		bool isPlaying;
 		float playbackTime;
 		
 		public override void Awake ()
@@ -26,27 +28,43 @@ namespace AmbitiousSnake
 			playbackTime = 0;
 			StartCoroutine(Init ());
 		}
+
+		public override void OnEnable ()
+		{
+			isPlaying = true;
+		}
 		
 		public override void DoUpdate ()
 		{
 			if (GameManager.paused)
 				return;
 			currentFrame = playing.frames[currentFrameIndex];
-			while (playbackTime <= currentFrame.timeSinceCreated)
+			if (!isPlaying)
 			{
-				NextFrame ();
-				if (currentFrameIndex == playing.frames.Count - 1)
-					return;
-				if (WillCollide())
-					break;
-				Translate ();
-				Rotate ();
-				AddHeadPieces ();
-				AddTailPieces ();
-				RemoveTailPieces ();
-				OnSetLength ();
+				if (!WillCollide())
+					isPlaying = true;
 			}
-			playbackTime += Time.deltaTime;
+			else
+			{
+				playbackTime += Time.deltaTime;
+				while (playbackTime > currentFrame.timeSinceCreated)
+				{
+					NextFrame ();
+					if (currentFrameIndex == playing.frames.Count - 1)
+						return;
+					if (WillCollide())
+					{
+						isPlaying = false;
+						break;
+					}
+					Translate ();
+					Rotate ();
+					AddHeadPieces ();
+					AddTailPieces ();
+					RemoveTailPieces ();
+					OnSetLength ();
+				}
+			}
 		}
 
 		public override void OnSetLength ()
@@ -67,23 +85,40 @@ namespace AmbitiousSnake
 		
 		bool WillCollide ()
 		{
-			Vector3 previousPiecePosition = HeadPosition;
-			for (int i = 0; i < currentFrame.newHeadPositions.Length; i ++)
+			Vector3 previousPiecePosition;
+			if (currentFrame.newHeadPositions.Length > 0)
 			{
-				Vector3 piecePosition = currentFrame.newHeadPositions[i];
-				Vector3 previousToCurrentPiecePosition = piecePosition - previousPiecePosition;
-				if (Physics.SphereCast(new Ray(piecePosition, previousToCurrentPiecePosition), SnakePiece.RADIUS, previousToCurrentPiecePosition.magnitude, whatICrashInto))
-					return true;
-				previousPiecePosition = piecePosition;
+				previousPiecePosition = currentFrame.newHeadPositions[0];
+				for (int i = 1; i < currentFrame.newHeadPositions.Length; i ++)
+				{
+					Vector3 piecePosition = currentFrame.newHeadPositions[i];
+					Vector3 previousToCurrentPiecePosition = piecePosition - previousPiecePosition;
+					RaycastHit[] hits = Physics.SphereCastAll(new Ray(piecePosition, previousToCurrentPiecePosition), SnakePiece.RADIUS - shrinkSphereChecks, previousToCurrentPiecePosition.magnitude + SnakePiece.RADIUS, whatICrashInto);
+					for (int i2 = 0; i2 < hits.Length; i2 ++)
+					{
+						RaycastHit hit = hits[i2];
+						if (hit.rigidbody != rigid)
+							return true;
+					}
+					previousPiecePosition = piecePosition;
+				}
 			}
-			previousPiecePosition = Quaternion.Euler(currentFrame.trsRotation) * TailLocalPosition + currentFrame.trsPosition;
-			for (int i = 0; i < currentFrame.newTailPositions.Length - currentFrame.removedTailPiecesCount; i ++)
+			if (currentFrame.newTailPositions.Length > 0)
 			{
-				Vector3 piecePosition = currentFrame.newTailPositions[i];
-				Vector3 previousToCurrentPiecePosition = piecePosition - previousPiecePosition;
-				if (Physics.SphereCast(new Ray(piecePosition, previousToCurrentPiecePosition), SnakePiece.RADIUS, previousToCurrentPiecePosition.magnitude, whatICrashInto))
-					return true;
-				previousPiecePosition = piecePosition;
+				previousPiecePosition = currentFrame.newTailPositions[0];
+				for (int i = 1; i < currentFrame.newTailPositions.Length - currentFrame.removedTailPiecesCount; i ++)
+				{
+					Vector3 piecePosition = currentFrame.newTailPositions[i];
+					Vector3 previousToCurrentPiecePosition = piecePosition - previousPiecePosition;
+					RaycastHit[] hits = Physics.SphereCastAll(new Ray(piecePosition, previousToCurrentPiecePosition), SnakePiece.RADIUS - shrinkSphereChecks, previousToCurrentPiecePosition.magnitude + SnakePiece.RADIUS, whatICrashInto);
+					for (int i2 = 0; i2 < hits.Length; i2 ++)
+					{
+						RaycastHit hit = hits[i2];
+						if (hit.rigidbody != rigid)
+							return true;
+					}
+					previousPiecePosition = piecePosition;
+				}
 			}
 			return false;
 		}
@@ -94,12 +129,29 @@ namespace AmbitiousSnake
 			currentFrame = playing.frames[currentFrameIndex];
 			Translate ();
 			Rotate ();
-			for (int i = 0; i < currentFrame.newHeadPositions.Length; i ++)
+			while (true)
 			{
-				Vector3 headPosition = currentFrame.newHeadPositions[i];
-				AddHeadPiece (headPosition);
+				bool willCollide = false;
+				for (int i = 0; i < currentFrame.newHeadPositions.Length; i ++)
+				{
+					Vector3 headPosition = currentFrame.newHeadPositions[i];
+					if (Physics.CheckSphere(headPosition, SnakePiece.RADIUS - shrinkSphereChecks, whatICrashInto))
+					{
+						willCollide = true;
+						break;
+					}
+				}
+				if (!willCollide)
+					break;
+				yield return new WaitForEndOfFrame();
 			}
-			yield break;
+			AddHeadPiece (currentFrame.newHeadPositions[0], 0);
+			for (int i = 1; i < currentFrame.newHeadPositions.Length; i ++)
+			{
+				Vector3 newHeadPosition = currentFrame.newHeadPositions[i];
+				AddHeadPiece (newHeadPosition);
+			}
+			GameManager.updatables = GameManager.updatables.Add(this);
 		}
 		
 		void Translate ()

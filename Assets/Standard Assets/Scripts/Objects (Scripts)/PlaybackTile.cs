@@ -17,13 +17,18 @@ namespace AmbitiousSnake
 		public MeshRenderer meshRenderer;
 		public static SnakeRecording[] recordings = new SnakeRecording[0];
 		bool hasBeenUsed;
+
+		void Awake ()
+		{
+			recordings = new SnakeRecording[0];
+		}
 		
 		public void OnCollisionEnter (Collision coll)
 		{
 			if (hasBeenUsed)
 				return;
 			hasBeenUsed = true;
-            meshRenderer.material.color = meshRenderer.material.color.GetWithDividedAlpha(2);
+            meshRenderer.material.color = meshRenderer.material.color.Divide(2);
 			for (int i = 0; i < RecorderTile.areRecording.Length; i ++)
 			{
 				RecorderTile recorder = RecorderTile.areRecording[i];

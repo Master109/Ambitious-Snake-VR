@@ -44,7 +44,7 @@ namespace Extensions
 		
 		public static Color GetColor (string key)
 		{
-			return GetColor(key, Color.black.GetWithAlpha(0));
+			return GetColor(key, Color.black.SetAlpha(0));
 		}
 		
 		public static Color GetColor (string key, Color defaultValue)

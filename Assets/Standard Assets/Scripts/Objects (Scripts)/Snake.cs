@@ -107,7 +107,7 @@ namespace AmbitiousSnake
 				AddHeadPiece (trs.position + trs.forward * distance, maxDistanceBetweenPieces);
 		}
 		
-		void OnEnable ()
+		public virtual void OnEnable ()
 		{
 			GameManager.updatables = GameManager.updatables.Add(this);
 		}
@@ -179,7 +179,7 @@ namespace AmbitiousSnake
 			AddHeadPiece (position, (HeadPosition - position).magnitude);
 		}
 
-		void AddHeadPiece (Vector3 position, float distanceToPreviousPiece)
+		public void AddHeadPiece (Vector3 position, float distanceToPreviousPiece)
 		{
 			SnakePiece headPiece = ObjectPool.Instance.SpawnComponent<SnakePiece>(piecePrefab.prefabIndex, position, piecePrefab.trs.rotation, trs);
 			headPiece.distanceToPreviousPiece = distanceToPreviousPiece;
@@ -269,6 +269,9 @@ namespace AmbitiousSnake
 		void OnDisable ()
 		{
 			GameManager.updatables = GameManager.updatables.Remove(this);
+			onAddHeadPiece = null;
+			onAddTailPiece = null;
+			onRemoveTailPiece = null;
 		}
 
 		public Vector3 GetPiecePosition (int index)

@@ -18,7 +18,6 @@ MonoBehaviour:
   isSupportingTile: 0
   tileParent: {fileID: 0}
   collider: {fileID: 6348877333432531220}
-  isRecording: 0
   meshRenderer: {fileID: 2516248580478555315}
 --- !u!1001 &1585487369490157490
 PrefabInstance:

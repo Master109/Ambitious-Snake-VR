@@ -6,51 +6,48 @@ namespace Extensions
 {
 	public static class ColorExtensions
 	{
-		public static Color GetWithAlpha (this Color c, float a)
+		public static Color SetAlpha (this Color c, float a)
 		{
 			return new Color(c.r, c.g, c.b, a);
 		}
 		
-		public static Color GetWithAddedAlpha (this Color c, float a)
+		public static Color AddAlpha (this Color c, float a)
 		{
-			return c.GetWithAlpha(c.a + a);
+			return c.SetAlpha(c.a + a);
 		}
 		
-		public static Color GetWithMultipliedAlpha (this Color c, float a)
+		public static Color MultiplyAlpha (this Color c, float a)
 		{
-			return c.GetWithAlpha(c.a * a);
+			return c.SetAlpha(c.a * a);
 		}
 		
-		public static Color GetWithDividedAlpha (this Color c, float a)
+		public static Color DivideAlpha (this Color c, float a)
 		{
-			return c.GetWithAlpha(c.a / a);
+			return c.SetAlpha(c.a / a);
 		}
-
+		
 		public static Color Add (this Color c, float f)
 		{
-			Color output = c;
-			output.r += f;
-			output.g += f;
-			output.b += f;
-			return output;
+			c.r += f;
+			c.g += f;
+			c.b += f;
+			return c;
 		}
 		
 		public static Color Multiply (this Color c, float f)
 		{
-			Color output = c;
-			output.r *= f;
-			output.g *= f;
-			output.b *= f;
-			return output;
+			c.r *= f;
+			c.g *= f;
+			c.b *= f;
+			return c;
 		}
 		
 		public static Color Divide (this Color c, float f)
 		{
-			Color output = c;
-			output.r /= f;
-			output.g /= f;
-			output.b /= f;
-			return output;
+			c.r /= f;
+			c.g /= f;
+			c.b /= f;
+			return c;
 		}
 		
 		public static byte[] ToBytes (this Color color)

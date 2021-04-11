@@ -24,6 +24,11 @@ namespace AmbitiousSnake
 		int removedTailPiecesCount;
 		float timeStarted;
 		bool hasBeenUsed;
+
+		void Awake ()
+		{
+			areRecording = new RecorderTile[0];
+		}
 		
 		public void OnCollisionEnter (Collision coll)
 		{
@@ -45,6 +50,7 @@ namespace AmbitiousSnake
 				frame.newHeadPositions[i] = Snake.instance.GetPiecePosition(i);
 			frame.trsPosition = Snake.instance.trs.position;
 			frame.trsRotation = Snake.instance.trs.eulerAngles;
+			currentRecording.frames = new List<SnakeRecording.Frame>();
 			currentRecording.frames.Add(frame);
 			Snake.instance.onAddHeadPiece += OnAddHeadPiece;
 			Snake.instance.onAddTailPiece += OnAddTailPiece;
