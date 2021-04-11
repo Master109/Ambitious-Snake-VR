@@ -16,6 +16,8 @@ namespace AmbitiousSnake
 			}
 		}
 		List<Rigidbody> touchingRigids = new List<Rigidbody>();
+		public float changeMaterialOffsetRate;
+		public Material material;
         public float forceAmount;
 
 		public void OnCollisionEnter (Collision coll)
@@ -31,13 +33,15 @@ namespace AmbitiousSnake
 			OnCollisionEnter (coll);
 		}
 
-		void OnEnable ()
+		public override void OnEnable ()
 		{
 			GameManager.updatables = GameManager.updatables.Add(this);
 		}
 
 		public void DoUpdate ()
 		{
+			if (material != null)
+				material.mainTextureOffset += Vector2.down * changeMaterialOffsetRate * Time.deltaTime;
 			for (int i = 0; i < touchingRigids.Count; i ++)
 			{
 				Rigidbody touchingRigid = touchingRigids[i];
@@ -67,6 +71,8 @@ namespace AmbitiousSnake
 		void OnDisable ()
 		{
 			GameManager.updatables = GameManager.updatables.Remove(this);
+			if (material != null)
+				material.mainTextureOffset = Vector2.zero;
 		}
 	}
 }

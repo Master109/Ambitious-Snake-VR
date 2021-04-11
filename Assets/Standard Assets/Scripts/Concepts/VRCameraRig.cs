@@ -15,18 +15,6 @@ namespace AmbitiousSnake
 		public Transform leftHandTrs;
 		public Transform rightHandTrs;
 		public Transform trs;
-		static Transform currentHand;
-		public static Transform CurrentHand
-		{
-			get
-			{
-				return currentHand;
-			}
-			set
-			{
-				currentHand = value;
-			}
-		}
 		public float lookRate;
 		public LayerMask whatICollideWith;
 		[HideInInspector]
@@ -40,7 +28,6 @@ namespace AmbitiousSnake
 		public void OnEnable ()
 		{
 			instance = this;
-			CurrentHand = rightHandTrs;
 			positionOffset = trs.localPosition;
 			cameraDistance = positionOffset.magnitude;
 			trs.SetParent(null);
