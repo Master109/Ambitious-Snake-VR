@@ -248,6 +248,8 @@ MonoBehaviour:
   levelNameText: {fileID: 7165574391523818099}
   bestTimeText: {fileID: 992237123750346832}
   parTimeText: {fileID: 4224744418747862285}
+  parTimeIconGo: {fileID: 1596327392184379517}
+  starIconGo: {fileID: 3813287048782075976}
   button: {fileID: 6199539986715427559}
 --- !u!114 &9182352490676267622
 MonoBehaviour:
