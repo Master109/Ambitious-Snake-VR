@@ -12,6 +12,15 @@ namespace Extensions
 			Vector2 max = rectTrs.TransformPoint(rectTrs.rect.max);
 			return Rect.MinMaxRect(min.x, min.y, max.x, max.y);
 		}
+
+		public static Bounds GetWorldBounds (this RectTransform rectTrs)
+		{
+			Vector3 min = rectTrs.TransformPoint(rectTrs.rect.min);
+			Vector3 max = rectTrs.TransformPoint(rectTrs.rect.max);
+			Bounds output = new Bounds();
+			output.SetMinMax(min, max);
+			return output;
+		}
 		
 		public static Vector2 GetCenterInCanvasNormalized (this RectTransform rectTrs, RectTransform canvasRectTrs)
 		{

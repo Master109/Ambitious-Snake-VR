@@ -15,6 +15,8 @@ namespace AmbitiousSnake
 		public GameObject parTimeIconGo;
 		public GameObject starIconGo;
 		public Button button;
+		public float maxDoubleClickRate;
+		float lastClickedTime;
 
 		void OnEnable ()
 		{
@@ -22,16 +24,29 @@ namespace AmbitiousSnake
 			levelNameText.text = "" + (trs.GetSiblingIndex() + 1);
 			LevelSelect.instance = trs.root.GetComponent<LevelSelect>();
 #endif
+			lastClickedTime = -Mathf.Infinity;
 			Level level = LevelSelect.Instance.levels[trs.GetSiblingIndex()];
 			if (level.HasWon)
 				bestTimeText.text = "Best time: " + string.Format("{0:0.#}", level.FastestTime);
-			parTimeIconGo.SetActive(level.FastestTime <= level.parTime);
-			starIconGo.SetActive(PlayerPrefsExtensions.GetBool(level.name + " star collected", false));
+			parTimeIconGo.SetActive(level.GotParTime);
+			starIconGo.SetActive(level.CollectedStar);
 #if UNITY_EDITOR
 			parTimeText.text = "Par time: " + level.parTime;
 			button.onClick.RemoveAllListeners();
-			button.onClick.AddListener(() => {_SceneManager.instance.LoadSceneWithoutTransition (trs.GetSiblingIndex());});
+			button.onClick.AddListener(OnButtonClicked);
 #endif
+		}
+
+		void OnButtonClicked ()
+		{
+			if (Time.realtimeSinceStartup - lastClickedTime <= maxDoubleClickRate)
+				_SceneManager.instance.LoadSceneWithoutTransition (trs.GetSiblingIndex());
+			lastClickedTime = Time.realtimeSinceStartup;
+			if (LevelSelect.selectedLevelIndex != MathfExtensions.NULL_INT)
+				LevelSelect.instance.StopLevelPreview (LevelSelect.selectedLevelIndex);
+			LevelSelect.selectedLevelIndex = trs.GetSiblingIndex();
+			LevelSelect.instance.StartLevelPreview (LevelSelect.selectedLevelIndex);
+			LevelSelect.instance.startLevelButton.interactable = true;
 		}
 	}
 }

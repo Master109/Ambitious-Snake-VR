@@ -19,9 +19,9 @@ namespace AmbitiousSnake
 		{
 			if (Snake.instance.rigid == coll.rigidbody)
 			{
-				if (Star.instance.isCollected && !Star.instance.CollectedAndWonLevel)
+				if (Star.instance.isCollected && !Level.instance.CollectedStar)
 				{
-					Star.instance.CollectedAndWonLevel = true;
+					Level.instance.CollectedStar = true;
 					AccountManager.CurrentAccount.score ++;
 				}
 				if (!Level.instance.HasWon)
@@ -32,7 +32,7 @@ namespace AmbitiousSnake
 				float timeSinceLevelLoad = Time.timeSinceLevelLoad;
 				if (Level.instance.FastestTime > timeSinceLevelLoad)
 				{
-					if (timeSinceLevelLoad <= Level.instance.parTime && Level.instance.FastestTime > Level.instance.parTime)
+					if (timeSinceLevelLoad <= Level.instance.parTime && Level.instance.GotParTime)
 						AccountManager.CurrentAccount.score ++;
 					Level.instance.FastestTime = timeSinceLevelLoad;
 				}

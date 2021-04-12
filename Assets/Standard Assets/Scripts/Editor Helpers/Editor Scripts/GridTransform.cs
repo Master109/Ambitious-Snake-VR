@@ -20,6 +20,8 @@ namespace AmbitiousSnake
 
 		public override void Do ()
 		{
+			if (trs == null)
+				return;
 			BoundsInt bounds = trs.GetBounds().ToBoundsInt();
 			trs.position = bounds.center - Vector3.one / 2;
 			trs.SetWorldScale (bounds.size);

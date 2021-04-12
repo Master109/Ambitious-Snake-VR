@@ -5,8 +5,6 @@ using System;
 using UnityEngine.Events;
 using System.Collections.Generic;
 using TMPro;
-using UnityEngine.SceneManagement;
-using UnityEngine.InputSystem;
 
 namespace AmbitiousSnake
 {
@@ -22,9 +20,6 @@ namespace AmbitiousSnake
 		public GameObject optionsParent;
 		public TMP_Text[] movementModeTexts = new TMP_Text[0];
 		public static Transform selectorTrs;
-		Level currentLevel;
-		Coroutine startLevelPreviewCoroutine;
-		Coroutine stopLevelPreviewCoroutine;
 		Option selectedOption;
 		bool leftGameplayMenuInput;
 		bool previousLeftGameplayMenuInput;
@@ -158,78 +153,6 @@ namespace AmbitiousSnake
 				option.deselectedGo.SetActive(true);
 				option.deselectUnityEvent.Invoke();
 			}
-		}
-
-		public void RestartLevel ()
-		{
-			_SceneManager.instance.RestartSceneWithoutTransition ();
-		}
-
-		public void LoadLevel (int index)
-		{
-			_SceneManager.instance.LoadSceneWithoutTransition (index);
-		}
-
-		public void StartLevelPreview (int index)
-		{
-			if (startLevelPreviewCoroutine != null)
-				StopCoroutine(startLevelPreviewCoroutine);
-			if (stopLevelPreviewCoroutine != null)
-				StopCoroutine(stopLevelPreviewCoroutine);
-			stopLevelPreviewCoroutine = null;
-			startLevelPreviewCoroutine = StartCoroutine(StartLevelPreviewRoutine (index));
-		}
-
-		IEnumerator StartLevelPreviewRoutine (int index)
-		{
-			yield return new WaitUntil(() => (SceneManager.sceneCount == 1 && stopLevelPreviewCoroutine == null));
-			if (index == SceneManager.GetActiveScene().buildIndex)
-				Level.instance.gameObject.SetActive(true);
-			else
-			{
-				GameplayMenu.instance.trs.SetParent(null);
-				Level.instance.gameObject.SetActive(false);
-				yield return _SceneManager.instance.LoadSceneAsyncAdditiveWithoutTransition(index);
-			}
-			// Snake.instance = Snake.Instance;
-			// InputSystem.Update();
-			// VRCameraRig.Instance.DoUpdate ();
-			// GameplayMenu.instance.SetOrientation ();
-			startLevelPreviewCoroutine = null;
-		}
-
-		public void StopLevelPreview (int index)
-		{
-			if (index != SceneManager.GetActiveScene().buildIndex && SceneManager.sceneCount == 2 && SceneManager.GetSceneByBuildIndex(index).isLoaded)
-			{
-				if (startLevelPreviewCoroutine != null)
-					StopCoroutine(startLevelPreviewCoroutine);
-				startLevelPreviewCoroutine = null;
-				if (stopLevelPreviewCoroutine != null)
-					StopCoroutine(stopLevelPreviewCoroutine);
-				stopLevelPreviewCoroutine = StartCoroutine(StopLevelPreviewRoutine (index));
-			}
-		}
-
-		IEnumerator StopLevelPreviewRoutine (int index)
-		{
-			SceneManager.sceneLoaded += OnSceneLoaded;
-			yield return SceneManager.UnloadSceneAsync(index, UnloadSceneOptions.UnloadAllEmbeddedSceneObjects);
-			Level.instance.gameObject.SetActive(true);
-			// Snake.instance = Snake.Instance;
-			// InputSystem.Update();
-			// VRCameraRig.Instance.DoUpdate ();
-			// GameplayMenu.instance.SetOrientation ();
-			stopLevelPreviewCoroutine = null;
-		}
-
-		void OnSceneLoaded (Scene scene = new Scene(), LoadSceneMode loadSceneMode = LoadSceneMode.Single)
-		{
-			SceneManager.sceneLoaded -= OnSceneLoaded;
-			Snake.instance = Snake.Instance;
-			InputSystem.Update();
-			VRCameraRig.Instance.DoUpdate ();
-			GameplayMenu.instance.SetOrientation ();
 		}
 
 		public void ToggleMovementMode ()

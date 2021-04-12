@@ -35,6 +35,24 @@ namespace AmbitiousSnake
 				PlayerPrefs.SetFloat(name + " best time", value);
 			}
 		}
+		public bool CollectedStar
+		{
+			get
+			{
+				return PlayerPrefsExtensions.GetBool(name + " star collected", false);
+			}
+			set
+			{
+				PlayerPrefsExtensions.SetBool(name + " star collected", value);
+			}
+		}
+		public bool GotParTime
+		{
+			get
+			{
+				return FastestTime <= parTime;
+			}
+		}
 		public float parTime;
 		public TMP_Text timerText;
 		public Color pastParTimeTimerColor;
