@@ -46,8 +46,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   handleMultipleInstances: 0
   persistant: 0
-  hasWon: 0
-  fastestTime: 0
   parTime: 0
   timerText: {fileID: 8624475072377845540}
   pastParTimeTimerColor: {r: 1, g: 0, b: 0, a: 1}

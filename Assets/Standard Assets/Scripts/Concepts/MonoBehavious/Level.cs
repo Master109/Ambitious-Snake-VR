@@ -11,12 +11,30 @@ using UnityEditor;
 namespace AmbitiousSnake
 {
 	[ExecuteInEditMode]
-	public class Level : SingletonMonoBehaviour<Level>, IUpdatable, ISaveableAndLoadable
+	public class Level : SingletonMonoBehaviour<Level>, IUpdatable
 	{
-		[SaveAndLoadValue]
-		public bool hasWon;
-		[SaveAndLoadValue]
-		public float fastestTime;
+		public bool HasWon
+		{
+			get
+			{
+				return PlayerPrefsExtensions.GetBool(name + " won");
+			}
+			set
+			{
+				PlayerPrefsExtensions.SetBool(name + " won", value);
+			}
+		}
+		public float FastestTime
+		{
+			get
+			{
+				return PlayerPrefs.GetFloat(name + " best time", MathfExtensions.NULL_INT);
+			}
+			set
+			{
+				PlayerPrefs.SetFloat(name + " best time", value);
+			}
+		}
 		public float parTime;
 		public TMP_Text timerText;
 		public Color pastParTimeTimerColor;
@@ -61,9 +79,7 @@ namespace AmbitiousSnake
 					i --;
 				}
 				else
-				{
 					tile.neighbors = new Tile[0];
-				}
 			}
 			for (int i = 0; i < tiles.Length; i ++)
 			{
@@ -109,10 +125,5 @@ namespace AmbitiousSnake
 			}
 		}
 #endif
-
-		[Serializable]
-		public class TileGraph : Graph<Tile>
-		{
-		}
 	}
 }

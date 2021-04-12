@@ -24,17 +24,17 @@ namespace AmbitiousSnake
 					Star.instance.CollectedAndWonLevel = true;
 					AccountManager.CurrentAccount.score ++;
 				}
-				if (!Level.instance.hasWon)
+				if (!Level.instance.HasWon)
 				{
-					Level.instance.hasWon = true;
+					Level.instance.HasWon = true;
 					AccountManager.CurrentAccount.score ++;
 				}
 				float timeSinceLevelLoad = Time.timeSinceLevelLoad;
-				if (Level.instance.fastestTime > timeSinceLevelLoad)
+				if (Level.instance.FastestTime > timeSinceLevelLoad)
 				{
-					if (timeSinceLevelLoad <= Level.instance.parTime && Level.instance.fastestTime > Level.instance.parTime)
+					if (timeSinceLevelLoad <= Level.instance.parTime && Level.instance.FastestTime > Level.instance.parTime)
 						AccountManager.CurrentAccount.score ++;
-					Level.instance.fastestTime = Time.timeSinceLevelLoad;
+					Level.instance.FastestTime = timeSinceLevelLoad;
 				}
 				_SceneManager.instance.NextSceneWithoutTransition ();
 			}
