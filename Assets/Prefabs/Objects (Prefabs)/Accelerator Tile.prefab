@@ -18,6 +18,8 @@ MonoBehaviour:
   isSupportingTile: 0
   tileParent: {fileID: 0}
   collider: {fileID: 6348877333432531220}
+  changeMaterialOffsetRate: 95.49293
+  material: {fileID: 0}
   forceAmount: 10000
 --- !u!1 &3075864858072190284
 GameObject:

@@ -10,16 +10,23 @@ namespace AmbitiousSnake
 		public Transform trs;
 		public TMP_Text levelNameText;
 		public TMP_Text bestTimeText;
+		public TMP_Text parTimeText;
 		public Button button;
 
 		void OnEnable ()
 		{
+#if UNITY_EDITOR
 			levelNameText.text = "" + (trs.GetSiblingIndex() + 1);
-			Level level = LevelSelect.instance.levels[trs.GetSiblingIndex()];
+			LevelSelect.instance = trs.root.GetComponent<LevelSelect>();
+#endif
+			Level level = LevelSelect.Instance.levels[trs.GetSiblingIndex()];
 			if (level.HasWon)
 				bestTimeText.text = "Best time: " + string.Format("{0:0.#}", level.FastestTime);
+#if UNITY_EDITOR
+			parTimeText.text = "Par time: " + level.parTime;
 			button.onClick.RemoveAllListeners();
-			button.onClick.AddListener(() => {_SceneManager.instance.LoadSceneWithoutTransition(trs.GetSiblingIndex());});
+			button.onClick.AddListener(() => {_SceneManager.instance.LoadSceneWithoutTransition (trs.GetSiblingIndex());});
+#endif
 		}
 	}
 }
