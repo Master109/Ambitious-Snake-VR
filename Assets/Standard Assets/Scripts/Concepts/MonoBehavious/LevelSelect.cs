@@ -10,6 +10,7 @@ namespace AmbitiousSnake
 {
 	public class LevelSelect : SingletonMonoBehaviour<LevelSelect>
 	{
+		public Transform trs;
         public Level[] levels = new Level[0];
 		public Button startLevelButton;
 		public TMP_Text infoText;

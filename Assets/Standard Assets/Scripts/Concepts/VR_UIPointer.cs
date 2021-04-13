@@ -12,9 +12,11 @@ namespace AmbitiousSnake
 		public GameObject graphicsGo;
 		public Transform uiPlaneTrs;
 		public Plane uiPlane;
+		public ComplexTimer selectableColorMultiplier;
 		public string submitInputVariablePath;
 		public static VR_UIPointer[] instances = new VR_UIPointer[0];
 		_Selectable hoveredOver;
+		_Selectable previousHoveredOver;
 		Vector3 previousPosition;
 		bool submitInput;
 		bool previousSubmitInput;
@@ -67,6 +69,13 @@ namespace AmbitiousSnake
 			}
 			if (hoveredOver != null)
 			{
+				if (previousHoveredOver != hoveredOver)
+				{
+					if (previousHoveredOver != null)
+						SetSelectableColorMultiplier (previousHoveredOver.selectable, 1);
+					selectableColorMultiplier.JumpToInitValue ();
+				}
+				SetSelectableColorMultiplier (hoveredOver.selectable, selectableColorMultiplier.GetValue());
 				if (submitInput && !previousSubmitInput)
 				{
 					Button button = hoveredOver.selectable as Button;
@@ -74,7 +83,17 @@ namespace AmbitiousSnake
 						button.onClick.Invoke();
 				}
 			}
+			else if (previousHoveredOver != null)
+				SetSelectableColorMultiplier (previousHoveredOver.selectable, 1);
+			previousHoveredOver = hoveredOver;
 			previousSubmitInput = submitInput;
+		}
+
+		void SetSelectableColorMultiplier (Selectable selectable, float colorMultiplier)
+		{
+			ColorBlock colorBlock = selectable.colors;
+			colorBlock.colorMultiplier = colorMultiplier;
+			selectable.colors = colorBlock;
 		}
 	}
 }
