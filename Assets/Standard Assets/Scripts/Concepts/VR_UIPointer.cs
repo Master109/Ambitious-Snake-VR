@@ -53,7 +53,7 @@ namespace AmbitiousSnake
 					for (int i = 0; i < _Selectable.instances.Length; i ++)
 					{
 						_Selectable selectable = _Selectable.instances[i];
-						if (selectable.rectTrs.GetWorldBounds().MakePositiveSize().Contains(position))
+						if (selectable.rectTrs.rect.Contains(selectable.rectTrs.InverseTransformPoint(position)))
 						{
 							hoveredOver = selectable;
 							break;
