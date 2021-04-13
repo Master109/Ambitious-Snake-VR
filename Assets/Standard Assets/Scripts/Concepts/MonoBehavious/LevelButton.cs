@@ -12,8 +12,8 @@ namespace AmbitiousSnake
 		public TMP_Text levelNameText;
 		public TMP_Text bestTimeText;
 		public TMP_Text parTimeText;
-		public GameObject parTimeIconGo;
-		public GameObject starIconGo;
+		public Image parTimeIcon;
+		public Image starIcon;
 		public Button button;
 		public float maxDoubleClickRate;
 		float lastClickedTime;
@@ -28,8 +28,8 @@ namespace AmbitiousSnake
 			Level level = LevelSelect.Instance.levels[trs.GetSiblingIndex()];
 			if (level.HasWon)
 				bestTimeText.text = "Best time: " + string.Format("{0:0.#}", level.FastestTime);
-			parTimeIconGo.SetActive(level.GotParTime);
-			starIconGo.SetActive(level.CollectedStar);
+			parTimeIcon.enabled = level.GotParTime;
+			starIcon.enabled = level.CollectedStar;
 #if UNITY_EDITOR
 			parTimeText.text = "Par time: " + level.parTime;
 			button.onClick.RemoveAllListeners();

@@ -36,6 +36,7 @@ namespace AmbitiousSnake
 						AccountManager.CurrentAccount.score ++;
 					Level.instance.FastestTime = timeSinceLevelLoad;
 				}
+				SaveAndLoadManager.instance.Save ();
 				_SceneManager.instance.NextSceneWithoutTransition ();
 			}
 		}

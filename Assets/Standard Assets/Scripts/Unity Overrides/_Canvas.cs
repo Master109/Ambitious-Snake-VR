@@ -2,27 +2,31 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(Canvas))]
-[ExecuteInEditMode]
-public class _Canvas : MonoBehaviour
+namespace AmbitiousSnake
 {
-	[HideInInspector]
-	public Canvas canvas;
-	public float planeDistance;
-	
-	public virtual void Start ()
+	[RequireComponent(typeof(Canvas))]
+	[ExecuteInEditMode]
+	public class _Canvas : UpdateWhileEnabled
 	{
-		if (!Application.isPlaying)
-			canvas = GetComponent<Canvas>();
-		else
+		public Canvas canvas;
+		public float planeDistance;
+		
+		void Start ()
 		{
+#if UNITY_EDITOR
+			if (!Application.isPlaying)
+			{
+				canvas = GetComponent<Canvas>();
+				return;
+			}
+#endif
 			canvas.worldCamera = Camera.main;
 			canvas.planeDistance = planeDistance;
 		}
-	}
-	
-	public virtual void Update ()
-	{
-		Canvas.ForceUpdateCanvases();
+		
+		public override void DoUpdate ()
+		{
+			Canvas.ForceUpdateCanvases();
+		}
 	}
 }

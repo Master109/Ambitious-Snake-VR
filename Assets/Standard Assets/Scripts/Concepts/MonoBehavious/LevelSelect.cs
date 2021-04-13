@@ -19,6 +19,11 @@ namespace AmbitiousSnake
 
 		void OnEnable ()
 		{
+			for (int i = 0; i < VR_UIPointer.instances.Length; i ++)
+			{
+				VR_UIPointer vR_UIPointer = VR_UIPointer.instances[i];
+				vR_UIPointer.uiPlaneTrs = trs;
+			}
 			selectedLevelIndex = MathfExtensions.NULL_INT;
 			int completedLevelCount = 0;
 			int parTimeCount = 0;

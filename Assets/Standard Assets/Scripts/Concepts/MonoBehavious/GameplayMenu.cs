@@ -48,6 +48,11 @@ namespace AmbitiousSnake
 			if (isTopTier && instance == null)
 				instance = this;
 			gameObject.SetActive(false);
+			for (int i = 0; i < VR_UIPointer.instances.Length; i ++)
+			{
+				VR_UIPointer vR_UIPointer = VR_UIPointer.instances[i];
+				vR_UIPointer.uiPlaneTrs = trs;
+			}
 		}
 
 		public override void OnEnable ()

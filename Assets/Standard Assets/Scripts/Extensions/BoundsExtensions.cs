@@ -140,7 +140,7 @@ namespace Extensions
 			return output.ToArray();
 		}
 		
-		public static Bounds GetNewBounds (this Bounds b, Vector3 normalizedStart, Vector3 normalizedEnd)
+		public static Bounds GetBoundsFromNormalizedMinMax (this Bounds b, Vector3 normalizedStart, Vector3 normalizedEnd)
 		{
 			Bounds output = new Bounds();
 			output.SetMinMax(b.FromNormalizedPoint(normalizedStart), b.FromNormalizedPoint(normalizedEnd));
@@ -150,6 +150,11 @@ namespace Extensions
 		public static Bounds ToBounds (this BoundsInt b)
 		{
 			return new Bounds(b.center, b.size);
+		}
+		
+		public static Bounds MakePositiveSize (this Bounds b)
+		{
+			return new Bounds(b.center, b.size.MakePositive());
 		}
 	}
 }

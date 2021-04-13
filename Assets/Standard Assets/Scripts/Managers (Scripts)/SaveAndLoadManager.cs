@@ -40,7 +40,7 @@ public class SaveAndLoadManager : SingletonMonoBehaviour<SaveAndLoadManager>
 	public TemporaryDisplayText displayOnSave;
 	
 #if UNITY_EDITOR
-	public virtual void OnEnable ()
+	public void OnEnable ()
 	{
 		if (Application.isPlaying)
 		{
@@ -58,7 +58,7 @@ public class SaveAndLoadManager : SingletonMonoBehaviour<SaveAndLoadManager>
 	}
 #endif
 	
-	public virtual void Start ()
+	public void Start ()
 	{
 #if UNITY_EDITOR
 		if (!Application.isPlaying)
@@ -78,7 +78,7 @@ public class SaveAndLoadManager : SingletonMonoBehaviour<SaveAndLoadManager>
 			LoadMostRecent ();
 	}
 	
-	public virtual void Save ()
+	public void Save ()
 	{
 		if (SaveAndLoadManager.Instance != this)
 		{
@@ -94,7 +94,7 @@ public class SaveAndLoadManager : SingletonMonoBehaviour<SaveAndLoadManager>
 			StartCoroutine(displayOnSave.DisplayRoutine ());
 	}
 	
-	public virtual void Load (int savedGameIndex)
+	public void Load (int savedGameIndex)
 	{
 		if (SaveAndLoadManager.Instance != this)
 		{
@@ -105,14 +105,14 @@ public class SaveAndLoadManager : SingletonMonoBehaviour<SaveAndLoadManager>
 		StartCoroutine(LoadRoutine ());
 	}
 
-	public virtual IEnumerator LoadRoutine ()
+	public IEnumerator LoadRoutine ()
 	{
 		yield return new WaitForEndOfFrame();
 		for (int i = 0; i < saveEntries.Length; i ++)
 			saveEntries[i].Load ();
 	}
 	
-	public virtual void LoadMostRecent ()
+	public void LoadMostRecent ()
 	{
 		Load (MostRecentlyLoadedSaveEntryIndex);
 	}
@@ -144,7 +144,7 @@ public class SaveAndLoadManager : SingletonMonoBehaviour<SaveAndLoadManager>
 		{
 		}
 		
-		public virtual void Save ()
+		public void Save ()
 		{
 			foreach (PropertyInfo property in properties)
 				PlayerPrefs.SetString(MostRecentlyLoadedSaveEntryIndex + VALUE_SEPERATOR + saveableAndLoadObject.uniqueId + VALUE_SEPERATOR + property.Name, Serialize(property.GetValue(saveableAndLoadable, null), property.PropertyType));
@@ -152,7 +152,7 @@ public class SaveAndLoadManager : SingletonMonoBehaviour<SaveAndLoadManager>
 				PlayerPrefs.SetString(MostRecentlyLoadedSaveEntryIndex + VALUE_SEPERATOR + saveableAndLoadObject.uniqueId + VALUE_SEPERATOR + field.Name, Serialize(field.GetValue(saveableAndLoadable), field.FieldType));
 		}
 		
-		public virtual void Load ()
+		public void Load ()
 		{
 			object value;
 			foreach (PropertyInfo property in properties)

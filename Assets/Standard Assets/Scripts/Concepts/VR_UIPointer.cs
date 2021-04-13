@@ -13,28 +13,45 @@ namespace AmbitiousSnake
 		public Transform uiPlaneTrs;
 		public Plane uiPlane;
 		public string submitInputVariablePath;
+		public static VR_UIPointer[] instances = new VR_UIPointer[0];
 		_Selectable hoveredOver;
 		Vector3 previousPosition;
 		bool submitInput;
 		bool previousSubmitInput;
+
+		void Start ()
+		{
+			trs.SetParent(null);
+			instances = instances.Add(this);
+		}
+
+		void OnDestroy ()
+		{
+			instances = instances.Remove(this);
+		}
 		
 		public override void DoUpdate ()
 		{
+			if (!uiPlaneTrs.gameObject.activeSelf)
+			{
+				graphicsGo.SetActive(false);
+				return;
+			}
 			submitInput = InputManager.instance.GetMember<bool>(submitInputVariablePath);
 			uiPlane = new Plane(uiPlaneTrs.forward, uiPlaneTrs.position);
 			Vector3 position = VectorExtensions.NULL3;
 			if (uiPlane.Raycast(new Ray(pointerTrs.position, pointerTrs.forward), out position))
 			{
-				if (trs.position != previousPosition)
+				if (position != previousPosition)
 				{
 					trs.position = position;
-					trs.rotation = Quaternion.LookRotation(pointerTrs.forward, trs.position - previousPosition);
-					previousPosition = trs.position;
+					trs.rotation = Quaternion.LookRotation(pointerTrs.forward, position - previousPosition);
+					previousPosition = position;
 					hoveredOver = null;
 					for (int i = 0; i < _Selectable.instances.Length; i ++)
 					{
 						_Selectable selectable = _Selectable.instances[i];
-						if (selectable.rectTrs.GetWorldBounds().Contains(position))
+						if (selectable.rectTrs.GetWorldBounds().MakePositiveSize().Contains(position))
 						{
 							hoveredOver = selectable;
 							break;

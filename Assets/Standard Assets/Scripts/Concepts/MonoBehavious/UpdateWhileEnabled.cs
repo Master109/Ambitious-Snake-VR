@@ -5,14 +5,6 @@ namespace AmbitiousSnake
 {
 	public class UpdateWhileEnabled : MonoBehaviour, IUpdatable
 	{
-		public bool PauseWhileUnfocused
-		{
-			get
-			{
-				return true;
-			}
-		}
-
 		public virtual void OnEnable ()
 		{
 			GameManager.updatables = GameManager.updatables.Add(this);

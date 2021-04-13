@@ -537,7 +537,7 @@ namespace AmbitiousSnake
 		{
 			base.Awake ();
 			trs.SetParent(null);
-			leftHandTrsAtBeginMove.SetParent(VRCameraRig.instance.trs);
+			leftHandTrsAtBeginMove.SetParent(VRCameraRig.Instance.trs);
 			rightHandTrsAtBeginMove.SetParent(VRCameraRig.instance.trs);
 			GameManager.updatables = GameManager.updatables.Add(this);
 		}
