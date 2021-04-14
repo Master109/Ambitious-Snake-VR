@@ -58,6 +58,9 @@ namespace AmbitiousSnake
 
 		public override void OnEnable ()
 		{
+			previousLeftGameplayMenuInput = true;
+			previousRightGameplayMenuInput = true;
+			previousGameplayMenuInput = true;
 			base.OnEnable ();
 			if (instance == this)
 			{
@@ -80,15 +83,16 @@ namespace AmbitiousSnake
 
 		public override void DoUpdate ()
 		{
-			if (!optionsParent.activeSelf)
-				return;
-			if (selectorTrs == null)
+			if (!optionsParent.activeSelf || selectorTrs == null)
 				return;
 			leftGameplayMenuInput = InputManager.LeftGameplayMenuInput;
 			rightGameplayMenuInput = InputManager.RightGameplayMenuInput;
 			gameplayMenuInput = InputManager.GameplayMenuInput;
-			HandleSelecting ();
-			HandleInteracting ();
+			if (optionsParent.activeSelf && selectorTrs != null)
+			{
+				HandleSelecting ();
+				HandleInteracting ();
+			}
 			previousLeftGameplayMenuInput = leftGameplayMenuInput;
 			previousRightGameplayMenuInput = rightGameplayMenuInput;
 			previousGameplayMenuInput = gameplayMenuInput;
@@ -127,11 +131,11 @@ namespace AmbitiousSnake
 		{
 			if (!selectedOption.Equals(default(Option)) && selectedOption.isInteractive)
 			{
-				if (selectorTrs == VRCameraRig.instance.leftHandTrs && !leftGameplayMenuInput && previousLeftGameplayMenuInput)
+				if (selectorTrs == VRCameraRig.instance.leftHandTrs && leftGameplayMenuInput && !previousLeftGameplayMenuInput)
 					selectedOption.interactUnityEvent.Invoke();
-				else if (selectorTrs == VRCameraRig.instance.rightHandTrs && !rightGameplayMenuInput && previousRightGameplayMenuInput)
+				else if (selectorTrs == VRCameraRig.instance.rightHandTrs && rightGameplayMenuInput && !previousRightGameplayMenuInput)
 					selectedOption.interactUnityEvent.Invoke();
-				else if (!gameplayMenuInput && previousGameplayMenuInput)
+				else if (gameplayMenuInput && !previousGameplayMenuInput)
 					selectedOption.interactUnityEvent.Invoke();
 			}
 		}

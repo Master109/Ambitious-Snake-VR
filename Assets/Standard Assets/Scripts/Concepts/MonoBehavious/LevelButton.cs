@@ -46,7 +46,6 @@ namespace AmbitiousSnake
 				LevelSelect.instance.StopLevelPreview (LevelSelect.selectedLevelIndex);
 			LevelSelect.selectedLevelIndex = trs.GetSiblingIndex();
 			LevelSelect.instance.StartLevelPreview (LevelSelect.selectedLevelIndex);
-			LevelSelect.instance.startLevelButton.interactable = true;
 		}
 	}
 }

@@ -50,9 +50,9 @@ namespace AmbitiousSnake
 		public void StartLevelPreview (int index)
 		{
 			if (startLevelPreviewCoroutine != null)
-				LevelSelect.instance.StopCoroutine(startLevelPreviewCoroutine);
+				StopCoroutine(startLevelPreviewCoroutine);
 			if (stopLevelPreviewCoroutine != null)
-				LevelSelect.instance.StopCoroutine(stopLevelPreviewCoroutine);
+				StopCoroutine(stopLevelPreviewCoroutine);
 			stopLevelPreviewCoroutine = null;
 			startLevelPreviewCoroutine = StartCoroutine(StartLevelPreviewRoutine (index));
 		}
@@ -68,6 +68,10 @@ namespace AmbitiousSnake
 				Level.instance.gameObject.SetActive(false);
 				yield return _SceneManager.instance.LoadSceneAsyncAdditiveWithoutTransition(index);
 			}
+			selectedLevelIndex = index;
+			yield return new WaitForEndOfFrame();
+			UpdateGameplayMenuOrientation ();
+			startLevelButton.interactable = true;
 			startLevelPreviewCoroutine = null;
 		}
 
@@ -76,30 +80,46 @@ namespace AmbitiousSnake
 			if (index != SceneManager.GetActiveScene().buildIndex && SceneManager.sceneCount == 2 && SceneManager.GetSceneByBuildIndex(index).isLoaded)
 			{
 				if (startLevelPreviewCoroutine != null)
-					LevelSelect.instance.StopCoroutine(startLevelPreviewCoroutine);
+					StopCoroutine(startLevelPreviewCoroutine);
 				startLevelPreviewCoroutine = null;
 				if (stopLevelPreviewCoroutine != null)
-					LevelSelect.instance.StopCoroutine(stopLevelPreviewCoroutine);
+					StopCoroutine(stopLevelPreviewCoroutine);
 				stopLevelPreviewCoroutine = StartCoroutine(StopLevelPreviewRoutine (index));
 			}
 		}
 
 		IEnumerator StopLevelPreviewRoutine (int index)
 		{
-			SceneManager.sceneLoaded += OnSceneLoaded;
 			yield return SceneManager.UnloadSceneAsync(index, UnloadSceneOptions.UnloadAllEmbeddedSceneObjects);
 			Level.instance.gameObject.SetActive(true);
 			stopLevelPreviewCoroutine = null;
 		}
 
-		void OnSceneLoaded (Scene scene = new Scene(), LoadSceneMode loadSceneMode = LoadSceneMode.Single)
+		public void StartSelectedLevel ()
 		{
-			SceneManager.sceneLoaded -= OnSceneLoaded;
-			Snake.instance = Snake.Instance;
+			_SceneManager.instance.LoadSceneWithoutTransition (selectedLevelIndex);
+		}
+
+		public void Close ()
+		{
+			StopLevelPreview (selectedLevelIndex);
+			StartCoroutine(CloseRoutine ());
+		}
+
+		IEnumerator CloseRoutine ()
+		{
+			yield return new WaitUntil(() => (Level.instance.gameObject.activeSelf));
+			gameObject.SetActive(false);
+			UpdateGameplayMenuOrientation ();
+			GameplayMenu.instance.optionsParent.SetActive(true);
+			startLevelButton.interactable = false;
+		}
+
+		void UpdateGameplayMenuOrientation ()
+		{
 			InputSystem.Update();
 			VRCameraRig.instance.DoUpdate ();
 			GameplayMenu.instance.SetOrientation ();
-			GameplayMenu.instance.gameObject.SetActive(true);
 		}
 	}
 }

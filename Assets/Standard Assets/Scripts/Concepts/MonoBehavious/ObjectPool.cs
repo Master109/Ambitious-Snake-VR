@@ -21,7 +21,6 @@ namespace AmbitiousSnake
 		public override void Awake ()
 		{
 			base.Awake ();
-			instance = this;
 			enabled = false;
 			gameObject.SetActive(false);
 			if (!preloadOnAwake)

@@ -13,9 +13,11 @@ namespace AmbitiousSnake
 		public Transform uiPlaneTrs;
 		public Plane uiPlane;
 		public ComplexTimer selectableColorMultiplier;
-		public float minDistanceToRotateSqr;
+		public float minDistanceToRotate;
+		float minDistanceToRotateSqr;
 		public string submitInputVariablePath;
 		public static VR_UIPointer[] instances = new VR_UIPointer[0];
+		Vector3 rotateEffectorPosition;
 		_Selectable hoveredOver;
 		_Selectable previousHoveredOver;
 		Vector3 previousPosition;
@@ -24,6 +26,7 @@ namespace AmbitiousSnake
 
 		void Start ()
 		{
+			minDistanceToRotateSqr = minDistanceToRotate * minDistanceToRotate;
 			trs.SetParent(null);
 			instances = instances.Add(this);
 		}
@@ -53,8 +56,11 @@ namespace AmbitiousSnake
 				if (position != previousPosition)
 				{
 					trs.position = position;
-					if ((position - previousPosition).sqrMagnitude >= minDistanceToRotateSqr)
-						trs.rotation = Quaternion.LookRotation(pointerTrs.forward, position - previousPosition);
+					if ((position - rotateEffectorPosition).sqrMagnitude >= minDistanceToRotateSqr)
+					{
+						trs.rotation = Quaternion.LookRotation(pointerTrs.forward, position - rotateEffectorPosition);
+						rotateEffectorPosition = position + (rotateEffectorPosition - position).normalized * minDistanceToRotate;
+					}
 					previousPosition = position;
 					hoveredOver = null;
 					for (int i = 0; i < _Selectable.instances.Length; i ++)
@@ -86,7 +92,7 @@ namespace AmbitiousSnake
 				if (submitInput && !previousSubmitInput)
 				{
 					Button button = hoveredOver.selectable as Button;
-					if (button != null)
+					if (button != null && button.interactable)
 						button.onClick.Invoke();
 				}
 			}
