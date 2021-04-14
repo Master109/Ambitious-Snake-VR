@@ -101,7 +101,6 @@ namespace AmbitiousSnake
 		public override void Awake ()
 		{
 			base.Awake ();
-			instance = this;
 			AddHeadPiece (trs.position, 0);
 			for (float distance = maxDistanceBetweenPieces; distance <= length.value; distance += maxDistanceBetweenPieces)
 				AddHeadPiece (trs.position + trs.forward * distance, maxDistanceBetweenPieces);
@@ -109,6 +108,7 @@ namespace AmbitiousSnake
 		
 		public virtual void OnEnable ()
 		{
+			instance = this;
 			GameManager.updatables = GameManager.updatables.Add(this);
 		}
 		
@@ -269,6 +269,10 @@ namespace AmbitiousSnake
 		void OnDisable ()
 		{
 			GameManager.updatables = GameManager.updatables.Remove(this);
+		}
+
+		void OnDestroy ()
+		{
 			onAddHeadPiece = null;
 			onAddTailPiece = null;
 			onRemoveTailPiece = null;

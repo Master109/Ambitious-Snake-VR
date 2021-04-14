@@ -97,8 +97,9 @@ namespace AmbitiousSnake
 			SceneManager.sceneLoaded -= OnSceneLoaded;
 			Snake.instance = Snake.Instance;
 			InputSystem.Update();
-			VRCameraRig.Instance.DoUpdate ();
+			VRCameraRig.instance.DoUpdate ();
 			GameplayMenu.instance.SetOrientation ();
+			GameplayMenu.instance.gameObject.SetActive(true);
 		}
 	}
 }

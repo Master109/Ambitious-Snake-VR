@@ -24,7 +24,7 @@ namespace AmbitiousSnake
 			levelNameText.text = "" + (trs.GetSiblingIndex() + 1);
 			LevelSelect.instance = trs.root.GetComponent<LevelSelect>();
 #endif
-			lastClickedTime = -Mathf.Infinity;
+			lastClickedTime = Mathf.NegativeInfinity;
 			Level level = LevelSelect.Instance.levels[trs.GetSiblingIndex()];
 			if (level.HasWon)
 				bestTimeText.text = "Best time: " + string.Format("{0:0.#}", level.FastestTime);
@@ -32,9 +32,9 @@ namespace AmbitiousSnake
 			starIcon.enabled = level.CollectedStar;
 #if UNITY_EDITOR
 			parTimeText.text = "Par time: " + level.parTime;
+#endif
 			button.onClick.RemoveAllListeners();
 			button.onClick.AddListener(OnButtonClicked);
-#endif
 		}
 
 		void OnButtonClicked ()

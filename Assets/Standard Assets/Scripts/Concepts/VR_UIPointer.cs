@@ -13,6 +13,7 @@ namespace AmbitiousSnake
 		public Transform uiPlaneTrs;
 		public Plane uiPlane;
 		public ComplexTimer selectableColorMultiplier;
+		public float minDistanceToRotateSqr;
 		public string submitInputVariablePath;
 		public static VR_UIPointer[] instances = new VR_UIPointer[0];
 		_Selectable hoveredOver;
@@ -34,6 +35,11 @@ namespace AmbitiousSnake
 		
 		public override void DoUpdate ()
 		{
+			if (uiPlaneTrs == null)
+			{
+				Destroy(gameObject);
+				return;
+			}
 			if (!uiPlaneTrs.gameObject.activeSelf)
 			{
 				graphicsGo.SetActive(false);
@@ -47,7 +53,8 @@ namespace AmbitiousSnake
 				if (position != previousPosition)
 				{
 					trs.position = position;
-					trs.rotation = Quaternion.LookRotation(pointerTrs.forward, position - previousPosition);
+					if ((position - previousPosition).sqrMagnitude >= minDistanceToRotateSqr)
+						trs.rotation = Quaternion.LookRotation(pointerTrs.forward, position - previousPosition);
 					previousPosition = position;
 					hoveredOver = null;
 					for (int i = 0; i < _Selectable.instances.Length; i ++)

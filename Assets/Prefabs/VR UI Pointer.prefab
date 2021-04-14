@@ -176,6 +176,7 @@ MonoBehaviour:
   graphicsGo: {fileID: 581186847341320204}
   uiPlaneTrs: {fileID: 0}
   selectableColorMultiplier: {fileID: 0}
+  minDistanceToRotateSqr: 0.25
   submitInputVariablePath: 
 --- !u!1 &6218765626587250125
 GameObject:

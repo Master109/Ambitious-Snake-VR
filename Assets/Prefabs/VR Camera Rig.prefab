@@ -98,8 +98,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13872bf2114c48f38a0d3f0b827cb568, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  handleMultipleInstances: 0
-  persistant: 0
+  handleMultipleInstances: 1
+  persistant: 1
   camera: {fileID: 950605957304368059}
   trackingSpaceTrs: {fileID: 413833954}
   eyesTrs: {fileID: 2088366994760580066}

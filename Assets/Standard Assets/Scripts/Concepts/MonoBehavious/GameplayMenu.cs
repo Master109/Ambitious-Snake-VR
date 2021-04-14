@@ -51,7 +51,8 @@ namespace AmbitiousSnake
 			for (int i = 0; i < VR_UIPointer.instances.Length; i ++)
 			{
 				VR_UIPointer vR_UIPointer = VR_UIPointer.instances[i];
-				vR_UIPointer.uiPlaneTrs = trs;
+				if (vR_UIPointer.uiPlaneTrs == null)
+					vR_UIPointer.uiPlaneTrs = trs;
 			}
 		}
 
@@ -80,6 +81,8 @@ namespace AmbitiousSnake
 		public override void DoUpdate ()
 		{
 			if (!optionsParent.activeSelf)
+				return;
+			if (selectorTrs == null)
 				return;
 			leftGameplayMenuInput = InputManager.LeftGameplayMenuInput;
 			rightGameplayMenuInput = InputManager.RightGameplayMenuInput;

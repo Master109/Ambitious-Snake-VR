@@ -25,7 +25,7 @@ namespace AmbitiousSnake
 		bool setOrientationInput;
 		bool previousSetOrientationInput;
 		
-		public void OnEnable ()
+		void OnEnable ()
 		{
 			instance = this;
 			positionOffset = trs.localPosition;
@@ -49,7 +49,7 @@ namespace AmbitiousSnake
 					trackingSpaceTrs.RotateAround(trackingSpaceTrs.position, Vector3.up, rotaInput.x);
 				}
 				RaycastHit hit;
-				if (Physics.Raycast(Snake.instance.HeadPosition, trs.position - Snake.instance.HeadPosition, out hit, cameraDistance, whatICollideWith))
+				if (Physics.Raycast(Snake.Instance.HeadPosition, trs.position - Snake.instance.HeadPosition, out hit, cameraDistance, whatICollideWith))
 					positionOffset = positionOffset.normalized * hit.distance;
 				else
 					positionOffset = positionOffset.normalized * cameraDistance;
