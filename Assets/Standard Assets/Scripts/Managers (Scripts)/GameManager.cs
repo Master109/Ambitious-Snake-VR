@@ -105,6 +105,7 @@ namespace AmbitiousSnake
 		public void ClearData ()
 		{
 			PlayerPrefs.DeleteAll();
+			AccountManager.CurrentAccount.score = 0;
 			_SceneManager.instance.LoadSceneWithoutTransition (0);
 		}
 		
