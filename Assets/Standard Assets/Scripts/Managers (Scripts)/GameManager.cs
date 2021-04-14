@@ -59,7 +59,7 @@ namespace AmbitiousSnake
 
 		void Update ()
 		{
-			if (Time.timeScale > 0)
+			if (Time.deltaTime > 0)
 				Physics.Simulate(Time.deltaTime);
 			for (int i = 0; i < updatables.Length; i ++)
 			{
