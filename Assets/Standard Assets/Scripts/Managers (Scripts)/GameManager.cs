@@ -101,21 +101,27 @@ namespace AmbitiousSnake
 			if (InputManager.RestartInput)
 				_SceneManager.instance.RestartSceneWithoutTransition ();
 		}
+
+		public void ClearData ()
+		{
+			PlayerPrefs.DeleteAll();
+			_SceneManager.instance.LoadSceneWithoutTransition (0);
+		}
 		
 		public void Quit ()
 		{
 			Application.Quit();
 		}
 
-		public static void Log (object obj)
-		{
-			print(obj);
-		}
-
 		void OnApplicationQuit ()
 		{
 			// PlayerPrefs.DeleteAll();
 			isQuittingGame = true;
+		}
+
+		public static void Log (object obj)
+		{
+			print(obj);
 		}
 		
 		public static bool ModifierExistsAndIsActive (string name)
