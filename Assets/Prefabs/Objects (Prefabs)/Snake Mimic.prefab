@@ -37,7 +37,7 @@ MonoBehaviour:
   collisionAudioClip: {fileID: 0}
   lengthIndicator: {fileID: 0}
   prefabIndex: 4
-  shrinkSphereChecks: 0.3
+  shrinkSphereChecks: 0.175
 --- !u!1001 &140292539585048480
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -95,11 +95,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5668265824703333566, guid: d8354c89dd96494b58ab489ec3591e2d, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.25000003
+      value: -0.000000021855694
       objectReference: {fileID: 0}
     - target: {fileID: 5668265824703333566, guid: d8354c89dd96494b58ab489ec3591e2d, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.4330127
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 6783484973761242404, guid: d8354c89dd96494b58ab489ec3591e2d, type: 3}
       propertyPath: m_LocalPosition.x
@@ -123,11 +123,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7045495252742184984, guid: d8354c89dd96494b58ab489ec3591e2d, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.24999996
+      value: -0.5
       objectReference: {fileID: 0}
     - target: {fileID: 7045495252742184984, guid: d8354c89dd96494b58ab489ec3591e2d, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.43301272
+      value: -0.00000004371139
       objectReference: {fileID: 0}
     - target: {fileID: 7320805966182605976, guid: d8354c89dd96494b58ab489ec3591e2d, type: 3}
       propertyPath: m_Name
@@ -182,8 +182,20 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7320805966182605979, guid: d8354c89dd96494b58ab489ec3591e2d, type: 3}
+      propertyPath: m_Drag
+      value: Infinity
+      objectReference: {fileID: 0}
+    - target: {fileID: 7320805966182605979, guid: d8354c89dd96494b58ab489ec3591e2d, type: 3}
+      propertyPath: m_Mass
+      value: 1e+9
+      objectReference: {fileID: 0}
+    - target: {fileID: 7320805966182605979, guid: d8354c89dd96494b58ab489ec3591e2d, type: 3}
       propertyPath: m_UseGravity
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7320805966182605979, guid: d8354c89dd96494b58ab489ec3591e2d, type: 3}
+      propertyPath: m_AngularDrag
+      value: Infinity
       objectReference: {fileID: 0}
     - target: {fileID: 7320805966182605979, guid: d8354c89dd96494b58ab489ec3591e2d, type: 3}
       propertyPath: m_IsKinematic

@@ -274,7 +274,7 @@ namespace AmbitiousSnake
 				if (_InputDevice == InputDevice.KeyboardAndMouse)
 					return Keyboard.current.leftArrowKey.isPressed;
 				else
-					return LeftTouchController != null && (LeftTouchController.primaryButton.isPressed || LeftTouchController.secondaryButton.isPressed);
+					return LeftTouchController != null && (LeftTouchController.primaryButton.isPressed || LeftTouchController.secondaryButton.isPressed || LeftTouchController.triggerPressed.isPressed);
 			}
 		}
 		public bool _LeftGameplayMenuInput
@@ -291,7 +291,7 @@ namespace AmbitiousSnake
 				if (_InputDevice == InputDevice.KeyboardAndMouse)
 					return Keyboard.current.rightArrowKey.isPressed;
 				else
-					return RightTouchController != null && (RightTouchController.primaryButton.isPressed || RightTouchController.secondaryButton.isPressed);
+					return RightTouchController != null && (RightTouchController.primaryButton.isPressed || RightTouchController.secondaryButton.isPressed || RightTouchController.triggerPressed.isPressed);
 			}
 		}
 		public bool _RightGameplayMenuInput

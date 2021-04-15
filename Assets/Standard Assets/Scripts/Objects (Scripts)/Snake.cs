@@ -165,6 +165,7 @@ namespace AmbitiousSnake
 					if (hit.distance <= SnakePiece.RADIUS + Physics.defaultContactOffset)
 						return;
 					position = hit.point + (headPosition - hit.point).normalized * (SnakePiece.RADIUS + Physics.defaultContactOffset);
+					moveAmount = hit.distance - SnakePiece.RADIUS - Physics.defaultContactOffset;
 				}
 				else
 					position = headPosition + (move.normalized * moveAmount);
@@ -191,7 +192,7 @@ namespace AmbitiousSnake
 
 		public void AddTailPiece (Vector3 position)
 		{
-			AddHeadPiece (position, (TailPosition - position).magnitude);
+			AddTailPiece (position, (TailPosition - position).magnitude);
 		}
 
 		void AddTailPiece (Vector3 position, float distanceToPreviousPiece)
@@ -227,7 +228,6 @@ namespace AmbitiousSnake
 				while (totalMoveAmount > 0)
 				{
 					float moveAmount = Mathf.Min(maxDistanceBetweenPieces, totalMoveAmount);
-					Vector3 position;
 					RaycastHit hit;
 					if (Physics.Raycast(tailPosition, move, out hit, moveAmount + SnakePiece.RADIUS + Physics.defaultContactOffset, whatICrashIntoExcludingMe, QueryTriggerInteraction.Ignore))
 					{
@@ -242,7 +242,7 @@ namespace AmbitiousSnake
 							}
 						}
 					}
-					position = tailPosition + (move * moveAmount);
+					Vector3 position = tailPosition + (move * moveAmount);
 					AddTailPiece (position, moveAmount);
 					tailPosition = position;
 					totalMoveAmount -= moveAmount;

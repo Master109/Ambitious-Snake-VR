@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
-using AmbitiousSnake;
 using UnityEngine.SceneManagement;
 using Object = UnityEngine.Object;
 using UnityEngine.InputSystem;

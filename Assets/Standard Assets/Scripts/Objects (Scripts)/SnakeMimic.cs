@@ -24,14 +24,14 @@ namespace AmbitiousSnake
 		
 		public override void Awake ()
 		{
-			currentFrameIndex = 0;
-			playbackTime = 0;
-			StartCoroutine(Init ());
 		}
 
 		public override void OnEnable ()
 		{
 			isPlaying = true;
+			currentFrameIndex = 0;
+			playbackTime = 0;
+			StartCoroutine(Init ());
 		}
 		
 		public override void DoUpdate ()
@@ -52,11 +52,11 @@ namespace AmbitiousSnake
 					NextFrame ();
 					if (currentFrameIndex == playing.frames.Count - 1)
 						return;
-					if (WillCollide())
-					{
-						isPlaying = false;
-						break;
-					}
+					// if (WillCollide())
+					// {
+					// 	isPlaying = false;
+					// 	break;
+					// }
 					Translate ();
 					Rotate ();
 					AddHeadPieces ();
@@ -93,11 +93,13 @@ namespace AmbitiousSnake
 				{
 					Vector3 piecePosition = currentFrame.newHeadPositions[i];
 					Vector3 previousToCurrentPiecePosition = piecePosition - previousPiecePosition;
-					RaycastHit[] hits = Physics.SphereCastAll(new Ray(piecePosition, previousToCurrentPiecePosition), SnakePiece.RADIUS - shrinkSphereChecks, previousToCurrentPiecePosition.magnitude + SnakePiece.RADIUS, whatICrashInto);
+					float sphereCheckRadius = SnakePiece.RADIUS + Physics.defaultContactOffset - shrinkSphereChecks;
+					// RaycastHit[] hits = Physics.SphereCastAll(new Ray(piecePosition, previousToCurrentPiecePosition), sphereCheckRadius, previousToCurrentPiecePosition.magnitude, whatICrashInto);
+					RaycastHit[] hits = Physics.RaycastAll(new Ray(piecePosition, previousToCurrentPiecePosition), previousToCurrentPiecePosition.magnitude + SnakePiece.RADIUS + Physics.defaultContactOffset - shrinkSphereChecks, whatICrashInto);
 					for (int i2 = 0; i2 < hits.Length; i2 ++)
 					{
 						RaycastHit hit = hits[i2];
-						if (hit.rigidbody != rigid)
+						if (hit.rigidbody != rigid && hit.distance <= SnakePiece.RADIUS + Physics.defaultContactOffset - shrinkSphereChecks)
 							return true;
 					}
 					previousPiecePosition = piecePosition;
@@ -110,11 +112,13 @@ namespace AmbitiousSnake
 				{
 					Vector3 piecePosition = currentFrame.newTailPositions[i];
 					Vector3 previousToCurrentPiecePosition = piecePosition - previousPiecePosition;
-					RaycastHit[] hits = Physics.SphereCastAll(new Ray(piecePosition, previousToCurrentPiecePosition), SnakePiece.RADIUS - shrinkSphereChecks, previousToCurrentPiecePosition.magnitude + SnakePiece.RADIUS, whatICrashInto);
+					float sphereCheckRadius = SnakePiece.RADIUS + Physics.defaultContactOffset - shrinkSphereChecks;
+					// RaycastHit[] hits = Physics.SphereCastAll(new Ray(piecePosition, previousToCurrentPiecePosition), sphereCheckRadius, previousToCurrentPiecePosition.magnitude, whatICrashInto);
+					RaycastHit[] hits = Physics.RaycastAll(new Ray(piecePosition, previousToCurrentPiecePosition), previousToCurrentPiecePosition.magnitude + SnakePiece.RADIUS + Physics.defaultContactOffset - shrinkSphereChecks, whatICrashInto);
 					for (int i2 = 0; i2 < hits.Length; i2 ++)
 					{
 						RaycastHit hit = hits[i2];
-						if (hit.rigidbody != rigid)
+						if (hit.rigidbody != rigid && hit.distance <= SnakePiece.RADIUS + Physics.defaultContactOffset - shrinkSphereChecks)
 							return true;
 					}
 					previousPiecePosition = piecePosition;
