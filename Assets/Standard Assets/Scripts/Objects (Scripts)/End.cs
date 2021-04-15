@@ -32,7 +32,7 @@ namespace AmbitiousSnake
 				float timeSinceLevelLoad = Time.timeSinceLevelLoad;
 				if (Level.instance.FastestTime > timeSinceLevelLoad)
 				{
-					if (timeSinceLevelLoad <= Level.instance.parTime && Level.instance.GotParTime)
+					if (timeSinceLevelLoad <= Level.instance.parTime && !Level.instance.GotParTime)
 						AccountManager.CurrentAccount.score ++;
 					Level.instance.FastestTime = timeSinceLevelLoad;
 				}
