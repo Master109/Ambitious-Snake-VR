@@ -11,6 +11,7 @@ namespace AmbitiousSnake
 	{
 #if UNITY_EDITOR
 		public bool autoSetWaypoints = true;
+		public bool autoSetPivotOffset = true;
 		public Transform waypointsParent;
 #endif
 		public Transform trs;
@@ -51,8 +52,11 @@ namespace AmbitiousSnake
 #if UNITY_EDITOR
 			if (!Application.isPlaying)
 			{
-				pivotOffset = GetBoundsOfChildren().center - trs.position;
-				waypoints[currentWaypointIndex].trs.position = GetBoundsOfChildren().center;
+				if (autoSetPivotOffset)
+				{
+					pivotOffset = GetBoundsOfChildren().center - trs.position;
+					waypoints[currentWaypointIndex].trs.position = GetBoundsOfChildren().center;
+				}
 				AutoSetLineRenderers ();
 				return;
 			}
