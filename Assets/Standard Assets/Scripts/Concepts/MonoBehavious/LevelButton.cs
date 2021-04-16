@@ -20,19 +20,23 @@ namespace AmbitiousSnake
 
 		void OnEnable ()
 		{
+			Level level;
 #if UNITY_EDITOR
-			levelNameText.text = "" + (trs.GetSiblingIndex() + 1);
-			LevelSelect.instance = trs.root.GetComponent<LevelSelect>();
+			if (!Application.isPlaying)
+			{
+				levelNameText.text = "" + (trs.GetSiblingIndex() + 1);
+				LevelSelect.instance = trs.root.GetComponent<LevelSelect>();
+				level = LevelSelect.instance.levels[trs.GetSiblingIndex()];
+				parTimeText.text = "Par time: " + level.parTime;
+				return;
+			}
 #endif
 			lastClickedTime = Mathf.NegativeInfinity;
-			Level level = LevelSelect.Instance.levels[trs.GetSiblingIndex()];
+			level = LevelSelect.Instance.levels[trs.GetSiblingIndex()];
 			if (level.HasWon)
 				bestTimeText.text = "Best time: " + string.Format("{0:0.#}", level.FastestTime);
 			parTimeIcon.enabled = level.GotParTime;
 			starIcon.enabled = level.CollectedStar;
-#if UNITY_EDITOR
-			parTimeText.text = "Par time: " + level.parTime;
-#endif
 			button.onClick.RemoveAllListeners();
 			button.onClick.AddListener(OnButtonClicked);
 		}
