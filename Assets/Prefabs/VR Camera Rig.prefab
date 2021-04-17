@@ -264,7 +264,7 @@ GameObject:
   - component: {fileID: 2271144593841587436}
   - component: {fileID: 5991563144126771908}
   - component: {fileID: 7786304376345110170}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Button Indicator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -378,7 +378,7 @@ GameObject:
   - component: {fileID: 4355026735127846517}
   - component: {fileID: 66731808022403960}
   - component: {fileID: 7919013731905432247}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Button Indicator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -504,7 +504,7 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.3
+  near clip plane: 0.01
   far clip plane: 1000
   field of view: 60
   orthographic: 0
@@ -567,7 +567,7 @@ GameObject:
   - component: {fileID: 5644131927050618743}
   - component: {fileID: 5758146036177940667}
   - component: {fileID: 781177296014709262}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Button Indicator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -649,7 +649,7 @@ GameObject:
   - component: {fileID: 885550982224918585}
   - component: {fileID: 8456303971297948323}
   - component: {fileID: 5564626166310514157}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Button Indicator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -755,21 +755,89 @@ PrefabInstance:
       propertyPath: m_LocalRotation.z
       value: -0
       objectReference: {fileID: 0}
+    - target: {fileID: -7340309014026577266, guid: fe579d32c34f28205b0160266d8ab8ae, type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: -6739464940280356427, guid: fe579d32c34f28205b0160266d8ab8ae, type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: -6739464940280356427, guid: fe579d32c34f28205b0160266d8ab8ae, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -6475584946403164485, guid: fe579d32c34f28205b0160266d8ab8ae, type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: -2323576303078994096, guid: fe579d32c34f28205b0160266d8ab8ae, type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: -2226546180795506221, guid: fe579d32c34f28205b0160266d8ab8ae, type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: -1840342066722959520, guid: fe579d32c34f28205b0160266d8ab8ae, type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: -878690631722628120, guid: fe579d32c34f28205b0160266d8ab8ae, type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 253655042675972209, guid: fe579d32c34f28205b0160266d8ab8ae, type: 3}
+      propertyPath: m_Layer
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: fe579d32c34f28205b0160266d8ab8ae, type: 3}
       propertyPath: m_Name
       value: Left Oculus Quest 2 Controller
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: fe579d32c34f28205b0160266d8ab8ae, type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: fe579d32c34f28205b0160266d8ab8ae, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2206771855490309868, guid: fe579d32c34f28205b0160266d8ab8ae, type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2707102280528190221, guid: fe579d32c34f28205b0160266d8ab8ae, type: 3}
+      propertyPath: m_Layer
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 2707102280528190221, guid: fe579d32c34f28205b0160266d8ab8ae, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2861967733521885938, guid: fe579d32c34f28205b0160266d8ab8ae, type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6343413620381202838, guid: fe579d32c34f28205b0160266d8ab8ae, type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8055032386672605203, guid: fe579d32c34f28205b0160266d8ab8ae, type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8232620093062221071, guid: fe579d32c34f28205b0160266d8ab8ae, type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8279880922762686292, guid: fe579d32c34f28205b0160266d8ab8ae, type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8727721373014247602, guid: fe579d32c34f28205b0160266d8ab8ae, type: 3}
+      propertyPath: m_Layer
+      value: 5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fe579d32c34f28205b0160266d8ab8ae, type: 3}
@@ -851,21 +919,89 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7340309014026577266, guid: fe579d32c34f28205b0160266d8ab8ae, type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: -6739464940280356427, guid: fe579d32c34f28205b0160266d8ab8ae, type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: -6475584946403164485, guid: fe579d32c34f28205b0160266d8ab8ae, type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: -2323576303078994096, guid: fe579d32c34f28205b0160266d8ab8ae, type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: -2226546180795506221, guid: fe579d32c34f28205b0160266d8ab8ae, type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: -1840342066722959520, guid: fe579d32c34f28205b0160266d8ab8ae, type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: -878690631722628120, guid: fe579d32c34f28205b0160266d8ab8ae, type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 253655042675972209, guid: fe579d32c34f28205b0160266d8ab8ae, type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: fe579d32c34f28205b0160266d8ab8ae, type: 3}
       propertyPath: m_Name
       value: Right Oculus Quest 2 Controller
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: fe579d32c34f28205b0160266d8ab8ae, type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: fe579d32c34f28205b0160266d8ab8ae, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2206771855490309868, guid: fe579d32c34f28205b0160266d8ab8ae, type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2707102280528190221, guid: fe579d32c34f28205b0160266d8ab8ae, type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2861967733521885938, guid: fe579d32c34f28205b0160266d8ab8ae, type: 3}
+      propertyPath: m_Layer
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 2861967733521885938, guid: fe579d32c34f28205b0160266d8ab8ae, type: 3}
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6343413620381202838, guid: fe579d32c34f28205b0160266d8ab8ae, type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8055032386672605203, guid: fe579d32c34f28205b0160266d8ab8ae, type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8232620093062221071, guid: fe579d32c34f28205b0160266d8ab8ae, type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8279880922762686292, guid: fe579d32c34f28205b0160266d8ab8ae, type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 8279880922762686292, guid: fe579d32c34f28205b0160266d8ab8ae, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8727721373014247602, guid: fe579d32c34f28205b0160266d8ab8ae, type: 3}
+      propertyPath: m_Layer
+      value: 5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fe579d32c34f28205b0160266d8ab8ae, type: 3}

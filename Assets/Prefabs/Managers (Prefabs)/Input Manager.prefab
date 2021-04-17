@@ -47,7 +47,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   handleMultipleInstances: 0
   persistant: 0
-  inputDevice: 0
+  inputDevice: 3
   settings: {fileID: 11400000, guid: 8566bffd07d8279fb8082fda6303b766, type: 2}
   trs: {fileID: 6680615273485330521}
   leftHandTrsAtBeginMove: {fileID: 8097090176948579204}
