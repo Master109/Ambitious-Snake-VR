@@ -40,8 +40,8 @@ namespace AmbitiousSnake
 
 		public override void Finish ()
 		{
-			base.Finish ();
 			LeftHandIsDominant = lookingAtLeftHand;
+			base.Finish ();
 		}
 
 		public override void OnDisable ()
