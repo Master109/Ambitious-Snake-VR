@@ -81,7 +81,7 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 158664407a7d6c892bdef4392aa940ad, type: 2}
     - target: {fileID: 7440210945223678247, guid: 4fb6fbb20e22c03b9997215fca7e749d, type: 3}
       propertyPath: m_Name
-      value: Dissolve Tile 1
+      value: Dissolve Tile
       objectReference: {fileID: 0}
     - target: {fileID: 7440210945223678247, guid: 4fb6fbb20e22c03b9997215fca7e749d, type: 3}
       propertyPath: m_Layer
