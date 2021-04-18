@@ -14,6 +14,12 @@ namespace AmbitiousSnake
 				return collider;
 			}
 		}
+		public static End instance;
+
+		public override void OnEnable ()
+		{
+			instance = this;
+		}
 		
 		public void OnCollisionEnter (Collision coll)
 		{

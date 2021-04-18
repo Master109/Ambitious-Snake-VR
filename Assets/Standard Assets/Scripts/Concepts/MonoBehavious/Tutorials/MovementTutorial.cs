@@ -1,6 +1,4 @@
 using UnityEngine;
-using UnityEngine.Playables;
-using Extensions;
 
 namespace AmbitiousSnake
 {
@@ -20,7 +18,6 @@ namespace AmbitiousSnake
 		
 		public override void DoUpdate ()
 		{
-
 		}
 	}
 }
