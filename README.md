@@ -5,9 +5,9 @@ In the top menu bar of the Unity editor, select the "Game" dropdown and then sel
 ## Controls  
 ### Oculus Rift and Oculus Quest  
 Hold either hand-grip button to move towards where your hand is facing  
-Move the thumstick up or down to control your length  
-Press the thumstick inward to change the camera orientation  
-Hold the A, B, X, or Y button to access the menu  
+Move either thumstick up or down to control your length  
+Press either thumstick inward to change the camera orientation  
+Press the A, B, X, or Y button or either trigger to access the menu  
 ### Keyboard and Mouse  
 Hold the w key to move towards where the camera is looking  
 Hold the left mouse button to grow  
