@@ -18,6 +18,15 @@ namespace AmbitiousSnake
 		
 		public override void DoUpdate ()
 		{
+			if (InputManager.MoveInput != Vector3.zero)
+				Finish ();
+		}
+
+		public override void Finish ()
+		{
+			base.Finish ();
+			leftGripIndicator.SetActive(false);
+			rightGripIndicator.SetActive(false);
 		}
 	}
 }
