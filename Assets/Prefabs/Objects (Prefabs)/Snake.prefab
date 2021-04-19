@@ -77,6 +77,8 @@ MonoBehaviour:
   changeLengthRate: 15
   collisionAudioClip: {fileID: 0}
   lengthIndicator: {fileID: 0}
+  physicsMaterial: {fileID: 13400000, guid: e0ee0007728bb99e9b7b523477c23754, type: 2}
+  maxAbsContactNormalYToHaveNoFriction: 0.1
 --- !u!54 &7320805966182605979
 Rigidbody:
   m_ObjectHideFlags: 0

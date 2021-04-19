@@ -48,12 +48,14 @@ namespace AmbitiousSnake
 		public float changeLengthRate;
 		public AudioClip collisionAudioClip;
 		public LineRenderer lengthIndicator;
+		public PhysicMaterial physicsMaterial;
 		public delegate void OnAddHeadPiece(Vector3 position);
 		public event OnAddHeadPiece onAddHeadPiece;
 		public delegate void OnAddTailPiece(Vector3 position);
 		public event OnAddTailPiece onAddTailPiece;
 		public delegate void OnRemoveTailPiece();
 		public event OnRemoveTailPiece onRemoveTailPiece;
+		public float maxAbsContactNormalYToHaveNoFriction;
 		public SnakePiece HeadPiece
 		{
 			get
@@ -97,10 +99,13 @@ namespace AmbitiousSnake
 			}
 		}
 		Vector3 move;
+		float friction;
+		Dictionary<Collider, ContactPoint[]> contactPointsWithCollidersDict = new Dictionary<Collider, ContactPoint[]>();
 
 		public override void Awake ()
 		{
 			base.Awake ();
+			friction = physicsMaterial.dynamicFriction;
 			AddHeadPiece (trs.position, 0);
 			for (float distance = maxDistanceBetweenPieces; distance <= length.value; distance += maxDistanceBetweenPieces)
 				AddHeadPiece (trs.position + trs.forward * distance, maxDistanceBetweenPieces);
@@ -268,6 +273,7 @@ namespace AmbitiousSnake
 
 		void OnDisable ()
 		{
+			physicsMaterial.dynamicFriction = friction;
 			GameManager.updatables = GameManager.updatables.Remove(this);
 		}
 
@@ -288,20 +294,42 @@ namespace AmbitiousSnake
 			return pieces[index].trs.localPosition;
 		}
 
-		// void OnCollisionEnter (Collision coll)
-		// {
-		// 	ContactPoint[] contactPoints = new ContactPoint[coll.contactCount];
-		// 	coll.GetContacts(contactPoints);
-		// 	for (int i = 0; i < coll.contactCount; i ++)
-		// 		AudioManager.instance.MakeSoundEffect (collisionAudioClip, contactPoints[i].point);
-		// }
+		void OnCollisionEnter (Collision coll)
+		{
+			ContactPoint[] contactPoints = new ContactPoint[coll.contactCount];
+			coll.GetContacts(contactPoints);
+			if (!contactPointsWithCollidersDict.ContainsKey(coll.collider))
+				contactPointsWithCollidersDict.Add(coll.collider, contactPoints);
+			else
+				contactPointsWithCollidersDict[coll.collider] = contactPoints;
+			List<ContactPoint> allContactPoints = new List<ContactPoint>();
+			foreach (ContactPoint[] _contactPoints in contactPointsWithCollidersDict.Values)
+				allContactPoints.AddRange(_contactPoints);
+			int horiozntalHitCount = 0;
+			for (int i = 0; i < allContactPoints.Count; i ++)
+			{
+				ContactPoint contactPoint = allContactPoints[i];
+				if (Mathf.Abs(contactPoint.normal.y) <= maxAbsContactNormalYToHaveNoFriction)
+				{
+					horiozntalHitCount ++;
+					if (horiozntalHitCount > 1)
+					{
+						physicsMaterial.dynamicFriction = 0;
+						return;
+					}
+				}
+			}
+			physicsMaterial.dynamicFriction = friction;
+		}
 
-		// void OnCollisionExit (Collision coll)
-		// {
-		// 	ContactPoint[] contactPoints = new ContactPoint[coll.contactCount];
-		// 	coll.GetContacts(contactPoints);
-		// 	for (int i = 0; i < coll.contactCount; i ++)
-		// 		AudioManager.instance.MakeSoundEffect (collisionAudioClip, contactPoints[i].point);
-		// }
+		void OnCollisionStay (Collision coll)
+		{
+			OnCollisionEnter (coll);
+		}
+
+		void OnCollisionExit (Collision coll)
+		{
+			contactPointsWithCollidersDict.Remove(coll.collider);
+		}
 	}
 }

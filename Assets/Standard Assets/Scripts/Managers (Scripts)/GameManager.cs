@@ -58,13 +58,13 @@ namespace AmbitiousSnake
 
 		void Update ()
 		{
-			if (Time.deltaTime > 0)
-				Physics.Simulate(Time.deltaTime);
 			for (int i = 0; i < updatables.Length; i ++)
 			{
 				IUpdatable updatable = updatables[i];
 				updatable.DoUpdate ();
 			}
+			if (Time.deltaTime > 0)
+				Physics.Simulate(Time.deltaTime);
 			if (ObjectPool.Instance != null && ObjectPool.instance.enabled)
 				ObjectPool.instance.DoUpdate ();
 			InputSystem.Update ();
