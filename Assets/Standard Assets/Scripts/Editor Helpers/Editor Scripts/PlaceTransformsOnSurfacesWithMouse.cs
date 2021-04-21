@@ -8,32 +8,32 @@ using UnityEditor;
 namespace AmbitiousSnake
 {
 	[ExecuteInEditMode]
-	public class PaintGameObjectsOnGrid : EditorScript
+	public class PlaceTransformsOnSurfacesWithMouse : EditorScript
 	{
-		public GameObject go;
+		public Transform trs;
 		public Transform paintParent;
 		List<Vector3> previousPaintPositions = new List<Vector3>();
 		Bounds goBounds;
 		Bounds[] gosBounds = new Bounds[0];
 
-		[MenuItem("Tools/Start painting GameObjects _F1")]
-		static void _StartPainting ()
+		[MenuItem("Tools/Start placing objects on surfaces _F1")]
+		static void _StartPlacing ()
 		{
-			FindObjectOfType<PaintGameObjectsOnGrid>().StartPainting ();
+			FindObjectOfType<PlaceTransformsOnSurfacesWithMouse>().StartPlacing ();
 		}
 
-		[MenuItem("Tools/Stop painting GameObjects #F1")]
-		static void _StopPainting ()
+		[MenuItem("Tools/Stop placing objects on surfaces #F1")]
+		static void _StopPlacing ()
 		{
-			FindObjectOfType<PaintGameObjectsOnGrid>().StopPainting ();
+			FindObjectOfType<PlaceTransformsOnSurfacesWithMouse>().StopPlacing ();
 		}
 
-		public void StartPainting ()
+		public void StartPlacing ()
 		{
 			EditorApplication.update -= Paint;
 			SceneView.duringSceneGui -= OnSceneGUI;
 			previousPaintPositions.Clear();
-			goBounds = go.GetComponentInChildren<Renderer>().bounds;
+			goBounds = trs.GetComponentInChildren<Renderer>().bounds;
 			Collider[] colliders = FindObjectsOfType<Collider>();
 			List<Bounds> _gosBounds = new List<Bounds>();
 			for (int i = 0; i < colliders.Length; i ++)
@@ -100,21 +100,23 @@ namespace AmbitiousSnake
 			if (!previousPaintPositions.Contains(_spawnPosition))
 			{
 				Quaternion spawnRotation = spawnRotations[indexOfClosestSpawnPosition];
-				Instantiate(go, _spawnPosition, spawnRotation, paintParent);
+				if (PrefabUtility.GetPrefabAssetType(trs) != PrefabAssetType.NotAPrefab)
+				{
+					Transform clonedTrs = (Transform) PrefabUtility.InstantiatePrefab(trs);
+					clonedTrs.position = _spawnPosition;
+					clonedTrs.rotation = spawnRotation;
+					clonedTrs.SetParent(paintParent);
+				}
+				else
+					Instantiate(trs, _spawnPosition, spawnRotation, paintParent);
 				previousPaintPositions.Add(_spawnPosition);
 			}
 		}
 
-		public void StopPainting ()
+		public void StopPlacing ()
 		{
 			EditorApplication.update -= Paint;
 			SceneView.duringSceneGui -= OnSceneGUI;
-		}
-
-		public override void OnEnable ()
-		{
-			base.OnEnable ();
-			StopPainting ();
 		}
 
 		void OnSceneGUI (SceneView sceneView)
@@ -122,28 +124,29 @@ namespace AmbitiousSnake
 			UpdateHotkeys ();
 		}
 
+		public override void OnEnable ()
+		{
+			base.OnEnable ();
+			StopPlacing ();
+		}
+
 		public override void OnDisable ()
 		{
 			base.OnDisable ();
-			StopPainting ();
+			StopPlacing ();
 		}
 
 		public override void OnDestroy ()
 		{
 			base.OnDestroy ();
-			StopPainting ();
+			StopPlacing ();
 		}
-	}
-
-	[CustomEditor(typeof(PaintGameObjectsOnGrid))]
-	public class PaintGameObjectsOnGridEditor : EditorScriptEditor
-	{
 	}
 }
 #else
 namespace AmbitiousSnake
 {
-	public class PaintGameObjectsOnGrid : EditorScript
+	public class PlaceTransformsOnSurfacesWithMouse : EditorScript
 	{
 	}
 }
