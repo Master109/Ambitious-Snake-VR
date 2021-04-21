@@ -182,14 +182,88 @@ namespace Extensions
 		{
 			hit = VectorExtensions.NULL3;
 			Plane[] facePlanes = b.GetOutsideFacePlanes();
-			if ((facePlanes[0].Raycast(ray, out hit) || facePlanes[1].Raycast(ray, out hit)) && hit.y >= b.min.y && hit.y <= b.max.y && hit.z >= b.min.z && hit.z <= b.max.z)
-				return true;
-			else if ((facePlanes[2].Raycast(ray, out hit) || facePlanes[3].Raycast(ray, out hit)) && hit.x >= b.min.x && hit.x <= b.max.x && hit.z >= b.min.z && hit.z <= b.max.z)
-				return true;
-			else if ((facePlanes[4].Raycast(ray, out hit) || facePlanes[5].Raycast(ray, out hit)) && hit.x >= b.min.x && hit.x <= b.max.x && hit.y >= b.min.y && hit.y <= b.max.y)
-				return true;
+			Plane facePlane0 = facePlanes[0];
+			Plane facePlane1 = facePlanes[1];
+			Plane facePlane2 = facePlanes[2];
+			Plane facePlane3 = facePlanes[3];
+			Plane facePlane4 = facePlanes[4];
+			Plane facePlane5 = facePlanes[5];
+			float distance0 = 0;
+			float distance1 = 0;
+			float distance2 = 0;
+			float distance3 = 0;
+			float distance4 = 0;
+			float distance5 = 0;
+			Vector3 hit0 = new Vector3();
+			Vector3 hit1 = new Vector3();
+			Vector3 hit2 = new Vector3();
+			Vector3 hit3 = new Vector3();
+			Vector3 hit4 = new Vector3();
+			Vector3 hit5 = new Vector3();
+			if (facePlane0.Raycast(ray, out distance0))
+			{
+				hit0 = ray.GetPoint(distance0);
+				if (hit0.y < b.min.y || hit0.y > b.max.y || hit0.z < b.min.z || hit0.z > b.max.z)
+					distance0 = Mathf.Infinity;
+			}
 			else
+				distance0 = Mathf.Infinity;
+			if (facePlane1.Raycast(ray, out distance1))
+			{
+				hit1 = ray.GetPoint(distance1);
+				if (hit1.y < b.min.y || hit1.y > b.max.y || hit1.z < b.min.z || hit1.z > b.max.z)
+					distance1 = Mathf.Infinity;
+			}
+			else
+				distance1 = Mathf.Infinity;
+			if (facePlane2.Raycast(ray, out distance2))
+			{
+				hit2 = ray.GetPoint(distance2);
+				if (hit2.x < b.min.x || hit2.x > b.max.x || hit2.z < b.min.z || hit2.z > b.max.z)
+					distance2 = Mathf.Infinity;
+			}
+			else
+				distance2 = Mathf.Infinity;
+			if (facePlane3.Raycast(ray, out distance3))
+			{
+				hit3 = ray.GetPoint(distance3);
+				if (hit3.x < b.min.x || hit3.x > b.max.x || hit3.z < b.min.z || hit3.z > b.max.z)
+					distance3 = Mathf.Infinity;
+			}
+			else
+				distance3 = Mathf.Infinity;
+			if (facePlane4.Raycast(ray, out distance4))
+			{
+				hit4 = ray.GetPoint(distance4);
+				if (hit4.x < b.min.x || hit4.x > b.max.x || hit4.y < b.min.y || hit4.y > b.max.y)
+					distance4 = Mathf.Infinity;
+			}
+			else
+				distance4 = Mathf.Infinity;
+			if (facePlane5.Raycast(ray, out distance5))
+			{
+				hit5 = ray.GetPoint(distance5);
+				if (hit5.x < b.min.x || hit5.x > b.max.x || hit5.y < b.min.y || hit5.y > b.max.y)
+					distance5 = Mathf.Infinity;
+			}
+			else
+				distance5 = Mathf.Infinity;
+			float distance = Mathf.Min(distance0, distance1, distance2, distance3, distance4, distance5);
+			if (distance == Mathf.Infinity)
 				return false;
+			else if (distance == distance0)
+				hit = hit0;
+			else if (distance == distance1)
+				hit = hit1;
+			else if (distance == distance2)
+				hit = hit2;
+			else if (distance == distance3)
+				hit = hit3;
+			else if (distance == distance4)
+				hit = hit4;
+			else
+				hit = hit5;
+			return true;
 		}
 	}
 }

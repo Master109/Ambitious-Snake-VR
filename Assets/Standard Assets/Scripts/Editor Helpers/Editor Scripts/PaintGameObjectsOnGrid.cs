@@ -39,7 +39,7 @@ namespace AmbitiousSnake
 			for (int i = 0; i < colliders.Length; i ++)
 			{
 				Collider collider = colliders[i];
-				Renderer renderer = collider.GetComponent<Renderer>();
+				Renderer renderer = collider.GetComponentInChildren<Renderer>();
 				if (renderer != null)
 					_gosBounds.Add(renderer.bounds);
 			}
@@ -61,12 +61,12 @@ namespace AmbitiousSnake
 					Quaternion spawnRotation = new Quaternion();
 					if (hit.x == bounds.min.x)
 					{
-						spawnPosition = new Vector3(hit.x - goBounds.extents.x, Mathf.Round(hit.y), Mathf.Round(hit.z));
+						spawnPosition = new Vector3(hit.x - goBounds.extents.y, Mathf.Round(hit.y), Mathf.Round(hit.z));
 						spawnRotation = Quaternion.LookRotation(Vector3.forward, Vector3.left);
 					}
 					else if (hit.x == bounds.max.x)
 					{
-						spawnPosition = new Vector3(hit.x + goBounds.extents.x, Mathf.Round(hit.y), Mathf.Round(hit.z));
+						spawnPosition = new Vector3(hit.x + goBounds.extents.y, Mathf.Round(hit.y), Mathf.Round(hit.z));
 						spawnRotation = Quaternion.LookRotation(Vector3.forward, Vector3.right);
 					}
 					else if (hit.y == bounds.min.y)
@@ -81,12 +81,12 @@ namespace AmbitiousSnake
 					}
 					else if (hit.z == bounds.min.z)
 					{
-						spawnPosition = new Vector3(Mathf.Round(hit.x), Mathf.Round(hit.y), hit.z - goBounds.extents.z);
+						spawnPosition = new Vector3(Mathf.Round(hit.x), Mathf.Round(hit.y), hit.z - goBounds.extents.y);
 						spawnRotation = Quaternion.LookRotation(Vector3.up, Vector3.back);
 					}
 					else if (hit.z == bounds.max.z)
 					{
-						spawnPosition = new Vector3(Mathf.Round(hit.x), Mathf.Round(hit.y), hit.z + goBounds.extents.z);
+						spawnPosition = new Vector3(Mathf.Round(hit.x), Mathf.Round(hit.y), hit.z + goBounds.extents.y);
 						spawnRotation = Quaternion.LookRotation(Vector3.up, Vector3.forward);
 					}
 					if (!previousPaintPositions.Contains(spawnPosition))
