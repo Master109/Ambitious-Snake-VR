@@ -49,70 +49,64 @@ namespace AmbitiousSnake
 
 		public virtual void UpdateHotkeys ()
 		{
+			if (Event.current == null)
+				return;
+			bool shouldBreak = false;
+			inputEvent.mousePosition = Event.current.mousePosition.ToVec2Int();
+			inputEvent.type = Event.current.type;
 			for (int i = 0; i < hotkeys.Length; i ++)
 			{
 				Hotkey hotkey = hotkeys[i];
-				if (Event.current != null && !Event.current.Equals(inputEvent))
+				foreach (Hotkey.Button button in hotkey.buttons)
 				{
-					bool shouldBreak = false;
-					inputEvent.mousePosition = Event.current.mousePosition.ToVec2Int();
-					inputEvent.type = Event.current.type;
-					foreach (Hotkey.Button button in hotkey.buttons)
+					if (Event.current.keyCode == button.key)
 					{
-						if (Event.current.keyCode == button.key)
+						if (Event.current.type == EventType.KeyDown)
 						{
-							if (Event.current.type == EventType.KeyDown)
+							inputEvent.keys = inputEvent.keys.Add(Event.current.keyCode);
+							button.isPressing = true;
+							if (hotkey.downType == Hotkey.DownType.All)
 							{
-								inputEvent.keys = inputEvent.keys.Add(Event.current.keyCode);
-								button.isPressing = true;
-								if (hotkey.downType == Hotkey.DownType.All)
+								foreach (Hotkey.Button button2 in hotkey.buttons)
 								{
-									foreach (Hotkey.Button button2 in hotkey.buttons)
+									if (!button2.isPressing)
 									{
-										if (!button2.isPressing)
-										{
-											shouldBreak = true;
-											break;
-										}
-									}
-									if (shouldBreak)
+										shouldBreak = true;
 										break;
+									}
 								}
-								hotkey.downAction.Invoke();
+								if (shouldBreak)
+									break;
 							}
-							else if (Event.current.type == EventType.KeyUp)
+							hotkey.downAction.Invoke();
+						}
+						else if (Event.current.type == EventType.KeyUp)
+						{
+							inputEvent.keys = inputEvent.keys.Remove(Event.current.keyCode);
+							button.isPressing = false;
+							if (hotkey.upType == Hotkey.UpType.All)
 							{
-								inputEvent.keys = inputEvent.keys.Remove(Event.current.keyCode);
-								button.isPressing = false;
-								if (hotkey.upType == Hotkey.UpType.All)
+								foreach (Hotkey.Button button2 in hotkey.buttons)
 								{
-									foreach (Hotkey.Button button2 in hotkey.buttons)
+									if (button2.isPressing)
 									{
-										if (button2.isPressing)
-										{
-											shouldBreak = true;
-											break;
-										}
-									}
-									if (shouldBreak)
+										shouldBreak = true;
 										break;
+									}
 								}
-								hotkey.upAction.Invoke();
+								if (shouldBreak)
+									break;
 							}
+							hotkey.upAction.Invoke();
 						}
 					}
 				}
-				inputEvent.previousKeys = (KeyCode[]) inputEvent.keys.Clone();
 			}
 		}
 
 		public static Vector2Int GetMousePosition ()
 		{
-			Vector2Int output;
-			Camera camera = GetSceneViewCamera();
-			output = inputEvent.mousePosition;
-			output.y = (int) (camera.ViewportToScreenPoint(Vector2.one).y - camera.ViewportToScreenPoint(Vector2.zero).y - output.y);
-			return output;
+			return inputEvent.mousePosition;
 		}
 
 		public static Vector3 GetMousePositionInWorld ()
@@ -122,7 +116,10 @@ namespace AmbitiousSnake
 
 		public static Ray GetMouseRay ()
 		{
-			return GetSceneViewCamera().ScreenPointToRay(GetMousePosition().ToVec2());
+			Camera camera = GetSceneViewCamera();
+			Vector2 screenPoint = GetMousePosition();
+			screenPoint.y = camera.pixelHeight - screenPoint.y;
+			return camera.ScreenPointToRay(screenPoint);
 		}
 
 		public static Camera GetSceneViewCamera ()
@@ -168,7 +165,6 @@ namespace AmbitiousSnake
 			public Vector2Int mousePosition;
 			public EventType type;
 			public KeyCode[] keys = new KeyCode[0];
-			public KeyCode[] previousKeys = new KeyCode[0];
 		}
 	}
 

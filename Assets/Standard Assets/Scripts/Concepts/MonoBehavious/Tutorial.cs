@@ -24,7 +24,10 @@ namespace AmbitiousSnake
 		{
 			base.OnEnable ();
 			if (!EnableTutorials)
+			{
+				Level.Instance.notificationText.text = "";
 				Destroy(gameObject);
+			}
 		}
 
 		public static bool IsLookingAtTransform (Transform trs, float shrinkCameraViewNormalized)

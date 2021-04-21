@@ -46,6 +46,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   handleMultipleInstances: 0
   persistant: 0
+  notificationText: {fileID: 9091801955287447604}
   parTime: 0
   timerText: {fileID: 8624475072377845540}
   pastParTimeTimerColor: {r: 1, g: 0, b: 0, a: 1}
@@ -158,6 +159,17 @@ RectTransform:
 --- !u!114 &8624475072377845540 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6672169987059189670, guid: 8390f91c09da6875da3be97e78a0d033, type: 3}
+  m_PrefabInstance: {fileID: 3109741190059487362}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &9091801955287447604 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6126184773048682678, guid: 8390f91c09da6875da3be97e78a0d033, type: 3}
   m_PrefabInstance: {fileID: 3109741190059487362}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}

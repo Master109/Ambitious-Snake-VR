@@ -13,6 +13,10 @@ namespace AmbitiousSnake
 	[ExecuteInEditMode]
 	public class Level : SingletonMonoBehaviour<Level>, IUpdatable
 	{
+		public TMP_Text notificationText;
+		public float parTime;
+		public TMP_Text timerText;
+		public Color pastParTimeTimerColor;
 		public bool HasWon
 		{
 			get
@@ -53,9 +57,6 @@ namespace AmbitiousSnake
 				return FastestTime <= parTime;
 			}
 		}
-		public float parTime;
-		public TMP_Text timerText;
-		public Color pastParTimeTimerColor;
 		
 		void OnEnable ()
 		{

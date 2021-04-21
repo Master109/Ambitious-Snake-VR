@@ -16,13 +16,22 @@ namespace AmbitiousSnake
 		Bounds goBounds;
 		Bounds[] gosBounds = new Bounds[0];
 
-		public override void Do ()
+		[MenuItem("Tools/Start painting GameObjects _F1")]
+		static void _StartPainting ()
 		{
-			UpdateHotkeys ();
+			FindObjectOfType<PaintGameObjectsOnGrid>().StartPainting ();
+		}
+
+		[MenuItem("Tools/Stop painting GameObjects #F1")]
+		static void _StopPainting ()
+		{
+			FindObjectOfType<PaintGameObjectsOnGrid>().StopPainting ();
 		}
 
 		public void StartPainting ()
 		{
+			EditorApplication.update -= Paint;
+			SceneView.duringSceneGui -= OnSceneGUI;
 			previousPaintPositions.Clear();
 			goBounds = go.GetComponentInChildren<Renderer>().bounds;
 			Collider[] colliders = FindObjectsOfType<Collider>();
@@ -35,6 +44,7 @@ namespace AmbitiousSnake
 					_gosBounds.Add(renderer.bounds);
 			}
 			gosBounds = _gosBounds.ToArray();
+			SceneView.duringSceneGui += OnSceneGUI;
 			EditorApplication.update += Paint;
 		}
 
@@ -88,27 +98,33 @@ namespace AmbitiousSnake
 			}
 		}
 
+		public void StopPainting ()
+		{
+			EditorApplication.update -= Paint;
+			SceneView.duringSceneGui -= OnSceneGUI;
+		}
+
 		public override void OnEnable ()
 		{
 			base.OnEnable ();
-			EditorApplication.update -= Paint;
+			StopPainting ();
+		}
+
+		void OnSceneGUI (SceneView sceneView)
+		{
+			UpdateHotkeys ();
 		}
 
 		public override void OnDisable ()
 		{
 			base.OnDisable ();
-			EditorApplication.update -= Paint;
+			StopPainting ();
 		}
 
 		public override void OnDestroy ()
 		{
 			base.OnDestroy ();
-			EditorApplication.update -= Paint;
-		}
-
-		public void StopPainting ()
-		{
-			EditorApplication.update -= Paint;
+			StopPainting ();
 		}
 	}
 
