@@ -13,6 +13,8 @@ namespace AmbitiousSnake
 
 		public override void OnEnable ()
 		{
+			if (!EnableTutorials)
+				Destroy(gameObject);
 			playableDirector.stopped += OnPlayableDirectorStopped;
 		}
 

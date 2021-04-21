@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Playables;
+using Extensions;
 
 namespace AmbitiousSnake
 {
@@ -7,6 +8,24 @@ namespace AmbitiousSnake
 	{
 		public PlayableDirector playableDirector;
 		public GameObject[] activateOnFinish;
+		public static bool EnableTutorials
+		{
+			get
+			{
+				return PlayerPrefsExtensions.GetBool("Enable tutorials", true);
+			}
+			set
+			{
+				PlayerPrefsExtensions.SetBool("Enable tutorials", value);
+			}
+		}
+
+		public override void OnEnable ()
+		{
+			base.OnEnable ();
+			if (!EnableTutorials)
+				Destroy(gameObject);
+		}
 
 		public static bool IsLookingAtTransform (Transform trs, float shrinkCameraViewNormalized)
 		{
