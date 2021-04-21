@@ -42,79 +42,95 @@ namespace AmbitiousSnake
 			doOnce = false;
 			Do ();
 		}
+		
 		public virtual void Do ()
 		{
 		}
 
 		public virtual void UpdateHotkeys ()
 		{
-			// for (int i = 0; i < hotkeys.Length; i ++)
-			// {
-			// 	Hotkey hotkey = hotkeys[i];
-			// 	if (Event.current != null)
-			// 	{
-			// 		bool shouldBreak = false;
-			// 		inputEvent.mousePosition = Event.current.mousePosition.ToVec2Int();
-			// 		inputEvent.type = Event.current.type;
-			// 		foreach (Hotkey.Button button in hotkey.buttons)
-			// 		{
-			// 			if (Event.current.keyCode == button.key)
-			// 			{
-			// 				if (Event.current.type == EventType.KeyDown)
-			// 				{
-			// 					inputEvent.keys = inputEvent.keys.Add(Event.current.keyCode);
-			// 					button.isPressing = true;
-			// 					if (hotkey.downType == Hotkey.DownType.All)
-			// 					{
-			// 						foreach (Hotkey.Button button2 in hotkey.buttons)
-			// 						{
-			// 							if (!button2.isPressing)
-			// 							{
-			// 								shouldBreak = true;
-			// 								break;
-			// 							}
-			// 						}
-			// 						if (shouldBreak)
-			// 							break;
-			// 					}
-			// 					hotkey.downAction.Invoke();
-			// 				}
-			// 				else if (Event.current.type == EventType.KeyUp)
-			// 				{
-			// 					inputEvent.keys = inputEvent.keys.Remove(Event.current.keyCode);
-			// 					button.isPressing = false;
-			// 					if (hotkey.upType == Hotkey.UpType.All)
-			// 					{
-			// 						foreach (Hotkey.Button button2 in hotkey.buttons)
-			// 						{
-			// 							if (button2.isPressing)
-			// 							{
-			// 								shouldBreak = true;
-			// 								break;
-			// 							}
-			// 						}
-			// 						if (shouldBreak)
-			// 							break;
-			// 					}
-			// 					hotkey.upAction.Invoke();
-			// 				}
-			// 			}
-			// 		}
-			// 	}
-			// 	inputEvent.previousKeys = (KeyCode[]) inputEvent.keys.Clone();
-			// }
+			for (int i = 0; i < hotkeys.Length; i ++)
+			{
+				Hotkey hotkey = hotkeys[i];
+				if (Event.current != null && !Event.current.Equals(inputEvent))
+				{
+					bool shouldBreak = false;
+					inputEvent.mousePosition = Event.current.mousePosition.ToVec2Int();
+					inputEvent.type = Event.current.type;
+					foreach (Hotkey.Button button in hotkey.buttons)
+					{
+						if (Event.current.keyCode == button.key)
+						{
+							if (Event.current.type == EventType.KeyDown)
+							{
+								inputEvent.keys = inputEvent.keys.Add(Event.current.keyCode);
+								button.isPressing = true;
+								if (hotkey.downType == Hotkey.DownType.All)
+								{
+									foreach (Hotkey.Button button2 in hotkey.buttons)
+									{
+										if (!button2.isPressing)
+										{
+											shouldBreak = true;
+											break;
+										}
+									}
+									if (shouldBreak)
+										break;
+								}
+								hotkey.downAction.Invoke();
+							}
+							else if (Event.current.type == EventType.KeyUp)
+							{
+								inputEvent.keys = inputEvent.keys.Remove(Event.current.keyCode);
+								button.isPressing = false;
+								if (hotkey.upType == Hotkey.UpType.All)
+								{
+									foreach (Hotkey.Button button2 in hotkey.buttons)
+									{
+										if (button2.isPressing)
+										{
+											shouldBreak = true;
+											break;
+										}
+									}
+									if (shouldBreak)
+										break;
+								}
+								hotkey.upAction.Invoke();
+							}
+						}
+					}
+				}
+				inputEvent.previousKeys = (KeyCode[]) inputEvent.keys.Clone();
+			}
 		}
 
-		public static Vector2 GetMousePositionInWorld ()
+		public static Vector2Int GetMousePosition ()
 		{
-			Vector2 output;
+			Vector2Int output;
+			Camera camera = GetSceneViewCamera();
+			output = inputEvent.mousePosition;
+			output.y = (int) (camera.ViewportToScreenPoint(Vector2.one).y - camera.ViewportToScreenPoint(Vector2.zero).y - output.y);
+			return output;
+		}
+
+		public static Vector3 GetMousePositionInWorld ()
+		{
+			return GetSceneViewCamera().ScreenToWorldPoint(GetMousePosition().ToVec2());
+		}
+
+		public static Ray GetMouseRay ()
+		{
+			return GetSceneViewCamera().ScreenPointToRay(GetMousePosition().ToVec2());
+		}
+
+		public static Camera GetSceneViewCamera ()
+		{
 			Camera camera = SceneView.lastActiveSceneView.camera;
 			if (camera == null)
 				camera = SceneView.currentDrawingSceneView.camera;
-			output = inputEvent.mousePosition;
-			output.y = camera.ViewportToScreenPoint(Vector2.one).y - camera.ViewportToScreenPoint(Vector2.zero).y - output.y;
-			output = camera.ScreenToWorldPoint(output);
-			return output;
+			return camera;
 		}
 
 		[Serializable]
@@ -130,12 +146,13 @@ namespace AmbitiousSnake
 			public enum DownType
 			{
 				All,
-				Any
+				// Any
 			}
 
 			public enum UpType
 			{
-				All
+				All,
+				// Any
 			}
 
 			[Serializable]

@@ -125,6 +125,27 @@ namespace Extensions
 			sides[11] = new LineSegment3D(corner1, corner2);
 			return sides;
 		}
+
+		public static Plane[] GetOutsideFacePlanes (this Bounds b)
+		{
+			Plane[] facePlanes = new Plane[6];
+			Vector3[] corners = b.GetCorners();
+			Vector3 corner0 = corners[0];
+			Vector3 corner1 = corners[1];
+			Vector3 corner2 = corners[2];
+			Vector3 corner3 = corners[3];
+			Vector3 corner4 = corners[4];
+			Vector3 corner5 = corners[5];
+			Vector3 corner6 = corners[6];
+			Vector3 corner7 = corners[7];
+			facePlanes[0] = new Plane(corner0, corner5, corner4); // -x
+			facePlanes[1] = new Plane(corner1, corner2, corner3); // +x
+			facePlanes[2] = new Plane(corner0, corner1, corner6); // -y
+			facePlanes[3] = new Plane(corner2, corner4, corner3); // +y
+			facePlanes[4] = new Plane(corner0, corner2, corner1); // -z
+			facePlanes[5] = new Plane(corner3, corner5, corner6); // +z
+			return facePlanes;
+		}
 		
 		public static Vector3[] GetPointsInside (this Bounds b, Vector3 checkInterval)
 		{
@@ -155,6 +176,20 @@ namespace Extensions
 		public static Bounds MakePositiveSize (this Bounds b)
 		{
 			return new Bounds(b.center, b.size.MakePositive());
+		}
+		
+		public static bool Raycast (this Bounds b, Ray ray, out Vector3 hit)
+		{
+			hit = VectorExtensions.NULL3;
+			Plane[] facePlanes = b.GetOutsideFacePlanes();
+			if ((facePlanes[0].Raycast(ray, out hit) || facePlanes[1].Raycast(ray, out hit)) && hit.y >= b.min.y && hit.y <= b.max.y && hit.z >= b.min.z && hit.z <= b.max.z)
+				return true;
+			else if ((facePlanes[2].Raycast(ray, out hit) || facePlanes[3].Raycast(ray, out hit)) && hit.x >= b.min.x && hit.x <= b.max.x && hit.z >= b.min.z && hit.z <= b.max.z)
+				return true;
+			else if ((facePlanes[4].Raycast(ray, out hit) || facePlanes[5].Raycast(ray, out hit)) && hit.x >= b.min.x && hit.x <= b.max.x && hit.y >= b.min.y && hit.y <= b.max.y)
+				return true;
+			else
+				return false;
 		}
 	}
 }
