@@ -303,12 +303,16 @@ namespace Extensions
 		public static Vector3 GetClosestPoint (Vector3 v, params Vector3[] points)
 		{
 			Vector3 closestPoint = points[0];
-			Vector3 point;
+			float closestDistanceSqr = (v - closestPoint).sqrMagnitude;
 			for (int i = 1; i < points.Length; i ++)
 			{
-				point = points[i];
-				if (Vector3.Distance(v, point) < Vector3.Distance(v, closestPoint))
+				Vector3 point = points[i];
+				float distanceSqr = (v - point).sqrMagnitude;
+				if (distanceSqr < closestDistanceSqr)
+				{
 					closestPoint = point;
+					closestDistanceSqr = distanceSqr;
+				}
 			}
 			return closestPoint;
 		}
@@ -317,13 +321,15 @@ namespace Extensions
 		{
 			int indexOfClosestPoint = 0;
 			Vector3 closestPoint = points[0];
-			Vector3 point;
+			float closestDistanceSqr = (v - closestPoint).sqrMagnitude;
 			for (int i = 1; i < points.Length; i ++)
 			{
-				point = points[i];
-				if (Vector3.Distance(v,- point) < Vector3.Distance(v, closestPoint))
+				Vector3 point = points[i];
+				float distanceSqr = (v - point).sqrMagnitude;
+				if (distanceSqr < closestDistanceSqr)
 				{
 					closestPoint = point;
+					closestDistanceSqr = distanceSqr;
 					indexOfClosestPoint = i;
 				}
 			}
@@ -333,12 +339,16 @@ namespace Extensions
 		public static Vector2 GetClosestPoint (Vector2 v, params Vector2[] points)
 		{
 			Vector2 closestPoint = points[0];
-			Vector2 point;
+			float closestDistanceSqr = (v - closestPoint).sqrMagnitude;
 			for (int i = 1; i < points.Length; i ++)
 			{
-				point = points[i];
-				if (Vector2.Distance(v, point) < Vector2.Distance(v, closestPoint))
+				Vector2 point = points[i];
+				float distanceSqr = (v - point).sqrMagnitude;
+				if (distanceSqr < closestDistanceSqr)
+				{
 					closestPoint = point;
+					closestDistanceSqr = distanceSqr;
+				}
 			}
 			return closestPoint;
 		}
@@ -347,13 +357,15 @@ namespace Extensions
 		{
 			int indexOfClosestPoint = 0;
 			Vector2 closestPoint = points[0];
-			Vector2 point;
+			float closestDistanceSqr = (v - closestPoint).sqrMagnitude;
 			for (int i = 1; i < points.Length; i ++)
 			{
-				point = points[i];
-				if (Vector2.Distance(v, point) < Vector2.Distance(v, closestPoint))
+				Vector2 point = points[i];
+				float distanceSqr = (v - point).sqrMagnitude;
+				if (distanceSqr < closestDistanceSqr)
 				{
 					closestPoint = point;
+					closestDistanceSqr = distanceSqr;
 					indexOfClosestPoint = i;
 				}
 			}

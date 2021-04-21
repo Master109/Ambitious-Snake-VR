@@ -51,6 +51,8 @@ namespace AmbitiousSnake
 		void Paint ()
 		{
 			Ray mouseRay = GetMouseRay();
+			List<Vector3> spawnPositions = new List<Vector3>();
+			List<Quaternion> spawnRotations = new List<Quaternion>();
 			for (int i = 0; i < gosBounds.Length; i ++)
 			{
 				Bounds bounds = gosBounds[i];
@@ -84,17 +86,22 @@ namespace AmbitiousSnake
 						spawnPosition = new Vector3(Mathf.Round(hit.x), Mathf.Round(hit.y), hit.z - goBounds.extents.y);
 						spawnRotation = Quaternion.LookRotation(Vector3.up, Vector3.back);
 					}
-					else if (hit.z == bounds.max.z)
+					else
 					{
 						spawnPosition = new Vector3(Mathf.Round(hit.x), Mathf.Round(hit.y), hit.z + goBounds.extents.y);
 						spawnRotation = Quaternion.LookRotation(Vector3.up, Vector3.forward);
 					}
-					if (!previousPaintPositions.Contains(spawnPosition))
-					{
-						Instantiate(go, spawnPosition, spawnRotation, paintParent);
-						previousPaintPositions.Add(spawnPosition);
-					}
+					spawnPositions.Add(spawnPosition);
+					spawnRotations.Add(spawnRotation);
 				}
+			}
+			int indexOfClosestSpawnPosition = VectorExtensions.GetIndexOfClosestPoint(mouseRay.origin, spawnPositions.ToArray());
+			Vector3 _spawnPosition = spawnPositions[indexOfClosestSpawnPosition];
+			if (!previousPaintPositions.Contains(_spawnPosition))
+			{
+				Quaternion spawnRotation = spawnRotations[indexOfClosestSpawnPosition];
+				Instantiate(go, _spawnPosition, spawnRotation, paintParent);
+				previousPaintPositions.Add(_spawnPosition);
 			}
 		}
 
