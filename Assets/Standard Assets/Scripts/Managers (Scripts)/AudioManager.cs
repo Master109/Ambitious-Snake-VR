@@ -35,9 +35,15 @@ namespace AmbitiousSnake
 		
 		public SoundEffect MakeSoundEffect (AudioClip audioClip, Vector3 position)
 		{
+			return MakeSoundEffect(audioClip, position, soundEffectPrefab.settings.Volume);
+		}
+		
+		public SoundEffect MakeSoundEffect (AudioClip audioClip, Vector3 position, float volume)
+		{
 			SoundEffect.Settings soundEffectSettings = soundEffectPrefab.settings;
 			soundEffectSettings.audioClip = audioClip;
 			soundEffectSettings.Position = position;
+			soundEffectSettings.Volume = volume;
 			return MakeSoundEffect(soundEffectSettings);
 		}
 		

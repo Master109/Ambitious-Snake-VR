@@ -56,6 +56,11 @@ namespace AmbitiousSnake
 		public delegate void OnRemoveTailPiece();
 		public event OnRemoveTailPiece onRemoveTailPiece;
 		public float maxAbsContactNormalYToHaveNoFriction;
+		public AnimationCurve wallCollisionVelocityToVolumeCurve;
+		public AudioSource headMovementAudioSource;
+		public Transform headMovementAudioSourceTrs;
+		public AudioSource tailMovementAudioSource;
+		public Transform tailMovementAudioSourceTrs;
 		public SnakePiece HeadPiece
 		{
 			get
@@ -99,6 +104,7 @@ namespace AmbitiousSnake
 			}
 		}
 		Vector3 move;
+		float changeLengthInput;
 		float friction;
 		Dictionary<Collider, ContactPoint[]> contactPointsWithCollidersDict = new Dictionary<Collider, ContactPoint[]>();
 
@@ -127,9 +133,18 @@ namespace AmbitiousSnake
 			if (GameManager.paused || dead)
 				return;
 			HandleMovement ();
-			SetLength (Mathf.Clamp(length.value + InputManager.ChangeLengthInput * changeLengthRate * Time.deltaTime, length.valueRange.min, length.valueRange.max));
+			changeLengthInput = InputManager.ChangeLengthInput;
+			SetLength (Mathf.Clamp(length.value + changeLengthInput * changeLengthRate * Time.deltaTime, length.valueRange.min, length.valueRange.max));
 			rigid.ResetCenterOfMass();
 			rigid.ResetInertiaTensor();
+			if (move.sqrMagnitude == 0)
+				headMovementAudioSource.Pause();
+			else
+				headMovementAudioSourceTrs.position = HeadPosition;
+			if (changeLengthInput == 0)
+				tailMovementAudioSource.Pause();
+			else
+				tailMovementAudioSourceTrs.position = TailPosition;
 		}
 
 		public virtual void TakeDamage (float amount, Hazard source)
@@ -171,6 +186,7 @@ namespace AmbitiousSnake
 						return;
 					position = hit.point + (headPosition - hit.point).normalized * (SnakePiece.RADIUS + Physics.defaultContactOffset);
 					moveAmount = hit.distance - SnakePiece.RADIUS - Physics.defaultContactOffset;
+					MakeCollisionSoundEffect (hit.collider.gameObject, hit.point, move.magnitude * moveSpeed);
 				}
 				else
 					position = headPosition + (move.normalized * moveAmount);
@@ -191,6 +207,7 @@ namespace AmbitiousSnake
 			headPiece.distanceToPreviousPiece = distanceToPreviousPiece;
 			pieces.Add(headPiece);
 			currentLength += distanceToPreviousPiece;
+			headMovementAudioSource.UnPause();
 			if (onAddHeadPiece != null)
 				onAddHeadPiece (position);
 		}
@@ -206,6 +223,7 @@ namespace AmbitiousSnake
 			tailPiece.distanceToPreviousPiece = distanceToPreviousPiece;
 			pieces.Insert(0, tailPiece);
 			currentLength += distanceToPreviousPiece;
+			tailMovementAudioSource.UnPause();
 			if (onAddTailPiece != null)
 				onAddTailPiece (position);
 		}
@@ -236,12 +254,14 @@ namespace AmbitiousSnake
 					RaycastHit hit;
 					if (Physics.Raycast(tailPosition, move, out hit, moveAmount + SnakePiece.RADIUS + Physics.defaultContactOffset, whatICrashIntoExcludingMe, QueryTriggerInteraction.Ignore))
 					{
+						MakeCollisionSoundEffect (hit.collider.gameObject, hit.point, changeLengthInput * changeLengthRate);
 						for (int i = 0; i < pieces.Count; i ++)
 						{
 							SnakePiece piece = pieces[i];
 							RaycastHit hit2;
 							if (Physics.Raycast(piece.trs.position, -move, out hit2, moveAmount + SnakePiece.RADIUS + Physics.defaultContactOffset, whatICrashIntoExcludingMe, QueryTriggerInteraction.Ignore))
 							{
+								MakeCollisionSoundEffect (hit2.collider.gameObject, hit2.point, changeLengthInput * changeLengthRate);
 								OnSetLength ();
 								return;
 							}
@@ -302,10 +322,14 @@ namespace AmbitiousSnake
 			{
 				if (contactPointsWithCollidersDict.Count == 0)
 				{
-					for (int i = 0; i < contactPoints.Length; i ++)
+					for (int i = 0; i < coll.contactCount; i ++)
 					{
 						ContactPoint contactPoint = contactPoints[i];
-						AudioManager.instance.MakeSoundEffect (collisionWithWallAudioClips[Random.Range(0, collisionWithWallAudioClips.Length)], contactPoint.point);
+						if (move.sqrMagnitude == 0 || contactPoint.thisCollider != HeadPiece.collider)
+						{
+							if (coll.gameObject.layer == LayerMask.NameToLayer("Wall"))
+								MakeCollisionSoundEffect (CollisionSoundEffectType.Wall, contactPoint.point);
+						}
 					}
 				}
 				contactPointsWithCollidersDict.Add(coll.collider, contactPoints);
@@ -340,6 +364,43 @@ namespace AmbitiousSnake
 		void OnCollisionExit (Collision coll)
 		{
 			contactPointsWithCollidersDict.Remove(coll.collider);
+		}
+
+		SoundEffect MakeCollisionSoundEffect (GameObject hitGo, Vector3 hitPoint)
+		{
+			if (hitGo.layer == LayerMask.NameToLayer("Wall"))
+				return MakeCollisionSoundEffect(CollisionSoundEffectType.Wall, hitPoint);
+			else
+				return null;
+		}
+
+		SoundEffect MakeCollisionSoundEffect (GameObject hitGo, Vector3 hitPoint, float hitSpeed)
+		{
+			if (hitGo.layer == LayerMask.NameToLayer("Wall"))
+				return MakeCollisionSoundEffect(CollisionSoundEffectType.Wall, hitPoint, hitSpeed);
+			else
+				return null;
+		}
+
+		SoundEffect MakeCollisionSoundEffect (CollisionSoundEffectType collisionSoundEffectType, Vector3 hitPoint)
+		{
+			return MakeCollisionSoundEffect(collisionSoundEffectType, hitPoint, rigid.GetPointVelocity(hitPoint).magnitude);
+		}
+
+		SoundEffect MakeCollisionSoundEffect (CollisionSoundEffectType collisionSoundEffectType, Vector3 hitPoint, float hitSpeed)
+		{
+			if (collisionSoundEffectType == CollisionSoundEffectType.Wall)
+			{
+				float volume = wallCollisionVelocityToVolumeCurve.Evaluate(hitSpeed);
+				return AudioManager.instance.MakeSoundEffect(collisionWithWallAudioClips[Random.Range(0, collisionWithWallAudioClips.Length)], hitPoint, volume);
+			}
+			else
+				return null;
+		}
+
+		public enum CollisionSoundEffectType
+		{
+			Wall
 		}
 	}
 }
