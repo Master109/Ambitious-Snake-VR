@@ -46,7 +46,7 @@ namespace AmbitiousSnake
 		public float currentLength;
 		public SnakePiece piecePrefab;
 		public float changeLengthRate;
-		public AudioClip collisionAudioClip;
+		public AudioClip[] collisionWithWallAudioClips = new AudioClip[0];
 		public LineRenderer lengthIndicator;
 		public PhysicMaterial physicsMaterial;
 		public delegate void OnAddHeadPiece(Vector3 position);
@@ -299,7 +299,17 @@ namespace AmbitiousSnake
 			ContactPoint[] contactPoints = new ContactPoint[coll.contactCount];
 			coll.GetContacts(contactPoints);
 			if (!contactPointsWithCollidersDict.ContainsKey(coll.collider))
+			{
+				if (contactPointsWithCollidersDict.Count == 0)
+				{
+					for (int i = 0; i < contactPoints.Length; i ++)
+					{
+						ContactPoint contactPoint = contactPoints[i];
+						AudioManager.instance.MakeSoundEffect (collisionWithWallAudioClips[Random.Range(0, collisionWithWallAudioClips.Length)], contactPoint.point);
+					}
+				}
 				contactPointsWithCollidersDict.Add(coll.collider, contactPoints);
+			}
 			else
 				contactPointsWithCollidersDict[coll.collider] = contactPoints;
 			List<ContactPoint> allContactPoints = new List<ContactPoint>();

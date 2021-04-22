@@ -75,7 +75,10 @@ MonoBehaviour:
   currentLength: 0
   piecePrefab: {fileID: 2551292470738008868, guid: c90fed61d079a9d6086b1212f3642e33, type: 3}
   changeLengthRate: 15
-  collisionAudioClip: {fileID: 0}
+  collisionWithWallAudioClips:
+  - {fileID: 8300000, guid: 183f0504ceba24bef96793da37fec854, type: 3}
+  - {fileID: 8300000, guid: 8b0d7828fc6146c729e1b8a178d9e583, type: 3}
+  - {fileID: 8300000, guid: 42880e489142e68d88cc15a9028cf265, type: 3}
   lengthIndicator: {fileID: 0}
   physicsMaterial: {fileID: 13400000, guid: e0ee0007728bb99e9b7b523477c23754, type: 2}
   maxAbsContactNormalYToHaveNoFriction: 0.1
