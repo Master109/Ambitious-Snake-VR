@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using Extensions;
 using TMPro;
+using System;
+using Random = UnityEngine.Random;
 
 namespace AmbitiousSnake
 {
@@ -46,7 +48,8 @@ namespace AmbitiousSnake
 		public float currentLength;
 		public SnakePiece piecePrefab;
 		public float changeLengthRate;
-		public AudioClip[] collisionWithWallAudioClips = new AudioClip[0];
+		public CollisionSoundEffectEntry[] collisionSoundEffectEntries = new CollisionSoundEffectEntry[0];
+		public Dictionary<CollisionSoundEffectEntry.Type, CollisionSoundEffectEntry> collisionSoundEffectEntriesDict = new Dictionary<CollisionSoundEffectEntry.Type, CollisionSoundEffectEntry>();
 		public LineRenderer lengthIndicator;
 		public PhysicMaterial physicsMaterial;
 		public delegate void OnAddHeadPiece(Vector3 position);
@@ -56,7 +59,6 @@ namespace AmbitiousSnake
 		public delegate void OnRemoveTailPiece();
 		public event OnRemoveTailPiece onRemoveTailPiece;
 		public float maxAbsContactNormalYToHaveNoFriction;
-		public AnimationCurve wallCollisionVelocityToVolumeCurve;
 		public AudioSource headMovementAudioSource;
 		public Transform headMovementAudioSourceTrs;
 		public AudioSource tailMovementAudioSource;
@@ -112,6 +114,11 @@ namespace AmbitiousSnake
 		{
 			base.Awake ();
 			friction = physicsMaterial.dynamicFriction;
+			for (int i = 0; i < collisionSoundEffectEntries.Length; i ++)
+			{
+				CollisionSoundEffectEntry collisionSoundEffectEntry = collisionSoundEffectEntries[i];
+				collisionSoundEffectEntriesDict.Add(collisionSoundEffectEntry.type, collisionSoundEffectEntry);
+			}
 			AddHeadPiece (trs.position, 0);
 			for (float distance = maxDistanceBetweenPieces; distance <= length.value; distance += maxDistanceBetweenPieces)
 				AddHeadPiece (trs.position + trs.forward * distance, maxDistanceBetweenPieces);
@@ -186,7 +193,6 @@ namespace AmbitiousSnake
 						return;
 					position = hit.point + (headPosition - hit.point).normalized * (SnakePiece.RADIUS + Physics.defaultContactOffset);
 					moveAmount = hit.distance - SnakePiece.RADIUS - Physics.defaultContactOffset;
-					MakeCollisionSoundEffect (hit.collider.gameObject, hit.point, move.magnitude * moveSpeed);
 				}
 				else
 					position = headPosition + (move.normalized * moveAmount);
@@ -254,14 +260,12 @@ namespace AmbitiousSnake
 					RaycastHit hit;
 					if (Physics.Raycast(tailPosition, move, out hit, moveAmount + SnakePiece.RADIUS + Physics.defaultContactOffset, whatICrashIntoExcludingMe, QueryTriggerInteraction.Ignore))
 					{
-						MakeCollisionSoundEffect (hit.collider.gameObject, hit.point, changeLengthInput * changeLengthRate);
 						for (int i = 0; i < pieces.Count; i ++)
 						{
 							SnakePiece piece = pieces[i];
 							RaycastHit hit2;
 							if (Physics.Raycast(piece.trs.position, -move, out hit2, moveAmount + SnakePiece.RADIUS + Physics.defaultContactOffset, whatICrashIntoExcludingMe, QueryTriggerInteraction.Ignore))
 							{
-								MakeCollisionSoundEffect (hit2.collider.gameObject, hit2.point, changeLengthInput * changeLengthRate);
 								OnSetLength ();
 								return;
 							}
@@ -320,17 +324,10 @@ namespace AmbitiousSnake
 			coll.GetContacts(contactPoints);
 			if (!contactPointsWithCollidersDict.ContainsKey(coll.collider))
 			{
-				if (contactPointsWithCollidersDict.Count == 0)
+				for (int i = 0; i < coll.contactCount; i ++)
 				{
-					for (int i = 0; i < coll.contactCount; i ++)
-					{
-						ContactPoint contactPoint = contactPoints[i];
-						if (move.sqrMagnitude == 0 || contactPoint.thisCollider != HeadPiece.collider)
-						{
-							if (coll.gameObject.layer == LayerMask.NameToLayer("Wall"))
-								MakeCollisionSoundEffect (CollisionSoundEffectType.Wall, contactPoint.point);
-						}
-					}
+					ContactPoint contactPoint = contactPoints[i];
+					MakeCollisionSoundEffect (coll.gameObject, contactPoint.point);
 				}
 				contactPointsWithCollidersDict.Add(coll.collider, contactPoints);
 			}
@@ -369,7 +366,7 @@ namespace AmbitiousSnake
 		SoundEffect MakeCollisionSoundEffect (GameObject hitGo, Vector3 hitPoint)
 		{
 			if (hitGo.layer == LayerMask.NameToLayer("Wall"))
-				return MakeCollisionSoundEffect(CollisionSoundEffectType.Wall, hitPoint);
+				return MakeCollisionSoundEffect(CollisionSoundEffectEntry.Type.Wall, hitPoint);
 			else
 				return null;
 		}
@@ -377,30 +374,42 @@ namespace AmbitiousSnake
 		SoundEffect MakeCollisionSoundEffect (GameObject hitGo, Vector3 hitPoint, float hitSpeed)
 		{
 			if (hitGo.layer == LayerMask.NameToLayer("Wall"))
-				return MakeCollisionSoundEffect(CollisionSoundEffectType.Wall, hitPoint, hitSpeed);
+				return MakeCollisionSoundEffect(CollisionSoundEffectEntry.Type.Wall, hitPoint, hitSpeed);
 			else
 				return null;
 		}
 
-		SoundEffect MakeCollisionSoundEffect (CollisionSoundEffectType collisionSoundEffectType, Vector3 hitPoint)
+		SoundEffect MakeCollisionSoundEffect (CollisionSoundEffectEntry.Type collisionSoundEffectEntryType, Vector3 hitPoint)
 		{
-			return MakeCollisionSoundEffect(collisionSoundEffectType, hitPoint, rigid.GetPointVelocity(hitPoint).magnitude);
+			return collisionSoundEffectEntriesDict[collisionSoundEffectEntryType].Make(hitPoint);
 		}
 
-		SoundEffect MakeCollisionSoundEffect (CollisionSoundEffectType collisionSoundEffectType, Vector3 hitPoint, float hitSpeed)
+		SoundEffect MakeCollisionSoundEffect (CollisionSoundEffectEntry.Type collisionSoundEffectEntryType, Vector3 hitPoint, float hitSpeed)
 		{
-			if (collisionSoundEffectType == CollisionSoundEffectType.Wall)
+			return collisionSoundEffectEntriesDict[collisionSoundEffectEntryType].Make(hitPoint, hitSpeed);
+		}
+
+		[Serializable]
+		public struct CollisionSoundEffectEntry
+		{
+			public Type type;
+			public AudioClip[] audioClips;
+			public AnimationCurve hitSpeedToVolumeCurve;
+
+			public SoundEffect Make (Vector3 hitPoint)
 			{
-				float volume = wallCollisionVelocityToVolumeCurve.Evaluate(hitSpeed);
-				return AudioManager.instance.MakeSoundEffect(collisionWithWallAudioClips[Random.Range(0, collisionWithWallAudioClips.Length)], hitPoint, volume);
+				return Make(hitPoint, Snake.instance.rigid.GetPointVelocity(hitPoint).magnitude);
 			}
-			else
-				return null;
-		}
 
-		public enum CollisionSoundEffectType
-		{
-			Wall
+			public SoundEffect Make (Vector3 hitPoint, float hitSpeed)
+			{
+				return AudioManager.instance.MakeSoundEffect(audioClips[Random.Range(0, audioClips.Length)], hitPoint, hitSpeedToVolumeCurve.Evaluate(hitSpeed));
+			}
+
+			public enum Type
+			{
+				Wall
+			}
 		}
 	}
 }
