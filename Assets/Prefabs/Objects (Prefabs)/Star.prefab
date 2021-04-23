@@ -48,7 +48,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   handleMultipleInstances: 0
   persistant: 0
+  trs: {fileID: 2251436855255300030}
   isCollected: 0
+  onTriggerEnterAudioClips:
+  - {fileID: 8300000, guid: e6f8e74fe89957706adc650fa1105504, type: 3}
 --- !u!33 &7643686271794991098
 MeshFilter:
   m_ObjectHideFlags: 0
