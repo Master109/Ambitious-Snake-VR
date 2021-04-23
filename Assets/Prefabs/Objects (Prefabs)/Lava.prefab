@@ -118,6 +118,34 @@ MonoBehaviour:
   trs: {fileID: 3656558516100744759}
   prefabIndex: 0
   damage: 0
+  onTriggerEnterAudioClips:
+  - {fileID: 8300000, guid: 0db20a4f7581688a1b73e07fe82a29ad, type: 3}
+  - {fileID: 8300000, guid: 7ace99f23ad0547b581167137f34fbe7, type: 3}
+  - {fileID: 8300000, guid: 35463ae913a44110fa98f608ea2cb440, type: 3}
+  onTriggerEnterSpeedToVolumeCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 20
+      outSlope: 20
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 20
+      inSlope: 20
+      outSlope: 20
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1001 &4433036083521919938
 PrefabInstance:
   m_ObjectHideFlags: 0
