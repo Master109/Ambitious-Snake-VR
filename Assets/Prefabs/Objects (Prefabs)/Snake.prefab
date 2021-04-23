@@ -361,6 +361,24 @@ MonoBehaviour:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 0
+  - type: 1
+    audioClips:
+    - {fileID: 8300000, guid: 96bce06dd5379ef74a3cecb65f868834, type: 3}
+    hitSpeedToVolumeCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 0
   lengthIndicator: {fileID: 0}
   physicsMaterial: {fileID: 13400000, guid: e0ee0007728bb99e9b7b523477c23754, type: 2}
   maxAbsContactNormalYToHaveNoFriction: 0.1

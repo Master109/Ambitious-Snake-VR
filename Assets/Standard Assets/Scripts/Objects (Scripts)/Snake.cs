@@ -415,7 +415,8 @@ namespace AmbitiousSnake
 
 			public enum Type
 			{
-				Wall
+				Wall,
+				End
 			}
 		}
 	}
