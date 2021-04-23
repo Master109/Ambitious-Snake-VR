@@ -320,16 +320,21 @@ namespace AmbitiousSnake
 
 		void OnCollisionEnter (Collision coll)
 		{
+			OnCollisionStay (coll);
+		}
+
+		void OnCollisionStay (Collision coll)
+		{
 			ContactPoint[] contactPoints = new ContactPoint[coll.contactCount];
 			coll.GetContacts(contactPoints);
 			if (!contactPointsWithCollidersDict.ContainsKey(coll.collider))
 			{
+				contactPointsWithCollidersDict.Add(coll.collider, contactPoints);
 				for (int i = 0; i < coll.contactCount; i ++)
 				{
 					ContactPoint contactPoint = contactPoints[i];
 					MakeCollisionSoundEffect (coll.gameObject, contactPoint.point);
 				}
-				contactPointsWithCollidersDict.Add(coll.collider, contactPoints);
 			}
 			else
 				contactPointsWithCollidersDict[coll.collider] = contactPoints;
@@ -353,14 +358,10 @@ namespace AmbitiousSnake
 			physicsMaterial.dynamicFriction = friction;
 		}
 
-		void OnCollisionStay (Collision coll)
-		{
-			OnCollisionEnter (coll);
-		}
-
 		void OnCollisionExit (Collision coll)
 		{
-			contactPointsWithCollidersDict.Remove(coll.collider);
+			if (!Physics.CheckBox(coll.collider.bounds.center, coll.transform.InverseTransformDirection(coll.collider.bounds.extents) + Vector3.one * Physics.defaultContactOffset, coll.transform.rotation, LayerMask.GetMask("Snake")))
+				contactPointsWithCollidersDict.Remove(coll.collider);
 		}
 
 		SoundEffect MakeCollisionSoundEffect (GameObject hitGo, Vector3 hitPoint)
