@@ -109,6 +109,7 @@ namespace AmbitiousSnake
 		float changeLengthInput;
 		float friction;
 		Dictionary<Collider, ContactPoint[]> contactPointsWithCollidersDict = new Dictionary<Collider, ContactPoint[]>();
+		List<Transform> hittingTransforms = new List<Transform>();
 
 		public override void Awake ()
 		{
@@ -320,6 +321,17 @@ namespace AmbitiousSnake
 
 		void OnCollisionEnter (Collision coll)
 		{
+			ContactPoint[] contactPoints = new ContactPoint[coll.contactCount];
+			coll.GetContacts(contactPoints);
+			if (!hittingTransforms.Contains(coll.transform))
+			{
+				hittingTransforms.Add(coll.transform);
+				for (int i = 0; i < coll.contactCount; i ++)
+				{
+					ContactPoint contactPoint = contactPoints[i];
+					MakeCollisionSoundEffect (coll.gameObject, contactPoint.point);
+				}
+			}
 			OnCollisionStay (coll);
 		}
 
@@ -328,14 +340,7 @@ namespace AmbitiousSnake
 			ContactPoint[] contactPoints = new ContactPoint[coll.contactCount];
 			coll.GetContacts(contactPoints);
 			if (!contactPointsWithCollidersDict.ContainsKey(coll.collider))
-			{
 				contactPointsWithCollidersDict.Add(coll.collider, contactPoints);
-				for (int i = 0; i < coll.contactCount; i ++)
-				{
-					ContactPoint contactPoint = contactPoints[i];
-					MakeCollisionSoundEffect (coll.gameObject, contactPoint.point);
-				}
-			}
 			else
 				contactPointsWithCollidersDict[coll.collider] = contactPoints;
 			List<ContactPoint> allContactPoints = new List<ContactPoint>();
@@ -360,8 +365,9 @@ namespace AmbitiousSnake
 
 		void OnCollisionExit (Collision coll)
 		{
+			contactPointsWithCollidersDict.Remove(coll.collider);
 			if (!Physics.CheckBox(coll.collider.bounds.center, coll.transform.InverseTransformDirection(coll.collider.bounds.extents) + Vector3.one * Physics.defaultContactOffset, coll.transform.rotation, LayerMask.GetMask("Snake")))
-				contactPointsWithCollidersDict.Remove(coll.collider);
+				hittingTransforms.Remove(coll.transform);
 		}
 
 		SoundEffect MakeCollisionSoundEffect (GameObject hitGo, Vector3 hitPoint)
